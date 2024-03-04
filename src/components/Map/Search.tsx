@@ -12,8 +12,7 @@ export default function Search() {
       <Stack spacing={1} direction="row" sx={{ mb: 2 }}>
         <FormControl sx={{ flex: 1 }}>
           <Input
-            placeholder="Search"
-            value={'Melbourne'}
+            placeholder="Search by Organization Name"
             startDecorator={<SearchRoundedIcon />}
             aria-label="Search"
           />
@@ -22,7 +21,6 @@ export default function Search() {
           Search
         </Button>
       </Stack>
-      <Typography level="body-sm">232 stays in Melbourne, Australia</Typography>
     </div>
   );
 }

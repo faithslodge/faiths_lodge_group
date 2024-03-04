@@ -8,10 +8,13 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 
-export default function RentalCard({ name, mission, image, cityState, phone }) {
+export default function RentalCard({ name, verified, mission, image, cityState, phone }) {
   return (
+
+// ! Joy Styling
     <Card
       variant="outlined"
       orientation="horizontal"
@@ -36,12 +39,13 @@ export default function RentalCard({ name, mission, image, cityState, phone }) {
           },
         }}
       >
+        {/* AspectRatio for setting Img Size/Ratio */}
+        {/* need to fix for small screens */}
         <AspectRatio
           ratio="1"
           flex
           sx={{
-            minWidth: { sm: 120, md: 160 },
-            '--AspectRatio-maxHeight': { xs: '160px', sm: '9999px' },
+            minWidth: { sm: 100 },
           }}
         >
           <img alt="" src={image} />
@@ -49,7 +53,7 @@ export default function RentalCard({ name, mission, image, cityState, phone }) {
       </CardOverflow>
 
 
-
+      {/* Card Content */}
       <CardContent>
         <Stack
           spacing={1}
@@ -66,6 +70,7 @@ export default function RentalCard({ name, mission, image, cityState, phone }) {
                 sx={{ color: 'text.primary' }}
               >
                 {name}
+                {verified && <VerifiedIcon />}
               </Link>
             </Typography>
           </div>

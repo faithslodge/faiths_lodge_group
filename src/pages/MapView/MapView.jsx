@@ -56,6 +56,7 @@ function MapView() {
             {/* Map DB info as props */}
             <OrganizationCard
               name="Faiths Lodge"
+              verified={true}
               cityState="Minneapolis, MN"
               phone="(123) 456-7890"
               mission="Lorem ipsum la zell uffda sieta homen latilda"
