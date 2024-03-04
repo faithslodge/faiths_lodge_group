@@ -185,17 +185,19 @@ CREATE TABLE "service_type_by_organization" (
     INSERT INTO "loss_type"
         (
             "name"
-        ) VALUES (
-                    'loss type one'
-                 );
-
-    -- loss_type TABLE INSERT
-    INSERT INTO "loss_type"
-        (
-            "name"
-        ) VALUES (
-                    'loss type two'
-                 );
+        ) VALUES
+                ('Early Pregnancy'),
+                ('Stillbirth'),
+                ('Infant / toddler Loss(0-3)'),
+                ('Child Loss'),
+                ('Childhood Cancer / Medically Complex'),
+                ('Youth Loss (12-18)'),
+                ('Suicide & Substance Abuse'),
+                ('Homicide'),
+                ('Ambigous Loss / Missing Child'),
+                ('Youth Grief'),
+                ('Bereaved Mothers'),
+                ('BIPOC / Multi-Lingual');
 
 ----------------------------------------------- INSERT TYPE SEPARATOR -----------------------------------------------                 
 
@@ -203,17 +205,18 @@ CREATE TABLE "service_type_by_organization" (
     INSERT INTO "service_type"
         (
             "name"
-        ) VALUES (
-                    'service type one'
-                 );
-
-    -- loss_type TABLE INSERT
-    INSERT INTO "service_type"
-        (
-            "name"
-        ) VALUES (
-                    'service type two'
-                 );
+        ) VALUES 
+                ('Grief Counseling'),
+                ('Support Groups'),
+                ('Retreats'),
+                ('Financial Support'),
+                ('Peer-to-Peer Support'),
+                ('Camps'),
+                ('Online Support Groups'),
+                ('Education'),
+                ('Local Chapters / National Group'),
+                ('Surviving Sibling Support'),
+                ('Spiritual / Religious Help');
 
 ----------------------------------------------- INSERT TYPE SEPARATOR -----------------------------------------------                 
 
