@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS "user";
 CREATE TABLE "user" (
     "id" SERIAL PRIMARY KEY,
     "username" VARCHAR (100) UNIQUE NOT NULL,
-    "password" VARCHAR (50) NOT NULL,
+    "password" VARCHAR (1000) NOT NULL,
     "is_admin" BOOL DEFAULT FALSE
 );
 
@@ -40,9 +40,9 @@ CREATE TABLE "organization" (
     "url" VARCHAR(300),
     "phone" VARCHAR(20),
     "email" VARCHAR(200), 
-    "for_profit" BOOL, -- DEFAULT FALSE,
-    "faith_based" BOOL, -- DEFAULT FALSE,
-    "has_retreat_center" BOOL DEFAULT FALSE,
+    "for_profit" BOOL,
+    "faith_based" BOOL,
+    "has_retreat_center" BOOL,
     "linked_in_url" VARCHAR(300),
     "facebook_url" VARCHAR(300), 
     "instagram_url" VARCHAR(300),
@@ -106,7 +106,7 @@ CREATE TABLE "service_type_by_organization" (
                  );
 
 ----------------------------------------------- INSERT TYPE SEPARATOR -----------------------------------------------                 
-
+    -- YOU CANNOT USE THIS USER TO LOGIN!!!! This is just to seed DB with a single user.
     -- user TABLE INSERT
     INSERT INTO "user"
         (
@@ -206,8 +206,6 @@ CREATE TABLE "service_type_by_organization" (
         ) VALUES (
                     'service type one'
                  );
-
------------------------------------------------ INSERT TYPE SEPARATOR -----------------------------------------------                 
 
     -- loss_type TABLE INSERT
     INSERT INTO "service_type"
