@@ -13,7 +13,7 @@ router.get('/service', rejectUnauthenticated, (req, res) => {
 
   pool.query(queryText)
   .then((dbRes) => {
-    console.log("response from db:", dbRes);
+    // console.log("response from db:", dbRes);
     res.status(200).send(dbRes.rows);
   })
   .catch((err) => {
@@ -39,7 +39,8 @@ router.post('/service', rejectUnauthenticated, (req, res) => {
 
   pool.query(queryText, [typeToInsert])
   .then((dbRes) => {
-    console.log("response from db:", dbRes);
+
+    // console.log("response from db:", dbRes);
     res.sendStatus(201);
   })
   .catch((err) => {
@@ -56,7 +57,7 @@ router.get('/loss', rejectUnauthenticated, (req, res) => {
 
   pool.query(queryText)
   .then((dbRes) => {
-    console.log("response from db:", dbRes);
+    // console.log("response from db:", dbRes);
     res.status(200).send(dbRes.rows);
   })
   .catch((err) => {
@@ -82,7 +83,7 @@ router.post('/loss', rejectUnauthenticated, (req, res) => {
 
   pool.query(queryText, [typeToInsert])
   .then((dbRes) => {
-    console.log("response from db:", dbRes);
+    // console.log("response from db:", dbRes);
     res.sendStatus(201);
   })
   .catch((err) => {
