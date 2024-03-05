@@ -9,9 +9,10 @@ import Typography from '@mui/joy/Typography';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 
-export default function RentalCard({ name, verified_by, mission, logo, city, state, phone }) {
+export default function RentalCard({ name, verified_by, mission, logo, city, state, phone, url }) {
   return (
 
 // ! Joy Styling
@@ -89,6 +90,13 @@ export default function RentalCard({ name, verified_by, mission, logo, city, sta
           <Typography level="body-xs" startDecorator={<PhoneIcon />}>
             {phone}
           </Typography>
+
+          {/* if website provided, render link */}
+          {url && 
+            <Link level="body-xs" href={url} target='_blank' rel="noreferrer noopener" startDecorator={<OpenInNewIcon />}>
+              Website
+            </Link>
+          }
         </Stack>
         <Stack direction="row">
           <Typography

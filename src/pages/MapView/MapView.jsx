@@ -88,11 +88,12 @@ function MapView() {
                 // verified_by id. 0 is falsey so this works for conditional rendering
                 verified_by={org.verified_by}
                 // address id is a placeholder -- waiting on joins
-                city={org.address_id}
-                state={org.address_id}
+                city={org.city}
+                state={org.state}
                 phone={org.phone}
                 mission={org.mission}
                 logo={org.logo}
+                url={org.url}
               />
             ))}
             
