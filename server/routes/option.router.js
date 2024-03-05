@@ -50,6 +50,26 @@ router.post('/service', rejectUnauthenticated, (req, res) => {
 });
 
 /**
+ * PUT update type of service
+ */
+router.put('/service/:id', rejectUnauthenticated, (req, res) => {
+  console.log(req.params, req.body)
+
+  const typeToInsert = req.body.service;
+  
+  const queryText = `UPDATE service_type SET "name"=$2 WHERE id=$1;`;
+
+  pool.query(queryText, [ req.params.id, typeToInsert])
+  .then((dbRes) => {
+    res.sendStatus(200);
+  })
+  .catch((err) => {
+    console.error("[inside option.router PUT service type] Error in this route", err);
+    res.sendStatus(500);
+  })
+});
+
+/**
  * GET all types of loss
  */
 router.get('/loss', rejectUnauthenticated, (req, res) => {
