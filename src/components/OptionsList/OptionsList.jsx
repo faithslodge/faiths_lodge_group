@@ -29,6 +29,7 @@ const OptionsList = ({ text, options, keyText }) => {
     >
       <Box sx={{ display: "flex", p: 1 }}>
         <TextField size="small" sx={{width: 250}} label={text} value={textInput} onChange={(event) => setInput(event.target.value)} />
+
         <Button variant="contained" onClick={handleAdd}>
           ＋
         </Button>
