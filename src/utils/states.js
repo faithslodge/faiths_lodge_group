@@ -51,4 +51,4 @@ const usStates = [
     { name: 'WYOMING', abbreviation: 'WY' }
 ]
 
-module.exports = usStates
+export default usStates;
