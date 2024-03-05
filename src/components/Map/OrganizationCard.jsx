@@ -11,7 +11,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import VerifiedIcon from '@mui/icons-material/Verified';
 
 
-export default function RentalCard({ name, verified, mission, logo, city, state, phone }) {
+export default function RentalCard({ name, verified_by, mission, logo, city, state, phone }) {
   return (
 
 // ! Joy Styling
@@ -70,7 +70,7 @@ export default function RentalCard({ name, verified, mission, logo, city, state,
                 sx={{ color: 'text.primary' }}
               >
                 {name}
-                {verified && <VerifiedIcon />}
+                {verified_by && <VerifiedIcon />}
               </Link>
             </Typography>
           </div>
