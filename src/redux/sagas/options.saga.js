@@ -16,7 +16,7 @@ function* fetchLosses() {
 function* addLoss(action) {
   try {
     yield axios.post("/api/option/loss", action.payload);
-    yield put("FETCH_LOSSES");
+    yield put({type: "FETCH_LOSSES"});
   } catch (error) {
     console.log("Error with addLoss:", error);
   }
@@ -36,7 +36,7 @@ function* fetchServices() {
 function* addService(action) {
     try {
       yield axios.post("/api/option/service", action.payload);
-      yield put("FETCH_SERVICES");
+      yield put({type: "FETCH_SERVICES"});
     } catch (error) {
       console.log("Error with addService:", error);
     }

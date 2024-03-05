@@ -1,19 +1,44 @@
 import { Box, Button, List, TextField } from "@mui/material";
 import OptionListItem from "../../components/OptionListItem/OptionListItem";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 
-const OptionsList = ({text}) => {
+
+// options prop is the store values passed into OptionsList
+  // could be Type of Loss or Services
+const OptionsList = ({ text, options, keyText }) => {
+  const [textInput, setInput] = useState(""); 
+  const dispatch = useDispatch();
+  const path = keyText.toUpperCase()
+
+  const handleAdd = () => {
+    dispatch({type: `ADD_${path}`, payload: {[keyText] : textInput}});
+    setInput("");
+  };
+
   return (
-    <Box sx={{ width: "fit-content", display: "flex", flexDirection:"column", justifyContent: "center", p:5 }}>
-      <Box sx={{display: "flex", p: 1}}>
-        <TextField size="small" label={text}/>
-        <Button variant="contained">＋</Button>
+    <Box
+      sx={{
+        width: "fit-content",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        p: 5,
+      }}
+    >
+      <Box sx={{ display: "flex", p: 1 }}>
+        <TextField size="small" label={text} value={textInput} onChange={(event) => setInput(event.target.value)} />
+        <Button variant="contained" onClick={handleAdd}>
+          ＋
+        </Button>
       </Box>
 
-      <Box sx={{border: "1px solid black", borderRadius: 3}}>
+      <Box sx={{ border: "1px solid black", borderRadius: 3 }}>
         <List>
-          <OptionListItem text="Item 1" />
-          <OptionListItem text="Item 2" />
-          <OptionListItem text="Item 3" />
+          {options?.map((option) => (
+            <OptionListItem text={option?.name} key={option?.id} />
+          ))}
         </List>
       </Box>
     </Box>

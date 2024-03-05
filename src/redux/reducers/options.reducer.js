@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 
 // Reducer to store types of losses
-const lossesReducer = (state = {}, action) => {
+const lossesReducer = (state = [], action) => {
   switch (action.type) {
     case "SET_LOSSES":
       return action.payload;
@@ -11,7 +11,7 @@ const lossesReducer = (state = {}, action) => {
 };
 
 // Reducer to store types of services
-const servicesReducer = (state = {}, action) => {
+const servicesReducer = (state = [], action) => {
   switch (action.type) {
     case "SET_SERVICES":
       return action.payload;
