@@ -22,6 +22,16 @@ function* addLoss(action) {
   }
 }
 
+//Update Loss in DB
+function* updateLoss(action) {
+  try {
+    yield axios.put(`/api/option/loss/${action.payload.id}`, action.payload);
+    yield put({type: "FETCH_LOSSES"});
+  } catch (error) {
+    console.log("Error with updateLoss:", error);
+  }
+}
+
 // ----- Services Provided Functions -----
 function* fetchServices() {
   try {
@@ -46,7 +56,8 @@ function* optionsSaga() {
   yield takeLatest("FETCH_LOSSES", fetchLosses);
   yield takeLatest("FETCH_SERVICES", fetchServices);
   yield takeLatest("ADD_LOSS", addLoss);
-  yield takeLatest("ADD_SERVICE", addService)
+  yield takeLatest("ADD_SERVICE", addService);
+  yield takeLatest("UPDATE_LOSS", updateLoss);
 }
 
 export default optionsSaga;

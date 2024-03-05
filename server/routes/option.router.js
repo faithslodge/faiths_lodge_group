@@ -92,4 +92,24 @@ router.post('/loss', rejectUnauthenticated, (req, res) => {
   })
 });
 
+/**
+ * PUT update type of loss
+ */
+router.put('/loss/:id', rejectUnauthenticated, (req, res) => {
+  console.log(req.params, req.body)
+
+  const typeToInsert = req.body.loss;
+  
+  const queryText = `UPDATE loss_type SET "name"=$2 WHERE id=$1;`;
+
+  pool.query(queryText, [ req.params.id, typeToInsert])
+  .then((dbRes) => {
+    res.sendStatus(200);
+  })
+  .catch((err) => {
+    console.error("[inside option.router PUT loss type] Error in this route", err);
+    res.sendStatus(500);
+  })
+});
+
 module.exports = router;
