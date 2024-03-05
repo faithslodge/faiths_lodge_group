@@ -1,5 +1,10 @@
 import React, { useEffect } from "react";
-import { HashRouter as Router, Redirect, Route, Switch } from "react-router-dom";
+import {
+  HashRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -17,11 +22,10 @@ import RegisterPage from "../RegisterPage/RegisterPage";
 import ListView from "../ListView/ListView";
 import MapView from "../MapView/MapView";
 import AddOrg from "../AddOrg/AddOrg";
-import OptionsPage from "../OptionsPage/OptionsPage"
+import OptionsPage from "../OptionsPage/OptionsPage";
 import OrgInfo from "../OrgInfo/OrgInfo";
 
 import "./App.css";
-
 
 // Test comment
 
