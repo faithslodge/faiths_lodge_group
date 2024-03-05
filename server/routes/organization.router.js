@@ -28,7 +28,8 @@ router.get('/', rejectUnauthenticated, (req, res) => {
  * POST make new organization
  */
 router.post('/', rejectUnauthenticated, async (req, res) => {
-  const { organizationDetails, user } = req.body;
+  const { organizationDetails } = req.body;
+  const { user } = req;
   try {
     const dbRes = await postOrganizationWithDetails(organizationDetails, user);
     res.status(201).send(dbRes); // send the dbRes?
