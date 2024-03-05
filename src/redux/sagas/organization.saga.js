@@ -9,7 +9,7 @@ function* fetchOrganization() {
          headers: { "Content-Type": "application/json" },
          withCredentials: true,
       };
-      const response = yield axios.get("/api/patient", config);
+      const response = yield axios.get("/api/organization", config);
       console.log(response.data);
       yield put({ type: "SET_ORGANIZATION", payload: response.data[0] });
    } catch (error) {
@@ -20,7 +20,7 @@ function* createOrganization(action) {
    try {
 
       // passes the username and password from the payload to the server
-      yield axios.post('/api/patient', action.payload);
+      yield axios.post('/api/organization', action.payload);
 
       // automatically log a user in after registration
       yield put({ type: 'GET_ORGANIZATION' });
@@ -36,7 +36,7 @@ function* editOrganization(action) {
    try {
 
       // passes the username and password from the payload to the server
-      yield axios.put('/api/patient', action.payload);
+      yield axios.put('/api/organization', action.payload);
 
       // automatically log a user in after registration
       yield put({ type: 'GET_ORGANIZATION' });
