@@ -1,5 +1,4 @@
-import { Box, Button, List, TextField } from "@mui/material";
-import OptionListItem from "../../components/OptionListItem/OptionListItem";
+import { Box } from "@mui/material";
 import OptionsList from "../../components/OptionsList/OptionsList";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
