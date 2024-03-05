@@ -17,8 +17,8 @@ const OptionsPage = () => {
 
   return (
     <Box sx={{ width: "fit-content", display: "flex", flexDirection: "row", margin: "auto", alignItems: "flex-start" }}>
-      <OptionsList text="Type of Loss" options={losses}/>
-      <OptionsList text="Services" options={services} />
+      <OptionsList text="Type of Loss" options={losses} keyText="loss" />
+      <OptionsList text="Services" options={services} keyText="service" />
     </Box>
   );
 };
