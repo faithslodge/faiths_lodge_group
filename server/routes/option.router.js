@@ -39,6 +39,7 @@ router.post('/service', rejectUnauthenticated, (req, res) => {
 
   pool.query(queryText, [typeToInsert])
   .then((dbRes) => {
+
     // console.log("response from db:", dbRes);
     res.sendStatus(201);
   })

@@ -36,8 +36,6 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
     console.error("[inside organization.router POST new org] Error in this route", err);
     res.sendStatus(500);
   }
-
-
 });
 
 module.exports = router;
