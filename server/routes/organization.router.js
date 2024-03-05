@@ -2,6 +2,7 @@ const express = require('express');
 const {
   rejectUnauthenticated
 } = require("../modules/authentication-middleware");
+const postOrganizationWithDetails = require("../modules/organizationService");
 const pool = require('../modules/pool');
 const router = express.Router();
 
@@ -24,10 +25,19 @@ router.get('/', rejectUnauthenticated, (req, res) => {
 });
 
 /**
- * POST route template
+ * POST make new organization
  */
-router.post('/', (req, res) => {
-  // POST route code here
+router.post('/', rejectUnauthenticated, async (req, res) => {
+  const { organizationDetails, user } = req.body;
+  try {
+    const dbRes = await postOrganizationWithDetails(organizationDetails, user);
+    res.status(201).send(dbRes); // send the dbRes?
+  } catch (err) {
+    console.error("[inside organization.router POST new org] Error in this route", err);
+    res.sendStatus(500);
+  }
+
+
 });
 
 module.exports = router;
