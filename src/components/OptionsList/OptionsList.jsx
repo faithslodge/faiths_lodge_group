@@ -28,7 +28,8 @@ const OptionsList = ({ text, options, keyText }) => {
       }}
     >
       <Box sx={{ display: "flex", p: 1 }}>
-        <TextField size="small" label={text} value={textInput} onChange={(event) => setInput(event.target.value)} />
+        <TextField size="small" sx={{width: 250}} label={text} value={textInput} onChange={(event) => setInput(event.target.value)} />
+
         <Button variant="contained" onClick={handleAdd}>
           ＋
         </Button>
@@ -37,7 +38,7 @@ const OptionsList = ({ text, options, keyText }) => {
       <Box sx={{ border: "1px solid black", borderRadius: 3 }}>
         <List>
           {options?.map((option) => (
-            <OptionListItem text={option?.name} key={option?.id} />
+            <OptionListItem text={option?.name} id={option?.id} key={option?.id} path={path}/>
           ))}
         </List>
       </Box>

@@ -2,21 +2,19 @@
 import axios from "axios";
 import { put, takeLatest } from "redux-saga/effects";
 
-// worker Saga: will be fired on "FETCH_USER" actions
-function* fetchOrganization() {
+// fetch org data from org router
+function* fetchOrganizations() {
    try {
-      const config = {
-         headers: { "Content-Type": "application/json" },
-         withCredentials: true,
-      };
-      const response = yield axios.get("/api/patient", config);
-      console.log(response.data);
-      yield put({ type: "SET_ORGANIZATION", payload: response.data[0] });
+      const response = yield axios.get("/api/organization");
+      console.log("FETCH ORG response data:", response.data);
+      yield put({ type: "SET_ORGANIZATIONS", payload: response.data });
    } catch (error) {
-      console.log("User get request failed", error);
+      console.log("Organizations GET request failed:", error);
    }
 }
-function* createOrganization(action) {
+
+
+function* createOrganizations(action) {
    try {
 
       // passes the username and password from the payload to the server
@@ -32,7 +30,7 @@ function* createOrganization(action) {
    }
 }
 
-function* editOrganization(action) {
+function* editOrganizations(action) {
    try {
 
       // passes the username and password from the payload to the server
@@ -48,10 +46,10 @@ function* editOrganization(action) {
    }
 }
 
-function* organizationSaga() {
-   yield takeLatest("GET_ORGANIZATION", fetchOrganization);
-   yield takeLatest("CREATE_ORGANIZATION", createOrganization);
-   yield takeLatest("EDIT_ORGANIZATION", editOrganization);
+function* organizationsSaga() {
+   yield takeLatest("FETCH_ORGANIZATIONS", fetchOrganizations);
+   yield takeLatest("CREATE_ORGANIZATION", createOrganizations);
+   yield takeLatest("EDIT_ORGANIZATION", editOrganizations);
 }
 
-export default organizationSaga;
+export default organizationsSaga;

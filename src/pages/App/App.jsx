@@ -21,11 +21,12 @@ import LoginPage from "../LoginPage/LoginPage";
 import RegisterPage from "../RegisterPage/RegisterPage";
 import ListView from "../ListView/ListView";
 import MapView from "../MapView/MapView";
-import AddOrg from "../AddOrg/AddOrg";
 import OptionsPage from "../OptionsPage/OptionsPage";
 import OrgInfo from "../OrgInfo/OrgInfo";
+import AddOrgPage from "../AddOrgPage/AddOrgPage";
 
 import "./App.css";
+
 
 // Test comment
 
@@ -79,7 +80,7 @@ function App() {
 
           {/* Route for AddOrg */}
           <ProtectedRoute exact path="/addorg">
-            <AddOrg />
+            <AddOrgPage />
           </ProtectedRoute>
 
           {/* Route for OptionsPage */}

@@ -1,7 +1,9 @@
 import { put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 
-// ----- Type of Loss functions -----
+/*
+------------------------------ Type of Loss functions ------------------------------
+*/
 // Fetch losses from DB
 function* fetchLosses() {
   try {
@@ -16,13 +18,26 @@ function* fetchLosses() {
 function* addLoss(action) {
   try {
     yield axios.post("/api/option/loss", action.payload);
-    yield put({type: "FETCH_LOSSES"});
+    yield put({ type: "FETCH_LOSSES" });
   } catch (error) {
     console.log("Error with addLoss:", error);
   }
 }
 
-// ----- Services Provided Functions -----
+//Update Loss in DB
+function* updateLoss(action) {
+  try {
+    yield axios.put(`/api/option/loss/${action.payload.id}`, action.payload);
+    yield put({ type: "FETCH_LOSSES" });
+  } catch (error) {
+    console.log("Error with updateLoss:", error);
+  }
+}
+
+/*
+ ------------------------------ Services Provided Functions ------------------------------
+*/
+
 function* fetchServices() {
   try {
     const servicesResponse = yield axios.get("/api/option/service");
@@ -34,19 +49,31 @@ function* fetchServices() {
 
 //Add Service to DB
 function* addService(action) {
-    try {
-      yield axios.post("/api/option/service", action.payload);
-      yield put({type: "FETCH_SERVICES"});
-    } catch (error) {
-      console.log("Error with addService:", error);
-    }
+  try {
+    yield axios.post("/api/option/service", action.payload);
+    yield put({ type: "FETCH_SERVICES" });
+  } catch (error) {
+    console.log("Error with addService:", error);
   }
+}
+
+//Update Service in DB
+function* updateService(action) {
+  try {
+    yield axios.put(`/api/option/service/${action.payload.id}`, action.payload);
+    yield put({ type: "FETCH_SERVICES" });
+  } catch (error) {
+    console.log("Error with updateService:", error);
+  }
+}
 
 function* optionsSaga() {
   yield takeLatest("FETCH_LOSSES", fetchLosses);
   yield takeLatest("FETCH_SERVICES", fetchServices);
   yield takeLatest("ADD_LOSS", addLoss);
-  yield takeLatest("ADD_SERVICE", addService)
+  yield takeLatest("ADD_SERVICE", addService);
+  yield takeLatest("UPDATE_LOSS", updateLoss);
+  yield takeLatest("UPDATE_SERVICE", updateService);
 }
 
 export default optionsSaga;
