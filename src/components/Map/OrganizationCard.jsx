@@ -11,7 +11,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import VerifiedIcon from '@mui/icons-material/Verified';
 
 
-export default function RentalCard({ name, verified, mission, image, cityState, phone }) {
+export default function RentalCard({ name, verified, mission, logo, city, state, phone }) {
   return (
 
 // ! Joy Styling
@@ -48,7 +48,7 @@ export default function RentalCard({ name, verified, mission, image, cityState, 
             minWidth: { sm: 100 },
           }}
         >
-          <img alt="" src={image} />
+          <img alt="" src={logo} />
         </AspectRatio>
       </CardOverflow>
 
@@ -83,7 +83,7 @@ export default function RentalCard({ name, verified, mission, image, cityState, 
           sx={{ my: 0.25 }}
         >
           <Typography level="body-xs" startDecorator={<LocationOnIcon />}>
-            {cityState}
+            {city}, {state}
           </Typography>
 
           <Typography level="body-xs" startDecorator={<PhoneIcon />}>

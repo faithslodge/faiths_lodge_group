@@ -7,8 +7,15 @@ import Stack from '@mui/joy/Stack';
 import OrganizationCard from '../../components/Map/OrganizationCard';
 import Search from '../../components/Map/Search';
 import Filters from '../../components/Map/Filters';
+import axios from 'axios';
+
+// TODO
+// 1. .map(organizations) OrganizationCards with following props: name, verified, mission, logo, city, state, phone
+// 2. add the following filters: verified, type of loss, services
+// 3. verify all filters work
 
 function MapView() {
+  
   return (
     <CssVarsProvider disableTransitionOnChange>
       {/* Main Container */}
@@ -57,12 +64,26 @@ function MapView() {
             <OrganizationCard
               name="Faiths Lodge"
               verified={true}
-              cityState="Minneapolis, MN"
+              city="Minneapolis"
+              state="MN"
               phone="(123) 456-7890"
               mission="Lorem ipsum la zell uffda sieta homen latilda"
-              image="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400"
+              logo="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400"
             />
-
+            
+           {/* {store.map((org) => (
+              <OrganizationCard
+                key={org.id}
+                name={org.name}
+                verified={org.verified}
+                city={org.city}
+                state={org.state}
+                phone={org.phone}
+                mission={org.phone}
+                logo={org.logo}
+              />
+            ))} */}
+            
           </Stack>
         </Stack>
       </Box>
