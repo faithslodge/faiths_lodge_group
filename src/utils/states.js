@@ -52,5 +52,5 @@ const usStates = [
 ]
 
 
+export default usStates;
 
-export default usStates
