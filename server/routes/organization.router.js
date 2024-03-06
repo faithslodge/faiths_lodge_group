@@ -2,7 +2,7 @@ const express = require('express');
 const {
   rejectUnauthenticated
 } = require("../modules/authentication-middleware");
-const postOrganizationWithDetails = require("../modules/organizationService");
+const postOrganizationWithDetails = require("../modules/organizationPostService");
 const pool = require('../modules/pool');
 const router = express.Router();
 
@@ -77,10 +77,26 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
   const { organizationDetails } = req.body;
   const { user } = req;
   try {
-    const dbRes = await postOrganizationWithDetails(organizationDetails);
-    res.status(201).send(dbRes); // send the dbRes?
+    await postOrganizationWithDetails(organizationDetails);
+    res.sendStatus(201);
   } catch (err) {
     console.error("[inside organization.router POST new org] Error in this route", err);
+    res.sendStatus(500);
+  }
+});
+
+/**
+ * PUT edit organization
+ */
+router.put('/:id', rejectUnauthenticated, async (req, res) => {
+  const organizationId = req.params.id;
+  const { organizationDetails } = req.body;
+  const { user } = req;
+  try {
+
+    res.sendStatus(204);
+  } catch (err) {
+    console.error("[inside organization.router PUT edit org] Error in this route", err);
     res.sendStatus(500);
   }
 });
