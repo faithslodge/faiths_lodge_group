@@ -13,27 +13,142 @@ import {
   Grid,
 } from "@mui/material";
 
-const AddOrgDetails = () => {
-  const [orgName, setOrgName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [streetAddress, setStreetAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zip, setZip] = useState("");
-  const [country, setCountry] = useState("");
-  const [lossType, setLossType] = useState([]);
-  const [services, setServices] = useState([]);
-  const dispatch = useDispatch();
-  const submit = (event) => {
-    event.preventDefault();
-    const NewOrg = {};
-    dispatch({
-      type: "CREATE_ORGANIZATION",
-      payload: NewOrg,
-    });
-  };
-    /*
+const AddOrgDetails = ({
+  setOrgName,
+  setServiceExplanation,
+  setMission,
+  setNotes,
+  setUrl,
+  setPhone,
+  setEmail,
+  setForProfit,
+  setFaithBased,
+  setHasRetreatCenter,
+  setLinkedInUrl,
+  setFacebookUrl,
+  setInstagramUrl,
+}) => {
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={6}>
+        <TextField
+          id="name"
+          label="Organisation Name"
+          fullWidth
+          onChange={(event) => setOrgName(event.target.value)}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          id="serviceExplanation"
+          label="Service Explanation"
+          fullWidth
+          onChange={(event) => setServiceExplanation(event.target.value)}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          id="mission"
+          label="Mission"
+          fullWidth
+          onChange={(event) => setMission(event.target.value)}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          id="notes"
+          label="Notes"
+          fullWidth
+          onChange={(event) => setNotes(event.target.value)}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          id="url"
+          label="URL"
+          fullWidth
+          onChange={(event) => setUrl(event.target.value)}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          id="phone"
+          label="Phone"
+          type="tel"
+          fullWidth
+          onChange={(event) => setPhone(event.target.value)}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          id="email"
+          label="Email"
+          type="email"
+          fullWidth
+          onChange={(event) => setEmail(event.target.value)}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={(event) => setForProfit(event.target.checked)}
+            />
+          }
+          label="For Profit"
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={(event) => setFaithBased(event.target.checked)}
+            />
+          }
+          label="Faith Based"
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={(event) => setHasRetreatCenter(event.target.checked)}
+            />
+          }
+          label="Has Retreat Center"
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          id="linkedInUrl"
+          label="LinkedIn URL"
+          fullWidth
+          onChange={(event) => setLinkedInUrl(event.target.value)}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          id="facebookUrl"
+          label="Facebook URL"
+          fullWidth
+          onChange={(event) => setFacebookUrl(event.target.value)}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <TextField
+          id="instagramUrl"
+          label="Instagram URL"
+          fullWidth
+          onChange={(event) => setInstagramUrl(event.target.value)}
+        />
+      </Grid>
+    </Grid>
+  );
+};
+
+export default AddOrgDetails;
+
+/*
     dispatch({
         type: 'CREATE_ORG',
         payload: {
@@ -93,91 +208,3 @@ const AddOrgDetails = () => {
 
 <-------- ABOVE IS FORMAT FOR A ORG CONTACT IN DISPATCH --------->
     */
-    
-
-  return (
-    <form className="add_org">
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <TextField
-            id="name"
-            label="Organisation Name"
-            fullWidth
-            value={orgName}
-            onChange={(event) => setOrgName(event.target.value)}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            id="phone"
-            label="Phone"
-            type="tel"
-            fullWidth
-            value={phone}
-            onChange={(event) => setPhone(event.target.value)}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            id="email"
-            label="Email"
-            type="email"
-            fullWidth
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            id="street"
-            label="Street Address"
-            fullWidth
-            value={streetAddress}
-            onChange={(event) => setStreetAddress(event.target.value)}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            id="city"
-            label="City"
-            fullWidth
-            value={city}
-            onChange={(event) => setCity(event.target.value)}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            id="state"
-            label="State"
-            fullWidth
-            value={state}
-            onChange={(event) => setState(event.target.value)}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            id="zip"
-            label="Zip"
-            fullWidth
-            value={zip}
-            onChange={(event) => setZip(event.target.value)}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            id="country"
-            label="Country"
-            fullWidth
-            value={country}
-            onChange={(event) => setCountry(event.target.value)}
-          />
-        </Grid>
-      </Grid>
-      <Button variant="contained" color="primary">
-        Add
-      </Button>
-    </form>
-  );
-};
-
-export default AddOrgDetails;
