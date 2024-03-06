@@ -12,51 +12,51 @@ const router = express.Router();
 router.get('/', rejectUnauthenticated, (req, res) => {
   
   const queryText = `
-          SELECT
-            o.id,
-            o.name,
-            o.verified_by,
-            o.service_explanation,
-            o.logo,
-            o.mission,
-            o.notes,
-            o.url,
-            o.phone,
-            o.email,
-            o.for_profit,
-            o.faith_based,
-            o.has_retreat_center,
-            o.linked_in_url,
-            o.facebook_url,
-            o.instagram_url,
-            o.date_verified,
-            a.address_line_1,
-            a.address_line_2,
-            a.city,
-            a.state,
-            a.zip_code,
-            a.latitude,
-            a.longitude,
-            lt.agg_loss_type,
-            st.agg_service_type
-        FROM organization o
-        JOIN address a ON o.address_id = a.id
-        LEFT JOIN (
-            SELECT
-                loss_type_by_organization.organization_id,
-                STRING_AGG(loss_type.name, ', ') AS agg_loss_type
-            FROM loss_type_by_organization
-            JOIN loss_type ON loss_type_by_organization.loss_id = loss_type.id
-            GROUP BY loss_type_by_organization.organization_id
-        ) lt ON o.id = lt.organization_id
-        LEFT JOIN (
-            SELECT
-                service_type_by_organization.organization_id,
-                STRING_AGG(service_type.name, ', ') AS agg_service_type
-            FROM service_type_by_organization
-            JOIN service_type ON service_type_by_organization.service_id = service_type.id
-            GROUP BY service_type_by_organization.organization_id
-        ) st ON o.id = st.organization_id;
+                  SELECT
+                    o.id,
+                    o.name,
+                    o.verified_by,
+                    o.service_explanation,
+                    o.logo,
+                    o.mission,
+                    o.notes,
+                    o.url,
+                    o.phone,
+                    o.email,
+                    o.for_profit,
+                    o.faith_based,
+                    o.has_retreat_center,
+                    o.linked_in_url,
+                    o.facebook_url,
+                    o.instagram_url,
+                    o.date_verified,
+                    a.address_line_1,
+                    a.address_line_2,
+                    a.city,
+                    a.state,
+                    a.zip_code,
+                    a.latitude,
+                    a.longitude,
+                    lt.agg_loss_type,
+                    st.agg_service_type
+                  FROM organization AS o
+                  JOIN address a ON o.address_id = a.id
+                  LEFT JOIN (
+                    SELECT
+                        loss_type_by_organization.organization_id,
+                        array_agg(json_build_object('id', loss_type.id, 'name', loss_type.name)) AS agg_loss_type
+                    FROM loss_type_by_organization
+                    JOIN loss_type ON loss_type_by_organization.loss_id = loss_type.id
+                    GROUP BY loss_type_by_organization.organization_id
+                  ) lt ON o.id = lt.organization_id
+                  LEFT JOIN (
+                    SELECT
+                        service_type_by_organization.organization_id,
+                        array_agg(json_build_object('id', service_type.id, 'name', service_type.name)) AS agg_service_type
+                    FROM service_type_by_organization
+                    JOIN service_type ON service_type_by_organization.service_id = service_type.id
+                    GROUP BY service_type_by_organization.organization_id
+                  ) st ON o.id = st.organization_id;
   `;
 
   pool.query(queryText)
