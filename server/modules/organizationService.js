@@ -29,14 +29,16 @@ const postOrganizationWithDetails = async (organizationDetails) => {
     } = organizationDetails.org;
 
     // arrays of strings
-    const lossTypes = organizationDetails.lossTypes;
-    const serviceTypes = organizationDetails.serviceTypes;
+    const lossTypeIds = organizationDetails.lossTypes;
+    const serviceTypesIds = organizationDetails.serviceTypes;
 
     // array of objects
     const contacts = organizationDetails.contacts;
 
-    // define DB connection
+    // define DB connection, and ids from created entities
     let connection;
+    let addressId;
+    let organizationId;
 
     try {
         // convert city and state to latitude and longitude
@@ -51,7 +53,7 @@ const postOrganizationWithDetails = async (organizationDetails) => {
 
         const latitude = geojson.data.features[0].geometry.coordinates[0];
         const longitude = geojson.data.features[0].geometry.coordinates[1];
-        console.log("latitude:", latitude);
+        // console.log("latitude:", latitude);
         // console.log("longitude:", longitude);
 
         // establish connection to DB
@@ -81,9 +83,9 @@ const postOrganizationWithDetails = async (organizationDetails) => {
             longitude,
         ]);
 
-        const addressId = addressQueryRes.rows[0].id;
+        addressId = addressQueryRes.rows[0].id;
 
-        console.log("addressId:", addressId);
+        // console.log("addressId:", addressId);
 
         // INSERT organization
         const organizationQuery = `INSERT INTO "organization"
@@ -126,60 +128,96 @@ const postOrganizationWithDetails = async (organizationDetails) => {
             addressId,
         ]);
 
-        
-        // the newly created organization ID
-        const organizationId = organizationQueryRes.rows[0].id;
-        console.log("organizationId", organizationId);
-        
-        // convert the service names to their IDs
-        const allServices = `SELECT * FROM "service_type";`;
-        const allServicesRes = await connection.query(allServices);
-        console.log("allServicesRes:", allServicesRes.rows);
+        organizationId = organizationQueryRes.rows[0].id;
+        // console.log("organizationId", organizationId);
 
-        const serviceIDs = allServicesRes.rows.map((service) => {
-            if (serviceTypes.includes(service.name)) {
-                return service.id;
-            }
-            return;
-        })
-        .filter((id) => id != undefined);
+        const serviceParameterQueryString = serviceTypesIds
+            .map((id, i) => {
+                // make two query parameter placeholders per loop
+                return `($${i * 2 + 1}, $${i * 2 + 2})`;
+            })
+            .join(", ");
 
-        console.log("serviceIDs:", serviceIDs);
+        // format for multi-line SQL insert
+        serviceQueryParams = serviceTypesIds.flatMap((id) => [
+            organizationId,
+            id,
+        ]);
+        // console.log("serviceQueryParams:", serviceQueryParams);
 
-        const serviceParameterQueryString = serviceTypes
-        .map((serviceType, i) => {
-            // make two query parameter placeholders per loop
-            return `($${i * 2 + 1}, $${i * 2 + 2})`;
-        })
-        .join(", ");
-
-        serviceQueryParams = serviceIDs.flatMap((id) => [organizationId, id]);
-        console.log("serviceQueryParams:", serviceQueryParams);
-        
-        
         const serviceTypeQuery = `INSERT INTO "service_type_by_organization"
-        (
-            "organization_id",
-            "service_id"
-            ) VALUES ${serviceParameterQueryString};`;
+                                        (
+                                            "organization_id",
+                                            "service_id"
+                                            ) VALUES ${serviceParameterQueryString};`;
 
         // INSERT service_type_by_organization(s)
-        const serviceTypeQueryResponse = await connection.query(serviceTypeQuery, serviceQueryParams);
-        console.log("serviceTypeQueryResponse.rows:", serviceTypeQueryResponse.rows);
+        const serviceTypeQueryResponse = await connection.query(
+            serviceTypeQuery,
+            serviceQueryParams
+        );
+        // console.log("serviceTypeQueryResponse.rows:", serviceTypeQueryResponse.rows);
+
         // INSERT loss_type_by_organization(s)
+        const lossParameterQueryString = lossTypeIds
+            .map((lossType, i) => {
+                // make two query parameter placeholders per loop
+                return `($${i * 2 + 1}, $${i * 2 + 2})`;
+            })
+            .join(", ");
 
-        
-        // const lossParameterQueryString = lossTypes
-        //     .map((lossType, i) => {
-        //         return `($${i + 1})`;
-        //     })
-        //     .join(", ");
+        // format for multi-line SQL insert
+        lossQueryParams = lossTypeIds.flatMap((id) => [organizationId, id]);
 
-        // const lossTypeQuery = `INSERT INTO "loss_type"`;
-        
-        
+        const lossTypeQuery = `INSERT INTO "loss_type_by_organization"
+                                    (
+                                        "organization_id",
+                                        "loss_id"
+                                        ) VALUES ${serviceParameterQueryString};`;
+
+        // INSERT loss_type_by_organization(s)
+        const lossTypeQueryResponse = await connection.query(
+            lossTypeQuery,
+            lossQueryParams
+        );
+
         // LOOP through contacts:
         // INSERT organization_contact
+        const contactParameterQueryString = contacts
+            .map((contact, i) => {
+                // make six query parameter placeholders per loop
+                return `($${i * 6 + 1}, $${i * 6 + 2}, $${i * 6 + 3}, $${
+                    i * 6 + 4
+                }, $${i * 6 + 5}, $${i * 6 + 6})`;
+            })
+            .join(", ");
+
+        console.log("contactParameterQueryString:", contactParameterQueryString);
+
+        // format for multi-line SQL insert
+        contactQueryParams = contacts.flatMap((contact) => [
+            contact.firstName,
+            contact.lastName,
+            contact.phone,
+            contact.email,
+            contact.title,
+            organizationId,
+        ]);
+
+        const contactQuery = `INSERT INTO "organization_contact"
+            (
+                "first_name",
+                "last_name",
+                "phone",
+                "email",
+                "title",
+                "organization_id"
+                ) VALUES ${contactParameterQueryString};`;
+
+        const contactQueryResponse = await connection.query(
+            contactQuery,
+            contactQueryParams
+        );
 
         connection.query("COMMIT;");
     } catch (err) {
