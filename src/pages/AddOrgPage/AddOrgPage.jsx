@@ -113,6 +113,7 @@ const AddOrgPage = () => {
         serviceTypes={serviceTypes}
         setServiceTypes={setServiceTypes}
       /> */}
+      <AddOrgOptions />
 
 
       <Button variant="contained" color="primary" onClick={submit}>

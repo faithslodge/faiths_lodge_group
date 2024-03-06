@@ -1,88 +1,35 @@
-import React from "react";
-import react, { useState } from "react";
-import { useDispatch } from "react-redux";
-import {
-  TextField,
-  Checkbox,
-  FormControlLabel,
-  Button,
-  FormGroup,
-  FormControl,
-  FormLabel,
-  Grid,
-} from "@mui/material";
+import { Grid, Button } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import OptionCheckMenu from "../OptionCheckMenu/OptionCheckMenu";
 
-const AddOrgOptions = ({
-  lossTypes,
-  setLossTypes,
-  serviceTypes,
-  setServiceTypes,
-}) => {
+const AddOrgOptions = () => {
+  const [lossTypes, setLossType] = useState([]);
+  const [sericeTypes, setServices] = useState([]);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({ type: "FETCH_LOSSES" });
+    dispatch({ type: "FETCH_SERVICES" });
+  }, []);
+
+  const losses = useSelector((store) => store?.options.lossesReducer);
+  const services = useSelector((store) => store?.options.servicesReducer);
+
+  // Need to dispatch lossTypes and serviceTypes
+  const handleLog = () => {
+    console.log(lossTypes, sericeTypes);
+  };
+
   return (
-    <Grid container spacing={2}>
+    <Grid container>
+      <Button onClick={handleLog}>Log</Button>
       <Grid item xs={12}>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">Select Type of Loss:</FormLabel>
-          <FormGroup>
-            {/* Loss Types */}
-            {lossTypes.map((lossType, index) => (
-              <FormControlLabel
-                key={index}
-                control={
-                  <Checkbox
-                    //id={⁠lossType_${index}⁠}
-                    name="loss_type[]"
-                    id={`lossType_${index}`}
-                    value={lossType}
-                    checked={lossTypes.includes(lossType)}
-                    onChange={(event) => {
-                      if (event.target.checked) {
-                        setLossTypes([...lossTypes, lossType]);
-                      } else {
-                        setLossTypes(
-                          lossTypes.filter((type) => type !== lossType)
-                        );
-                      }
-                    }}
-                  />
-                }
-                label={lossType}
-              />
-            ))}
-          </FormGroup>
-        </FormControl>
+        <OptionCheckMenu options={losses} optTypes={lossTypes} setOptTypes={setLossType} text={"Loss"} />
       </Grid>
       <Grid item xs={12}>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">Select Service Types:</FormLabel>
-          <FormGroup>
-            {/* Service Types */}
-            {serviceTypes.map((serviceType, index) => (
-              <FormControlLabel
-                key={index}
-                control={
-                  <Checkbox
-                    
-                    id={`serviceType_${index}`}
-                    name="service_types[]"
-                    value={serviceType}
-                    checked={serviceTypes.includes(serviceType)}
-                    onChange={(event) => {
-                      if (event.target.checked) {
-                        setServiceTypes([...serviceTypes, serviceType]);
-                      } else {
-                        setServiceTypes(
-                          serviceTypes.filter((type) => type !== serviceType)
-                        );
-                      }
-                    }}
-                  />
-                }
-                label={serviceType}
-              />
-            ))}
-          </FormGroup>
-        </FormControl>
+        <OptionCheckMenu options={services} optTypes={sericeTypes} setOptTypes={setServices} text={"Service"} />
       </Grid>
     </Grid>
   );
