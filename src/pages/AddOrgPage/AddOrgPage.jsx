@@ -2,6 +2,7 @@
 import React from "react";
 import AddOrgDetails from "../../components/AddOrgDetails/AddOrgDetails";
 import AddOrgAddress from "../../components/AddOrgAddress/AddOrgAddress";
+import AddOrgOptions from "../../components/AddOrgOptions/AddOrgOptions";
 
 const AddOrgPage = () => {
   /*
@@ -69,6 +70,7 @@ const AddOrgPage = () => {
     <>
       <AddOrgDetails />
       <AddOrgAddress />
+      <AddOrgOptions />
     </>
   );
 };
