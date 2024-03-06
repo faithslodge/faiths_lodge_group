@@ -77,7 +77,7 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
   const { organizationDetails } = req.body;
   const { user } = req;
   try {
-    const dbRes = await postOrganizationWithDetails(organizationDetails, user);
+    const dbRes = await postOrganizationWithDetails(organizationDetails);
     res.status(201).send(dbRes); // send the dbRes?
   } catch (err) {
     console.error("[inside organization.router POST new org] Error in this route", err);

@@ -1,9 +1,7 @@
 const pool = require("./pool");
 const axios = require("axios");
 
-const postOrganizationWithDetails = async (organizationDetails, user) => {
-    console.log("user obj:", user);
-    
+const postOrganizationWithDetails = async (organizationDetails) => {
     const {
         addressLineOne,
         addressLineTwo,
@@ -53,7 +51,7 @@ const postOrganizationWithDetails = async (organizationDetails, user) => {
 
         const latitude = geojson.data.features[0].geometry.coordinates[0];
         const longitude = geojson.data.features[0].geometry.coordinates[1];
-        // console.log("latitude:", latitude);
+        console.log("latitude:", latitude);
         // console.log("longitude:", longitude);
 
         // establish connection to DB
@@ -86,6 +84,7 @@ const postOrganizationWithDetails = async (organizationDetails, user) => {
         const addressId = addressQueryRes.rows[0].id;
 
         console.log("addressId:", addressId);
+
         // INSERT organization
         const organizationQuery = `INSERT INTO "organization"
                                         (
@@ -103,9 +102,11 @@ const postOrganizationWithDetails = async (organizationDetails, user) => {
                                             "linked_in_url",
                                             "facebook_url",
                                             "instagram_url",
-                                            "address_id",
-                                            "verified_by"
-                                        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16);`;
+                                            "address_id"
+                                        ) VALUES (
+                                            $1, $2, $3, $4, $5, $6, $7, $8, $9,
+                                            $10, $11, $12, $13, $14, $15
+                                            ) RETURNING id;`;
 
         const organizationQueryRes = await connection.query(organizationQuery, [
             name,
@@ -123,14 +124,60 @@ const postOrganizationWithDetails = async (organizationDetails, user) => {
             facebookUrl,
             instagramUrl,
             addressId,
-            user.id
         ]);
 
-        console.log("added org, res:", organizationQueryRes);
-        // LOOP through serviceTypes:
-        // INSERT service_type_by_organization
-        // LOOP through lossTypes:
-        // INSERT loss_type_by_organization
+        
+        // the newly created organization ID
+        const organizationId = organizationQueryRes.rows[0].id;
+        console.log("organizationId", organizationId);
+        
+        // convert the service names to their IDs
+        const allServices = `SELECT * FROM "service_type";`;
+        const allServicesRes = await connection.query(allServices);
+        console.log("allServicesRes:", allServicesRes.rows);
+
+        const serviceIDs = allServicesRes.rows.map((service) => {
+            if (serviceTypes.includes(service.name)) {
+                return service.id;
+            }
+            return;
+        })
+        .filter((id) => id != undefined);
+
+        console.log("serviceIDs:", serviceIDs);
+
+        const serviceParameterQueryString = serviceTypes
+        .map((serviceType, i) => {
+            // make two query parameter placeholders per loop
+            return `($${i * 2 + 1}, $${i * 2 + 2})`;
+        })
+        .join(", ");
+
+        serviceQueryParams = serviceIDs.flatMap((id) => [organizationId, id]);
+        console.log("serviceQueryParams:", serviceQueryParams);
+        
+        
+        const serviceTypeQuery = `INSERT INTO "service_type_by_organization"
+        (
+            "organization_id",
+            "service_id"
+            ) VALUES ${serviceParameterQueryString};`;
+
+        // INSERT service_type_by_organization(s)
+        const serviceTypeQueryResponse = await connection.query(serviceTypeQuery, serviceQueryParams);
+        console.log("serviceTypeQueryResponse.rows:", serviceTypeQueryResponse.rows);
+        // INSERT loss_type_by_organization(s)
+
+        
+        // const lossParameterQueryString = lossTypes
+        //     .map((lossType, i) => {
+        //         return `($${i + 1})`;
+        //     })
+        //     .join(", ");
+
+        // const lossTypeQuery = `INSERT INTO "loss_type"`;
+        
+        
         // LOOP through contacts:
         // INSERT organization_contact
 
