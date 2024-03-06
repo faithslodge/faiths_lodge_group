@@ -1,42 +1,69 @@
-import * as React from 'react';
-import AspectRatio from '@mui/joy/AspectRatio';
-import Card from '@mui/joy/Card';
-import CardContent from '@mui/joy/CardContent';
-import CardOverflow from '@mui/joy/CardOverflow';
-import Link from '@mui/joy/Link';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import PhoneIcon from '@mui/icons-material/Phone';
-import VerifiedIcon from '@mui/icons-material/Verified';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import * as React from "react";
+import AspectRatio from "@mui/joy/AspectRatio";
+import Card from "@mui/joy/Card";
+import CardContent from "@mui/joy/CardContent";
+import CardOverflow from "@mui/joy/CardOverflow";
+import Link from "@mui/joy/Link";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import PhoneIcon from "@mui/icons-material/Phone";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { useState } from "react";
+import { Fade } from '@mui/material';
 
+import MapModal from "./MapModal/MapModal";
+import { useRef } from "react";
 
-export default function RentalCard({ name, verified_by, mission, logo, city, state, phone, url }) {
+function OrganizationCard({
+  name,
+  verified_by,
+  mission,
+  logo,
+  city,
+  state,
+  phone,
+  url,
+  org
+}) {
+
+  // Modal Open/Close state
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  // const ref = useRef(null)
+
+  
+  // Used MUI Joy Map Template. Left default styling options.
+  // Will refactor for readability at a later time
+  // ! Data is passed as props into CardContent (scroll down to CardContent)
   return (
+    // Main Card
+    <>
 
-// ! Joy Styling
     <Card
       variant="outlined"
       orientation="horizontal"
       sx={{
-        bgcolor: 'neutral.softBg',
-        display: 'flex',
-        flexDirection: { xs: 'column', sm: 'row' },
-        '&:hover': {
-          boxShadow: 'lg',
-          borderColor: 'var(--joy-palette-neutral-outlinedDisabledBorder)',
+        bgcolor: "neutral.softBg",
+        display: "flex",
+        flexDirection: { xs: "column", sm: "row" },
+        "&:hover": {
+          boxShadow: "lg",
+          borderColor: "var(--joy-palette-neutral-outlinedDisabledBorder)",
         },
       }}
     >
-
+      {/* Content Overflow Handling */}
       <CardOverflow
         sx={{
-          mr: { xs: 'var(--CardOverflow-offset)', sm: 0 },
-          mb: { xs: 0, sm: 'var(--CardOverflow-offset)' },
-          '--AspectRatio-radius': {
-            xs: 'calc(var(--CardOverflow-radius) - var(--variant-borderWidth, 0px)) calc(var(--CardOverflow-radius) - var(--variant-borderWidth, 0px)) 0 0',
-            sm: 'calc(var(--CardOverflow-radius) - var(--variant-borderWidth, 0px)) 0 0 calc(var(--CardOverflow-radius) - var(--variant-borderWidth, 0px))',
+          mr: { xs: "var(--CardOverflow-offset)", sm: 0 },
+          mb: { xs: 0, sm: "var(--CardOverflow-offset)" },
+          "--AspectRatio-radius": {
+            xs: "calc(var(--CardOverflow-radius) - var(--variant-borderWidth, 0px)) calc(var(--CardOverflow-radius) - var(--variant-borderWidth, 0px)) 0 0",
+            sm: "calc(var(--CardOverflow-radius) - var(--variant-borderWidth, 0px)) 0 0 calc(var(--CardOverflow-radius) - var(--variant-borderWidth, 0px))",
           },
         }}
       >
@@ -53,8 +80,7 @@ export default function RentalCard({ name, verified_by, mission, logo, city, sta
         </AspectRatio>
       </CardOverflow>
 
-
-      {/* Card Content */}
+      {/* !!! MAIN Card Content !!! */}
       <CardContent>
         <Stack
           spacing={1}
@@ -63,16 +89,17 @@ export default function RentalCard({ name, verified_by, mission, logo, city, sta
           alignItems="flex-start"
         >
           <div>
-            <Typography level="title-md">
-              <Link
-                overlay
+            <Typography level="title-md" >
+              {/* <Link
+                // overlay
+                // onClick={promptModal}
                 underline="none"
-                href="#interactive-card"
-                sx={{ color: 'text.primary' }}
-              >
+                sx={{ color: "text.primary" }}
+              > */}
                 {name}
                 {verified_by && <VerifiedIcon />}
-              </Link>
+                <button onClick={handleOpen}>Modal</button>
+              {/* </Link> */}
             </Typography>
           </div>
         </Stack>
@@ -92,21 +119,30 @@ export default function RentalCard({ name, verified_by, mission, logo, city, sta
           </Typography>
 
           {/* if website provided, render link */}
-          {url && 
-            <Link level="body-xs" href={url} target='_blank' rel="noreferrer noopener" startDecorator={<OpenInNewIcon />}>
+          {url && (
+            <Link
+              level="body-xs"
+              href={url}
+              target="_blank"
+              rel="noreferrer noopener"
+              startDecorator={<OpenInNewIcon />}
+            >
               Website
             </Link>
-          }
+          )}
         </Stack>
         <Stack direction="row">
-          <Typography
-            level="title-sm"
-            sx={{ display: 'flex', gap: 1 }}
-          >
+          <Typography level="title-sm" sx={{ display: "flex", gap: 1 }}>
             {mission}
           </Typography>
         </Stack>
       </CardContent>
     </Card>
+
+    <MapModal open={open} handleClose={handleClose} />
+    </>
   );
 }
+
+
+export default OrganizationCard

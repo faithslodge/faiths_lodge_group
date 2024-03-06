@@ -24,11 +24,9 @@ function MapView() {
   
   const dispatch = useDispatch()
   const store = useSelector((store) => store.organizations)
-  
 
   return (
-    <CssVarsProvider disableTransitionOnChange>
-      {/* Main Container */}
+    <>
       <Box
         component="main"
         sx={{
@@ -69,9 +67,8 @@ function MapView() {
         <Stack spacing={2} sx={{ px: { xs: 2, md: 4 }, pt: 2, minHeight: 0 }}>
           <Filters />
           <Stack spacing={2} sx={{ overflow: 'auto' }}>
-
-            {/* Map DB info as props */}
-            <OrganizationCard
+            
+            {/* <OrganizationCard
               name="Faiths Lodge"
               verified={true}
               city="Minneapolis"
@@ -79,7 +76,7 @@ function MapView() {
               phone="(123) 456-7890"
               mission="Lorem ipsum la zell uffda sieta homen latilda"
               logo="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400"
-            />
+            /> */}
             
            {store?.map((org) => (
               <OrganizationCard
@@ -94,13 +91,14 @@ function MapView() {
                 mission={org.mission}
                 logo={org.logo}
                 url={org.url}
+                org={org}
               />
             ))}
-            
+
           </Stack>
         </Stack>
       </Box>
-    </CssVarsProvider>
+    </>
   );
 }
 
