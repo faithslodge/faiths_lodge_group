@@ -3,7 +3,7 @@ import Autocomplete from '@mui/joy/Autocomplete';
 import AutocompleteOption from '@mui/joy/AutocompleteOption';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
-import usStates from '../../utils/states'
+import usStates from '../../../utils/states'
 
 export default function StateSelector() {
   return (

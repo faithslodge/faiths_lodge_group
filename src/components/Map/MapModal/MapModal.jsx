@@ -59,9 +59,26 @@ const MapModal = ({ open, handleClose, org }) => {
           <Grid item xs={6} pr={1}>
 
             {/* Org Name, Verified Badge, View/Edit Btn */}
-            <Stack direction="row" alignItems="center" gap={1}>
-              <Typography variant="h5" component="h2">{org.name}</Typography>
-              {org.verified_by && <VerifiedIcon fontSize='medium' sx={{color: 'rgba(217, 144, 33, 1)'}} />}
+            <Stack direction="row" alignItems="center" gap={2}>
+              <Typography variant="h5" component="h2">
+                {org.name}
+              </Typography>
+              
+              {org.verified_by && (
+                <Stack spacing={1} direction="row" alignItems="center" ml={1}>
+                  <Typography
+                    variant="caption"
+                    fontStyle="italic"
+                    sx={{ fontSize: 14, color: "rgba(217, 144, 33, 1)" }}
+                  >
+                    Verified
+                  </Typography>
+                  <VerifiedIcon
+                    fontSize="medium"
+                    sx={{ color: "rgba(217, 144, 33, 1)" }}
+                  />
+                </Stack>
+              )}
             </Stack>
 
             <br />
@@ -78,16 +95,19 @@ const MapModal = ({ open, handleClose, org }) => {
                 <b>Phone:</b> {org.phone}<br />
               </Typography>
 
+              {/* Email */}
               <Stack direction="row" alignItems="center" gap={1}>
                 <Typography variant="body2" fontWeight='bold'>Email: </Typography>
                 <Link variant="body2" href={`mailto:${org.email}`} target="_blank" rel="noreferrer noopener">{org.email}</Link>
               </Stack>
 
+              {/* Website */}
               <Stack direction="row" alignItems="center" gap={1}>
                 <Typography variant="body2" fontWeight='bold'>Website:</Typography>
                 <Link variant="body2" href={org.url} target="_blank" rel="noreferrer noopener">{org.url}</Link>
               </Stack>
 
+              {/* Retreat?, Faith Based?, For Profit? */}
               <Typography variant="body2">
                 <b>Has Retreat?:</b> {boolCheck(org.has_retreat_center)}<br />
                 <b>Faith Based?:</b> {boolCheck(org.faith_based)}<br />
@@ -144,7 +164,9 @@ const MapModal = ({ open, handleClose, org }) => {
               </Stack>
               <Stack direction="row" alignItems="center" gap={1} pl={2}>
                 <Email fontSize='xsmall' />
-                <Link fontSize={12}>example@example.com</Link>
+                <Link variant="body2" href={`mailto:example@example.com`}  fontSize={12} target="_blank" rel="noreferrer noopener">
+                  example@example.com
+                </Link>
               </Stack>
             
             <br />
