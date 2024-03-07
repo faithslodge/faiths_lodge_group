@@ -130,7 +130,7 @@ async function postServiceTypeByOrganization(
     organizationId,
     connection
 ) {
-    if (serviceTypesIds.length > 0) {
+    if (serviceTypesIds && serviceTypesIds.length > 0) {
     // generate $1, $2, ... for SQL query string
     const serviceParameterQueryString = serviceTypesIds
         .map((id, i) => {
@@ -157,7 +157,7 @@ async function postLossTypeByOrganization(
     organizationId,
     connection
 ) {
-    if (lossTypeIds.length > 0) {
+    if (lossTypeIds && lossTypeIds.length > 0) {
     const lossParameterQueryString = lossTypeIds
         .map((lossType, i) => {
             // make two query parameter placeholders per loop
@@ -180,7 +180,7 @@ async function postLossTypeByOrganization(
 }
 
 async function postContacts(contacts, organizationId, connection) {
-    if (contacts.length > 0) {
+    if ( contacts && contacts.length > 0) {
     const contactParameterQueryString = contacts
         .map((contact, i) => {
             const updatedContactObject = {...contact, organizationId};
