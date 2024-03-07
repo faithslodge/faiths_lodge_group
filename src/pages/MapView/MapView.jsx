@@ -28,6 +28,13 @@ function MapView() {
     setOrgList(filter);
   };
 
+  const searchFunction = () => {
+    const newList = storeOrgs.filter((org) => {
+      return search.toLowerCase() === "" ? org : org.name.toLowerCase().includes(search);
+    });
+    setOrgList(newList);
+  };
+
   return (
     <>
       <Box
@@ -49,7 +56,7 @@ function MapView() {
             borderColor: "divider",
           }}
         >
-          <Search search={search} setSearch={setSearch} />
+          <Search search={search} setSearch={setSearch} searchFunction={searchFunction} />
         </Stack>
 
         {/* !--- insert map into this Box, replace background img ---! */}
@@ -70,17 +77,13 @@ function MapView() {
 
           {/* Organization Cards */}
           <Stack spacing={2} sx={{ overflow: "auto" }}>
-            {orgList
-              ?.filter((org) => {
-                return search.toLowerCase() === "" ? org : org.name.toLowerCase().includes(search);
-              })
-              .map((org) => (
-                <OrganizationCard
-                  key={org.id}
-                  logo="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400"
-                  org={org}
-                />
-              ))}
+            {orgList.map((org) => (
+              <OrganizationCard
+                key={org.id}
+                logo="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400"
+                org={org}
+              />
+            ))}
           </Stack>
         </Stack>
       </Box>
