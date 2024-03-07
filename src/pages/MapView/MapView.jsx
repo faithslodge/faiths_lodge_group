@@ -81,17 +81,7 @@ function MapView() {
            {store?.map((org) => (
               <OrganizationCard
                 key={org.id}
-                name={org.name}
-                // verified_by id. 0 is falsey so this works for conditional rendering
-                verified_by={org.verified_by}
-                // address id is a placeholder -- waiting on joins
-                city={org.city}
-                state={org.state}
-                phone={org.phone}
-                mission={org.mission}
-                // logo={org.logo}
                 logo="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400"
-                url={org.url}
                 org={org}
               />
             ))}
