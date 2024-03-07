@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { CssVarsProvider } from '@mui/joy/styles';
-import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import Stack from '@mui/joy/Stack';
 
 import OrganizationCard from '../../components/Map/OrganizationCard/OrganizationCard';
 import Search from '../../components/Map/Filters/Search';
 import Filters from '../../components/Map/Filters/Filters';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
@@ -17,13 +15,18 @@ import { useSelector } from 'react-redux';
 // 3. verify all filters work
 
 function MapView() {
-  // useEffect to run fetch org on load
-  useEffect(() => {
-    dispatch({type:'FETCH_ORGANIZATIONS'})
-  }, [])
-  
+
   const dispatch = useDispatch()
-  const store = useSelector((store) => store.organizations)
+  const orgs = useSelector((store) => store.organizations)
+  const [orgList, setOrgList] = useState([])
+
+  useEffect(() => {
+    setOrgList(orgs)
+  }, [orgs])
+  
+  const filter = (orgs) => {
+    setOrgList(orgs)
+  }
 
   return (
     <>
@@ -78,7 +81,7 @@ function MapView() {
               logo="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400"
             /> */}
             
-           {store?.map((org) => (
+           {orgList?.map((org) => (
               <OrganizationCard
                 key={org.id}
                 logo="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400"
