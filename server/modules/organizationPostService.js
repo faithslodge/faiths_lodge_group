@@ -130,6 +130,7 @@ async function postServiceTypeByOrganization(
     organizationId,
     connection
 ) {
+    if (serviceTypesIds.length > 0) {
     // generate $1, $2, ... for SQL query string
     const serviceParameterQueryString = serviceTypesIds
         .map((id, i) => {
@@ -140,7 +141,6 @@ async function postServiceTypeByOrganization(
 
     // format values for multi-line SQL insert
     serviceQueryParams = serviceTypesIds.flatMap((id) => [organizationId, id]);
-    if (serviceTypesIds.length > 0) {
         const serviceTypeQuery = `INSERT INTO "service_type_by_organization"
                                         (
                                             "organization_id",
@@ -157,6 +157,7 @@ async function postLossTypeByOrganization(
     organizationId,
     connection
 ) {
+    if (lossTypeIds.length > 0) {
     const lossParameterQueryString = lossTypeIds
         .map((lossType, i) => {
             // make two query parameter placeholders per loop
@@ -167,7 +168,6 @@ async function postLossTypeByOrganization(
     // format for multi-line SQL insert
     lossQueryParams = lossTypeIds.flatMap((id) => [organizationId, id]);
 
-    if (lossTypeIds.length > 0) {
         const lossTypeQuery = `INSERT INTO "loss_type_by_organization"
                                     (
                                         "organization_id",
@@ -180,6 +180,7 @@ async function postLossTypeByOrganization(
 }
 
 async function postContacts(contacts, organizationId, connection) {
+    if (contacts.length > 0) {
     const contactParameterQueryString = contacts
         .map((contact, i) => {
             const updatedContactObject = {...contact, organizationId};
@@ -197,7 +198,6 @@ async function postContacts(contacts, organizationId, connection) {
     // format for multi-line SQL insert
     contactQueryParams = contacts.flatMap((contact) => [...Object.values(contact), organizationId]);
 
-    if (contacts.length > 0) {
         const contactQuery = `INSERT INTO "organization_contact"
             (
                 "first_name",
