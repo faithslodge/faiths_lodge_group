@@ -8,6 +8,7 @@ import Filters from "../../components/Map/Filters/Filters";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import MapBox from "../../components/Map/MapBox/MapBox";
 
 // TODO
 // 1. .map(organizations) OrganizationCards with following props: name, verified, mission, logo, city, state, phone
@@ -58,23 +59,20 @@ function MapView() {
             display: { xs: "none", md: "flex" },
             backgroundColor: "background.level1",
             backgroundSize: "cover",
-            backgroundImage:
-              'url("https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3731&q=80")',
           }}
-        />
+        >
+          <MapBox orgList={orgList} />
+        </Box>
 
         {/* Left Panel with Filters and Org Cards */}
         <Stack spacing={2} sx={{ px: { xs: 2, md: 4 }, pt: 2, minHeight: 0 }}>
-
           <Filters />
-          
+
           {/* Organization Cards */}
           <Stack spacing={2} sx={{ overflow: "auto" }}>
             {orgList
               ?.filter((org) => {
-                return search.toLowerCase() === ""
-                  ? org
-                  : org.name.toLowerCase().includes(search);
+                return search.toLowerCase() === "" ? org : org.name.toLowerCase().includes(search);
               })
               .map((org) => (
                 <OrganizationCard
