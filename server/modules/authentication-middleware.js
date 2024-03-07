@@ -10,4 +10,12 @@ const rejectUnauthenticated = (req, res, next) => {
   }
 };
 
-module.exports = { rejectUnauthenticated };
+const rejectUnauthorized = (req, res, next) => {
+  if (req.user.isAdmin) {
+    next();
+  } else {
+    res.sendStatus(403);
+  }
+}
+
+module.exports = { rejectUnauthenticated, rejectUnauthorized };
