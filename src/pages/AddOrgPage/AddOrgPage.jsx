@@ -20,6 +20,7 @@ const AddOrgPage = () => {
   const [linkedInUrl, setLinkedInUrl] = useState("");
   const [facebookUrl, setFacebookUrl] = useState("");
   const [instagramUrl, setInstagramUrl] = useState("");
+  const [logo, setLogo] = useState(null);
 
   // Organization Address State
   const [streetAddress, setStreetAddress] = useState("");
@@ -47,6 +48,7 @@ const AddOrgPage = () => {
         org: {
           name: orgName,
           serviceExplanation,
+          logo,
           mission,
           notes,
           url,
