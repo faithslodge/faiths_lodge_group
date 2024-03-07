@@ -1,8 +1,9 @@
+import MapBox from "../../components/Map/MapBox/MapBox"
 
 const TestPage = ()=>{
 
     return (
-        <h1>Test page working</h1>
+        <MapBox />
     )
 }
 

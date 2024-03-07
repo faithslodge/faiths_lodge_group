@@ -16,11 +16,13 @@
     "cookie-session": "^2.0.0",
     "dotenv": "^16.0.3",
     "express": "^4.17.1",
+    "leaflet": "^1.9.4",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "pg": "^8.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-leaflet": "^4.2.1",
     "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.4",
     "redux": "^4.1.2",
@@ -35,6 +37,7 @@
     "test": "vitest"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.8",
     "@vitejs/plugin-react": "^4.2.1",
     "nodemon": "^2.0.4",
     "vite": "^5.0.7",
