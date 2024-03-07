@@ -79,6 +79,9 @@ async function convertCityStateToLatLong(city, state) {
 }
 
 async function postAddress(connection, address) {
+    const addressEntityForDatabase = {...address};
+    delete addressEntityForDatabase.state;
+    
     const addressQuery = `INSERT INTO "address"
                                     (
                                         "address_line_1",
@@ -89,15 +92,7 @@ async function postAddress(connection, address) {
                                         "latitude",
                                         "longitude"
                                         ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;`;
-    const addressQueryRes = await connection.query(addressQuery, [
-        address.addressLineOne,
-        address.addressLineTwo,
-        address.city,
-        address.stateAbbreviation,
-        address.zipCode,
-        address.latitude,
-        address.longitude,
-    ]);
+    const addressQueryRes = await connection.query(addressQuery, Object.values(addressEntityForDatabase));
 
     return addressQueryRes.rows[0].id;
 }
@@ -125,23 +120,7 @@ async function postOrganization(connection, organization) {
                                         $10, $11, $12, $13, $14, $15
                                         ) RETURNING id;`;
 
-    const organizationQueryRes = await connection.query(organizationQuery, [
-        organization.name,
-        organization.serviceExplanation,
-        organization.logo,
-        organization.mission,
-        organization.notes,
-        organization.url,
-        organization.phone,
-        organization.email,
-        organization.forProfit,
-        organization.faithBased,
-        organization.hasRetreatCenter,
-        organization.linkedInUrl,
-        organization.facebookUrl,
-        organization.instagramUrl,
-        organization.addressId,
-    ]);
+    const organizationQueryRes = await connection.query(organizationQuery, Object.values(organization));
 
     return organizationQueryRes.rows[0].id;
 }
@@ -203,22 +182,20 @@ async function postLossTypeByOrganization(
 async function postContacts(contacts, organizationId, connection) {
     const contactParameterQueryString = contacts
         .map((contact, i) => {
-            // make six query parameter placeholders per loop
-            return `($${i * 6 + 1}, $${i * 6 + 2}, $${i * 6 + 3}, $${
-                i * 6 + 4
-            }, $${i * 6 + 5}, $${i * 6 + 6})`;
+            const updatedContactObject = {...contact, organizationId};
+            const contactObjKeyCount = Object.keys(updatedContactObject).length;
+            return `($${i * contactObjKeyCount + 1}, $${
+                i * contactObjKeyCount + 2
+            }, $${i * contactObjKeyCount + 3}, $${
+                i * contactObjKeyCount + 4
+            }, $${i * contactObjKeyCount + 5}, $${
+                i * contactObjKeyCount + 6
+            })`;
         })
         .join(", ");
 
     // format for multi-line SQL insert
-    contactQueryParams = contacts.flatMap((contact) => [
-        contact.firstName,
-        contact.lastName,
-        contact.phone,
-        contact.email,
-        contact.title,
-        organizationId,
-    ]);
+    contactQueryParams = contacts.flatMap((contact) => [...Object.values(contact), organizationId]);
 
     if (contacts.length > 0) {
         const contactQuery = `INSERT INTO "organization_contact"
