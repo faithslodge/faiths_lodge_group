@@ -26,6 +26,7 @@ import OrgInfo from "../OrgInfo/OrgInfo";
 import AddOrgPage from "../AddOrgPage/AddOrgPage";
 
 import "./App.css";
+import TestPage from "../TestPage/TestPage";
 
 
 // Test comment
@@ -54,6 +55,15 @@ function App() {
             path="/about"
           >
             <AboutPage />
+          </Route>
+
+          // ! Need to delete test page before release
+          <Route
+            // page for testing components
+            exact
+            path="/test"
+          >
+            <TestPage />
           </Route>
 
           {/* For protected routes, the view could show one of several things on the same route.

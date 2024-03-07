@@ -4,9 +4,9 @@ import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import Stack from '@mui/joy/Stack';
 
-import OrganizationCard from '../../components/Map/OrganizationCard';
-import Search from '../../components/Map/Search';
-import Filters from '../../components/Map/Filters';
+import OrganizationCard from '../../components/Map/OrganizationCard/OrganizationCard';
+import Search from '../../components/Map/Filters/Search';
+import Filters from '../../components/Map/Filters/Filters';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -81,16 +81,7 @@ function MapView() {
            {store?.map((org) => (
               <OrganizationCard
                 key={org.id}
-                name={org.name}
-                // verified_by id. 0 is falsey so this works for conditional rendering
-                verified_by={org.verified_by}
-                // address id is a placeholder -- waiting on joins
-                city={org.city}
-                state={org.state}
-                phone={org.phone}
-                mission={org.mission}
-                logo={org.logo}
-                url={org.url}
+                logo="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400"
                 org={org}
               />
             ))}
