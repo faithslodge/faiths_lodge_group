@@ -68,32 +68,29 @@ const MapModal = ({ open, handleClose, org }) => {
             <br />
 
             {/* Org Info */}
-            <Typography variant="body2">
-              <Typography variant='overline' sx={overlineFont}><b>Organization Info</b></Typography><br />
-              <b>Mission:</b> {org.mission}<br />
-              <b>Address: </b>
-                {org.address_line_1 && `${org.address_line_1}, `}
-                {org.address_line_2 && `${org.address_line_2}, `}
-                {org.city && `${org.city}, `}{org.state && `${org.state} `}
-                {org.zip && `${org.phone}`}<br />
-              <b>Phone:</b> {org.phone}<br />
-              <b>Email:</b> {org.email}<br />
-              <b>Website:</b> {org.url}<br />
-              <b>Has Retreat?:</b> {boolCheck(org.has_retreat_center)}<br />
-              <b>Faith Based?:</b> {boolCheck(org.faith_based)}<br />
-              <b>For Profit?:</b> {boolCheck(org.for_profit)}<br />
-
+            <Typography variant='overline' sx={overlineFont}><b>Organization Info</b></Typography><br />
+              <Typography variant="body2">
+                <b>Mission:</b> {org.mission}<br />
+                <b>Address: </b>
+                  {org.address_line_1 && `${org.address_line_1}, `}
+                  {org.address_line_2 && `${org.address_line_2}, `}
+                  {org.city && `${org.city}, `}{org.state && `${org.state} `}
+                  {org.zip && `${org.phone}`}<br />
+                <b>Phone:</b> {org.phone}<br />
+                <b>Email:</b> {org.email}<br />
+                <b>Website:</b> {org.url}<br />
+                <b>Has Retreat?:</b> {boolCheck(org.has_retreat_center)}<br />
+                <b>Faith Based?:</b> {boolCheck(org.faith_based)}<br />
+                <b>For Profit?:</b> {boolCheck(org.for_profit)}<br />
+              </Typography>
 
               <br />
 
               {/* Notes */}
               <Typography variant='overline' sx={overlineFont}><b>Notes</b></Typography><br />
-              <Typography variant="body2">
-                {org.notes}<br />
-              </Typography>
-
-              <br />
-            </Typography>
+                <Typography variant="body2">
+                  {org.notes}<br />
+                </Typography>
           </Grid>
 
           {/* Right Side */}
@@ -109,7 +106,7 @@ const MapModal = ({ open, handleClose, org }) => {
             {/* Type of Loss */}
             <Typography variant='overline' sx={overlineFont}><b>Type of Loss</b></Typography>
               <Typography variant="body2" component="ul" pl={2}>
-                <li>{org.agg_loss_type}</li>
+                {org.agg_loss_type?.map((losstype)=>(<li key={losstype.id}>{losstype.name}</li>))}
               </Typography>
 
             <br />
@@ -117,7 +114,7 @@ const MapModal = ({ open, handleClose, org }) => {
             {/* Service Types */}
             <Typography variant='overline' sx={overlineFont}><b>Services</b></Typography>
               <Typography variant="body2" component="ul" pl={2}>
-                <li>{org.agg_service_type}</li>
+                {org.agg_service_type?.map((service)=>(<li key={service.id}>{service.name}</li>))}
               </Typography>
 
             <br />
@@ -132,7 +129,7 @@ const MapModal = ({ open, handleClose, org }) => {
               </Stack>
               <Stack direction="row" alignItems="center" gap={1}>
                 <Email fontSize='xsmall' />
-                <Link variant="body2" fontSize={12}>example@example.com</Link>
+                <Link fontSize={12}>example@example.com</Link>
               </Stack>
             <br />
 
