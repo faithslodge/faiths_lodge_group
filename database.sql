@@ -61,7 +61,7 @@ CREATE TABLE "organization_contact" (
     "email" VARCHAR(200),
     "title" VARCHAR(15),
     "organization_id" INT NOT NULL,
-    FOREIGN KEY ("organization_id") REFERENCES "organization" ("id")
+    FOREIGN KEY ("organization_id") REFERENCES "organization" ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "loss_type" (
@@ -78,16 +78,16 @@ CREATE TABLE "loss_type_by_organization" (
     "id" SERIAL PRIMARY KEY,
     "organization_id" INT NOT NULL,
     "loss_id" INT NOT NULL,
-    FOREIGN KEY ("organization_id") REFERENCES "organization" ("id"),
-    FOREIGN KEY ("loss_id") REFERENCES "loss_type" ("id")
+    FOREIGN KEY ("organization_id") REFERENCES "organization" ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("loss_id") REFERENCES "loss_type" ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "service_type_by_organization" (
     "id" SERIAL PRIMARY KEY,
     "organization_id" INT NOT NULL,
     "service_id" INT NOT NULL,
-    FOREIGN KEY ("organization_id") REFERENCES "organization" ("id"),
-    FOREIGN KEY ("service_id") REFERENCES "service_type" ("id")
+    FOREIGN KEY ("organization_id") REFERENCES "organization" ("id") ON DELETE CASCADE,
+    FOREIGN KEY ("service_id") REFERENCES "service_type" ("id") ON DELETE CASCADE
 );
 
 -------------------------------------------------- END CREATE TABLE -------------------------------------------------
