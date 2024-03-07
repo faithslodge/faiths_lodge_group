@@ -63,9 +63,12 @@ function MapView() {
           }}
         />
 
-        {/* Organization Cards */}
+        {/* Left Panel with Filters and Org Cards */}
         <Stack spacing={2} sx={{ px: { xs: 2, md: 4 }, pt: 2, minHeight: 0 }}>
+
           <Filters />
+          
+          {/* Organization Cards */}
           <Stack spacing={2} sx={{ overflow: "auto" }}>
             {orgList
               ?.filter((org) => {
