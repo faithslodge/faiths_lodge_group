@@ -109,4 +109,37 @@ router.put('/:id', rejectUnauthenticated, async (req, res) => {
   }
 });
 
+/**
+ * DELETE organization
+ */
+router.delete('/:id', rejectUnauthenticated, async (req, res) => {
+  const organizationId = req.params.id;
+  // need to delete address
+  // then delete org_contact
+  // then delete organization
+  // then delete service_type_by_organization
+  // then delete loss_type_by_organization
+  const { user } = req;
+  try {
+    let connection = await pool.connect();
+
+    // Begin transaction
+    connection.query("BEGIN;");
+    const addressDelQuery = `DELETE FROM address
+                                WHERE address.id = organization.address_id;`
+
+
+    // Commit transaction
+    connection.query("COMMIT;");
+    res.sendStatus(204);
+  } catch (err) {
+    // Cancel transaction
+    connection.query("ROLLBACK;");
+    console.error("[inside organization.router PUT edit org] Error in this route", err);
+    res.sendStatus(500);
+  } finally {
+    connection.release();
+  } 
+});
+
 module.exports = router;
