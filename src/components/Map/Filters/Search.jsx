@@ -5,12 +5,14 @@ import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import Typography from '@mui/joy/Typography';
+import { useState } from 'react';
 
-export default function Search() {
+export default function Search({ search, setSearch}) {
+
   return (
     <div>
       <Stack spacing={1} direction="row" sx={{ mb: 2 }}>
-        <FormControl sx={{ flex: 1 }}>
+        <FormControl onChange={(e) => setSearch(e.target.value)} sx={{ flex: 1 }}>
           <Input
             placeholder="Search by Organization Name"
             startDecorator={<SearchRoundedIcon />}
