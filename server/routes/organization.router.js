@@ -114,20 +114,26 @@ router.put('/:id', rejectUnauthenticated, async (req, res) => {
  */
 router.delete('/:id', rejectUnauthenticated, async (req, res) => {
   const organizationId = req.params.id;
-  // need to delete address
-  // then delete org_contact
-  // then delete organization
-  // then delete service_type_by_organization
-  // then delete loss_type_by_organization
-  const { user } = req;
+  let connection;
   try {
-    let connection = await pool.connect();
-
+    connection = await pool.connect();
+    
     // Begin transaction
     connection.query("BEGIN;");
+    
+    const organizationDelQuery = `DELETE FROM organization
+    WHERE organization.id = $1 RETURNING organization.address_id;`;
+    
+    // delete organization
+    const organizationDelResponse = await connection.query(organizationDelQuery, [organizationId]);
+    
+    const addressId = organizationDelResponse.rows[0].address_id;
+    
+    // then delete address
     const addressDelQuery = `DELETE FROM address
-                                WHERE address.id = organization.address_id;`
+                                WHERE address.id = $1;`
 
+    const addressDelResponse = await connection.query(addressDelQuery, [addressId]);
 
     // Commit transaction
     connection.query("COMMIT;");
