@@ -4,9 +4,9 @@ import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import Stack from '@mui/joy/Stack';
 
-import OrganizationCard from '../../components/Map/OrganizationCard';
-import Search from '../../components/Map/Search';
-import Filters from '../../components/Map/Filters';
+import OrganizationCard from '../../components/Map/OrganizationCard/OrganizationCard';
+import Search from '../../components/Map/Filters/Search';
+import Filters from '../../components/Map/Filters/Filters';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
