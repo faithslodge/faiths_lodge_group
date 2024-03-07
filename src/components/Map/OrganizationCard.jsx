@@ -90,16 +90,16 @@ function OrganizationCard({
         >
           <div>
             <Typography level="title-md" >
-              {/* <Link
-                // overlay
-                // onClick={promptModal}
+              <Link
+                overlay
+                onClick={handleOpen}
                 underline="none"
+                gap={1}
                 sx={{ color: "text.primary" }}
-              > */}
+              >
                 {name}
                 {verified_by && <VerifiedIcon />}
-                <button onClick={handleOpen}>Modal</button>
-              {/* </Link> */}
+              </Link>
             </Typography>
           </div>
         </Stack>
@@ -110,11 +110,11 @@ function OrganizationCard({
           flexWrap="wrap"
           sx={{ my: 0.25 }}
         >
-          <Typography level="body-xs" startDecorator={<LocationOnIcon />}>
+          <Typography level="body-xs" startDecorator={<LocationOnIcon fontSize="small" />}>
             {city}, {state}
           </Typography>
 
-          <Typography level="body-xs" startDecorator={<PhoneIcon />}>
+          <Typography level="body-xs" startDecorator={<PhoneIcon fontSize="small" />}>
             {phone}
           </Typography>
 
@@ -125,21 +125,21 @@ function OrganizationCard({
               href={url}
               target="_blank"
               rel="noreferrer noopener"
-              startDecorator={<OpenInNewIcon />}
+              startDecorator={<OpenInNewIcon fontSize="small"/>}
             >
               Website
             </Link>
           )}
         </Stack>
         <Stack direction="row">
-          <Typography level="title-sm" sx={{ display: "flex", gap: 1 }}>
+          <Typography level="title-sm" sx={{ display: "flex", gap: 1, overflow: "hidden", textOverflow: 'ellipsis'}}>
             {mission}
           </Typography>
         </Stack>
       </CardContent>
     </Card>
 
-    <MapModal open={open} handleClose={handleClose} />
+    <MapModal org={org} open={open} handleClose={handleClose} />
     </>
   );
 }

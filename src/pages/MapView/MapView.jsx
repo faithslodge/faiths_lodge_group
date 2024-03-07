@@ -89,7 +89,8 @@ function MapView() {
                 state={org.state}
                 phone={org.phone}
                 mission={org.mission}
-                logo={org.logo}
+                // logo={org.logo}
+                logo="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400"
                 url={org.url}
                 org={org}
               />
