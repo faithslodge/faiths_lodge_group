@@ -98,7 +98,7 @@ function OrganizationCard({
                 sx={{ color: "text.primary" }}
               >
                 {name}
-                {verified_by && <VerifiedIcon />}
+                {verified_by && <VerifiedIcon fontSize='small' sx={{color: 'rgba(217, 144, 33, 1)'}} />}
               </Link>
             </Typography>
           </div>

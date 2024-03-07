@@ -22,7 +22,6 @@ const style = {
   transform: 'translate(-50%, -50%)',
   width: 800,
   bgcolor: 'background.paper',
-  border: '2px solid black',
   boxShadow: 24,
   p: 4
 };
@@ -52,8 +51,9 @@ const MapModal = ({ open, handleClose, org }) => {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        disableAutoFocus={true}
       >
-        <Box borderRadius={5} sx={style}>
+        <Box border='1px solid black' borderRadius={5} sx={style}>
         {/* Modal Info Container */}
         <Grid container>
 
@@ -61,9 +61,10 @@ const MapModal = ({ open, handleClose, org }) => {
           <Grid item xs={6} pr={1}>
 
             {/* Org Name, Verified Badge, View/Edit Btn */}
-            <Typography variant="h5" component="h2">
-              {org.name} {org.verified_by && <VerifiedIcon fontSize='small' />}
-            </Typography>
+            <Stack direction="row" alignItems="center" gap={1}>
+              <Typography variant="h5" component="h2">{org.name}</Typography>
+              {org.verified_by && <VerifiedIcon fontSize='medium' sx={{color: 'rgba(217, 144, 33, 1)'}} />}
+            </Stack>
 
             <br />
 
