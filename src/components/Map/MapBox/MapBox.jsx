@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -6,6 +6,10 @@ const MapBox = ({ orgList }) => {
   // Set the initial position and zoom level of the map
   const position = ["44.985", "-93.25"]; // Coordinates for London
   const zoom = 4;
+
+  useEffect(()=>{
+
+  },[orgList])
 
   console.log(orgList);
 
