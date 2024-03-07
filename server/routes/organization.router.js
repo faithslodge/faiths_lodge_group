@@ -41,8 +41,8 @@ router.get('/', rejectUnauthenticated, (req, res) => {
                           sts.agg_service_type,
                           ocs.agg_contacts
                       FROM organization AS o
-                      JOIN address AS a ON o.address_id = a.id
-                      JOIN (
+                      LEFT JOIN address AS a ON o.address_id = a.id
+                      LEFT JOIN (
                             SELECT
                                 ltbo.organization_id,
                                 ARRAY_AGG(json_build_object('id', lt.id, 'name', lt.name)) AS agg_loss_type
@@ -50,7 +50,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
                             JOIN loss_type AS lt ON ltbo.loss_id = lt.id
                             GROUP BY ltbo.organization_id
                           ) AS lts ON o.id = lts.organization_id
-                      JOIN (
+                      LEFT JOIN (
                             SELECT
                                 stbo.organization_id,
                                 ARRAY_AGG(json_build_object('id', st.id, 'name', st.name)) AS agg_service_type
@@ -58,7 +58,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
                             JOIN service_type AS st ON stbo.service_id = st.id
                             GROUP BY stbo.organization_id
                           ) AS sts ON o.id = sts.organization_id
-                      JOIN (
+                      LEFT JOIN (
                             SELECT
                                 oc.organization_id,
                                 ARRAY_AGG(json_build_object('id', oc.id, 'firstName', oc.first_name, 'lastName', oc.last_name, 'phone', oc.phone, 'email', oc.email, 'title', oc.title)) AS agg_contacts
@@ -69,7 +69,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
 
   pool.query(queryText)
   .then((dbRes) => {
-    console.log("response from db:", dbRes);
+    // console.log("response from db:", dbRes);
     res.status(200).send(dbRes.rows);
   })
   .catch((err) => {
