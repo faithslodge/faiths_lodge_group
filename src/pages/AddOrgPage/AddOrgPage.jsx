@@ -1,15 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import {
-  TextField,
-  Checkbox,
-  FormControlLabel,
-  Button,
-  FormGroup,
-  FormControl,
-  FormLabel,
-  Grid,
-} from "@mui/material";
+import { TextField, Checkbox, FormControlLabel, Button, FormGroup, FormControl, FormLabel, Grid } from "@mui/material";
 import AddOrgDetails from "../../components/AddOrgDetails/AddOrgDetails";
 import AddOrgOptions from "../../components/AddOrgOptions/AddOrgOptions";
 import AddOrgAddress from "../../components/AddOrgAddress/AddOrgAddress";
@@ -44,12 +35,17 @@ const AddOrgPage = () => {
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch({ type: "FETCH_LOSSES" });
+    dispatch({ type: "FETCH_SERVICES" });
+  }, []);
+
   const submit = (event) => {
     event.preventDefault();
     const newOrg = {
       organizationDetails: {
         org: {
-          orgName,
+          name: orgName,
           serviceExplanation,
           mission,
           notes,
@@ -64,8 +60,8 @@ const AddOrgPage = () => {
           instagramUrl,
         },
         address: {
-          streetAddress,
-          streetAddressTwo,
+          addressLineOne: streetAddress,
+          addressLineTwo: streetAddressTwo,
           city,
           state,
           stateAbbreviation,
@@ -75,6 +71,8 @@ const AddOrgPage = () => {
         serviceTypes,
       },
     };
+
+    console.log(newOrg);
 
     dispatch({
       type: "CREATE_ORGANIZATION",
@@ -107,14 +105,13 @@ const AddOrgPage = () => {
         setStateAbbreviation={setStateAbbreviation}
         setZipCode={setZipCode}
       />
-      {/* <AddOrgOptions
+
+      <AddOrgOptions
         lossTypes={lossTypes}
         setLossTypes={setLossTypes}
         serviceTypes={serviceTypes}
         setServiceTypes={setServiceTypes}
-      /> */}
-      <AddOrgOptions />
-
+      />
 
       <Button variant="contained" color="primary" onClick={submit}>
         Add

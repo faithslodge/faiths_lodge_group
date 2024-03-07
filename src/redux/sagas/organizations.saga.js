@@ -16,17 +16,10 @@ function* fetchOrganizations() {
 
 function* createOrganizations(action) {
    try {
-
-      // passes the username and password from the payload to the server
-      yield axios.post('/api/patient', action.payload);
-
-      // automatically log a user in after registration
-      yield put({ type: 'GET_ORGANIZATION' });
-
-
+      yield axios.post('/api/organization', action.payload);
+      yield put({ type: 'FETCH_ORGANIZATIONS' });
    } catch (error) {
-      console.log('Error with user registration:', error);
-      yield put({ type: 'REGISTRATION_FAILED' });
+      console.log("Organizations POST request failed:", error);
    }
 }
 
