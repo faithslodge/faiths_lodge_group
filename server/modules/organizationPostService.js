@@ -73,8 +73,8 @@ async function convertCityStateToLatLong(city, state) {
         }
     );
 
-    const latitude = geojson.data.features[0].geometry.coordinates[0];
-    const longitude = geojson.data.features[0].geometry.coordinates[1];
+    const latitude = geojson.data.features[0].geometry.coordinates[1];
+    const longitude = geojson.data.features[0].geometry.coordinates[0];
     return { latitude, longitude };
 }
 
