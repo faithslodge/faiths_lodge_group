@@ -5,14 +5,14 @@ import {
   Box,
   Grid,
   Button,
-  Link,
-  Stack
+  Stack,
+  Link
 } from '@mui/material';
 import VerifiedIcon from "@mui/icons-material/Verified";
 import FacebookIcon from '@mui/icons-material/Facebook';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import { Email, Phone } from '@mui/icons-material';
+import { Email, OpenInNew, Phone } from '@mui/icons-material';
 
 
 const style = {
@@ -40,8 +40,6 @@ const boolCheck = (info) => {
     return "No"
   }
 }
-
-
 
 const MapModal = ({ open, handleClose, org }) => {
   return (
@@ -78,8 +76,19 @@ const MapModal = ({ open, handleClose, org }) => {
                   {org.city && `${org.city}, `}{org.state && `${org.state} `}
                   {org.zip && `${org.phone}`}<br />
                 <b>Phone:</b> {org.phone}<br />
-                <b>Email:</b> {org.email}<br />
-                <b>Website:</b> {org.url}<br />
+              </Typography>
+
+              <Stack direction="row" alignItems="center" gap={1}>
+                <Typography variant="body2" fontWeight='bold'>Email: </Typography>
+                <Link variant="body2" href={`mailto:${org.email}`} target="_blank" rel="noreferrer noopener">{org.email}</Link>
+              </Stack>
+
+              <Stack direction="row" alignItems="center" gap={1}>
+                <Typography variant="body2" fontWeight='bold'>Website:</Typography>
+                <Link variant="body2" href={org.url} target="_blank" rel="noreferrer noopener">{org.url}</Link>
+              </Stack>
+
+              <Typography variant="body2">
                 <b>Has Retreat?:</b> {boolCheck(org.has_retreat_center)}<br />
                 <b>Faith Based?:</b> {boolCheck(org.faith_based)}<br />
                 <b>For Profit?:</b> {boolCheck(org.for_profit)}<br />
@@ -101,37 +110,43 @@ const MapModal = ({ open, handleClose, org }) => {
             <Typography align='right' pr={5}>
               <Button variant='text' sx={{fontSize: 'small'}}>View/Edit</Button>
             </Typography>
-
+          
             <br />
 
-            {/* Type of Loss */}
-            <Typography variant='overline' sx={overlineFont}><b>Type of Loss</b></Typography>
-              <Typography variant="body2" component="ul" pl={2}>
-                {org.agg_loss_type?.map((losstype)=>(<li key={losstype.id}>{losstype.name}</li>))}
-              </Typography>
+            {/* Stack to place Type of Loss and Services side-by-side */}
+            <Stack direction="row" alignItems="top" gap={5}>
+              {/* Type of Loss */}
+              <div>
+                <Typography variant='overline' sx={overlineFont}><b>Type of Loss</b></Typography>
+                  <Typography variant="body2" component="ul" pl={2}>
+                    {org.agg_loss_type && org.agg_loss_type?.map((losstype)=>(<li key={losstype.id}>{losstype.name}</li>))}
+                  </Typography>
+              </div>
 
-            <br />
-
-            {/* Service Types */}
-            <Typography variant='overline' sx={overlineFont}><b>Services</b></Typography>
-              <Typography variant="body2" component="ul" pl={2}>
-                {org.agg_service_type?.map((service)=>(<li key={service.id}>{service.name}</li>))}
-              </Typography>
-
-            <br />
+              {/* Service Types */}
+              <div>
+                <Typography variant='overline' sx={overlineFont}><b>Services</b></Typography>
+                  <Typography variant="body2" component="ul" pl={2}>
+                    {org.agg_service_type && org.agg_service_type?.map((service)=>(<li key={service.id}>{service.name}</li>))}
+                  </Typography>
+              </div>
+            </Stack>
+          
+            <br /><br />
 
             {/* Point of Contact */}
             <Typography variant='overline' sx={overlineFont}><b>POINTS OF CONTACT</b></Typography><br />
               <Typography variant="body2" textTransform='capitalize' fontWeight='bold' fontSize={13}>contact name</Typography>
-              <Typography variant="caption" fontWeight='300'>title</Typography>
-              <Stack direction="row" alignItems="center" gap={1}>
+              <Typography variant="caption" fontWeight='300' pl={2}>title</Typography>
+              <Stack direction="row" alignItems="center" gap={1} pl={2}>
                 <Phone fontSize='xsmall' /> 
                 <Typography variant="body2" fontSize={12}>(123) 456-7890</Typography>
               </Stack>
-              <Stack direction="row" alignItems="center" gap={1}>
+              <Stack direction="row" alignItems="center" gap={1} pl={2}>
                 <Email fontSize='xsmall' />
                 <Link fontSize={12}>example@example.com</Link>
               </Stack>
+            
             <br />
 
             {/* Social Media */}
@@ -170,7 +185,6 @@ const MapModal = ({ open, handleClose, org }) => {
                   </Link>
                 }
             </Stack>
-            
           </Grid>
         </Grid>
         </Box>
