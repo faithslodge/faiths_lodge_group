@@ -1,6 +1,8 @@
 import * as React from "react";
 import {
+  Modal,
   Typography,
+  Box,
   Grid,
   Button,
   Stack,
@@ -11,9 +13,10 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import { Email, Phone } from "@mui/icons-material";
+import { Email, OpenInNew, Phone } from "@mui/icons-material";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const overlineFont = {
   fontSize: 14,
@@ -51,10 +54,10 @@ const OrgInfo = () => {
           {/* Org Name, Verified Badge, View/Edit Btn */}
           <Stack direction="row" alignItems="center" gap={2}>
             <Typography variant="h5" component="h2">
-              {org.name}
+              {org?.name}
             </Typography>
 
-            {org.verified_by && (
+            {org?.verified_by && (
               <Stack spacing={1} direction="row" alignItems="center" ml={1}>
                 <Typography
                   variant="caption"
@@ -83,16 +86,16 @@ const OrgInfo = () => {
           </Typography>
           <br />
           <Typography variant="body2">
-            <b>Mission:</b> {org.mission}
+            <b>Mission:</b> {org?.mission}
             <br />
             <b>Address: </b>
-            {org.address_line_1 && `${org.address_line_1}, `}
-            {org.address_line_2 && `${org.address_line_2}, `}
-            {org.city && `${org.city}, `}
-            {org.state && `${org.state} `}
-            {org.zip && `${org.phone}`}
+            {org?.address_line_1 && `${org?.address_line_1}, `}
+            {org?.address_line_2 && `${org?.address_line_2}, `}
+            {org?.city && `${org?.city}, `}
+            {org?.state && `${org?.state} `}
+            {org?.zip && `${org?.phone}`}
             <br />
-            <b>Phone:</b> {org.phone}
+            <b>Phone:</b> {org?.phone}
             <br />
           </Typography>
 
@@ -103,11 +106,11 @@ const OrgInfo = () => {
             </Typography>
             <Link
               variant="body2"
-              href={`mailto:${org.email}`}
+              href={`mailto:${org?.email}`}
               target="_blank"
               rel="noreferrer noopener"
             >
-              {org.email}
+              {org?.email}
             </Link>
           </Stack>
 
@@ -118,21 +121,21 @@ const OrgInfo = () => {
             </Typography>
             <Link
               variant="body2"
-              href={org.url}
+              href={org?.url}
               target="_blank"
               rel="noreferrer noopener"
             >
-              {org.url}
+              {org?.url}
             </Link>
           </Stack>
 
           {/* Retreat?, Faith Based?, For Profit? */}
           <Typography variant="body2">
-            <b>Has Retreat?:</b> {boolCheck(org.has_retreat_center)}
+            <b>Has Retreat?:</b> {boolCheck(org?.has_retreat_center)}
             <br />
-            <b>Faith Based?:</b> {boolCheck(org.faith_based)}
+            <b>Faith Based?:</b> {boolCheck(org?.faith_based)}
             <br />
-            <b>For Profit?:</b> {boolCheck(org.for_profit)}
+            <b>For Profit?:</b> {boolCheck(org?.for_profit)}
             <br />
           </Typography>
 
@@ -144,7 +147,7 @@ const OrgInfo = () => {
           </Typography>
           <br />
           <Typography variant="body2">
-            {org.notes}
+            {org?.notes}
             <br />
           </Typography>
         </Grid>
@@ -159,8 +162,8 @@ const OrgInfo = () => {
                 <b>Type of Loss</b>
               </Typography>
               <Typography variant="body2" component="ul" pl={2}>
-                {org.agg_loss_type &&
-                  org.agg_loss_type?.map((losstype) => (
+                {org?.agg_loss_type &&
+                  org?.agg_loss_type?.map((losstype) => (
                     <li key={losstype.id}>{losstype.name}</li>
                   ))}
               </Typography>
@@ -172,8 +175,8 @@ const OrgInfo = () => {
                 <b>Services</b>
               </Typography>
               <Typography variant="body2" component="ul" pl={2}>
-                {org.agg_service_type &&
-                  org.agg_service_type?.map((service) => (
+                {org?.agg_service_type &&
+                  org?.agg_service_type?.map((service) => (
                     <li key={service.id}>{service.name}</li>
                   ))}
               </Typography>
@@ -191,8 +194,8 @@ const OrgInfo = () => {
           <br />
 
           {/* Map Contacts */}
-          {org.agg_contacts &&
-            org.agg_contacts?.map((contact) => (
+          {org?.agg_contacts &&
+            org?.agg_contacts?.map((contact) => (
               <div key={contact.id}>
                 <Typography
                   variant="body2"
@@ -234,9 +237,9 @@ const OrgInfo = () => {
           </Typography>
           <br />
           <Stack direction="row" alignItems="center" gap={1}>
-            {org.facebook_url && (
+            {org?.facebook_url && (
               <Link
-                href={org.facebook_url}
+                href={org?.facebook_url}
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -244,9 +247,9 @@ const OrgInfo = () => {
               </Link>
             )}
 
-            {org.instagram_url && (
+            {org?.instagram_url && (
               <Link
-                href={org.instagram_url}
+                href={org?.instagram_url}
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -257,9 +260,9 @@ const OrgInfo = () => {
               </Link>
             )}
 
-            {org.linked_in_url && (
+            {org?.linked_in_url && (
               <Link
-                href={org.linked_in_url}
+                href={org?.linked_in_url}
                 target="_blank"
                 rel="noreferrer noopener"
               >
