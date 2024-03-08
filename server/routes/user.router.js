@@ -15,7 +15,6 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
     res.send(req.user);
 });
 
-// Handles Ajax request for user information if user is authenticated
 router.get(
     "/getUsers",
     rejectUnauthenticated,
@@ -23,12 +22,12 @@ router.get(
     async (req, res) => {
         // Send back user object from the session (previously queried from the database)
         try {
-            const queryText = `SELECT * FROM users;`;
+            const queryText = `SELECT * FROM "user";`;
 
             const dbRes = await pool.query(queryText);
             res.status(200).send(dbRes.rows);
         } catch (err) {
-            console.err("Error with accessing all user information:", err);
+            console.error("Error with accessing all user information:", err);
             res.sendStatus(500);
         }
     }
@@ -97,7 +96,7 @@ router.put(
     rejectUnauthenticated,
     rejectUnauthorized,
     async (req, res) => {
-        const id = req.params.id;
+        const { id } = req.params;
         const { isAdmin } = req.body;
 
         try {
@@ -114,6 +113,29 @@ router.put(
         } catch (err) {
             console.error(
                 "[inside user.router PUT admin edit selected user] Error in this route",
+                err
+            );
+            res.sendStatus(500);
+        }
+    }
+);
+
+router.put(
+    "/editPassword",
+    rejectUnauthenticated,
+    async (req, res) => {
+        const { id } = req.user;
+        const password = encryptLib.encryptPassword(req.body.password);
+
+        try {
+                const queryText = `UPDATE "user" SET "password" = $1
+                            WHERE id = $2;`;
+
+                await pool.query(queryText, [ password, id]);
+                res.sendStatus(204);
+        } catch (err) {
+            console.error(
+                "[inside user.router PUT change user password] Error in this route",
                 err
             );
             res.sendStatus(500);

@@ -84,7 +84,6 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
  */
 router.post("/", rejectUnauthenticated, async (req, res) => {
     const { organizationDetails } = req.body;
-    const { user } = req;
     try {
         await postOrganizationWithDetails(organizationDetails);
         res.sendStatus(201);
