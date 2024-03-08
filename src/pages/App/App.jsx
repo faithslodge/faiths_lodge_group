@@ -28,7 +28,6 @@ import AddOrgPage from "../AddOrgPage/AddOrgPage";
 import "./App.css";
 import TestPage from "../TestPage/TestPage";
 
-
 // Test comment
 
 function App() {
@@ -48,7 +47,6 @@ function App() {
         <Switch>
           {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
           <Redirect exact from="/" to="/home" />
-
           {/* Visiting localhost:5173/about will show the about page. */}
           <Route
             // shows AboutPage at all times (logged in or not)
@@ -57,7 +55,6 @@ function App() {
           >
             <AboutPage />
           </Route>
-
           // ! Need to delete test page before release
           <Route
             // page for testing components
@@ -66,7 +63,6 @@ function App() {
           >
             <TestPage />
           </Route>
-
           {/* For protected routes, the view could show one of several things on the same route.
             Visiting localhost:5173/user will show the UserPage if the user is logged in.
             If the user is not logged in, the ProtectedRoute will show the LoginPage (component).
@@ -78,32 +74,26 @@ function App() {
           >
             <UserPage />
           </ProtectedRoute>
-
           {/* Route for MapView */}
           <ProtectedRoute exact path="/map">
             <MapView />
           </ProtectedRoute>
-
           {/* Route for ListView */}
           <ProtectedRoute exact path="/list">
             <ListView />
           </ProtectedRoute>
-
           {/* Route for AddOrg */}
           <ProtectedRoute exact path="/addorg">
             <AddOrgPage />
           </ProtectedRoute>
-
           {/* Route for OptionsPage */}
           <ProtectedRoute exact path="/options">
             <OptionsPage />
           </ProtectedRoute>
-
           {/* Route for OrgInfo */}
           <ProtectedRoute exact path="/org/:id">
             <OrgInfo />
           </ProtectedRoute>
-
           <ProtectedRoute
             // logged in shows InfoPage else shows LoginPage
             exact
@@ -111,7 +101,6 @@ function App() {
           >
             <InfoPage />
           </ProtectedRoute>
-
           <Route exact path="/login">
             {user.id ? (
               // If the user is already logged in,
@@ -122,7 +111,6 @@ function App() {
               <LoginPage />
             )}
           </Route>
-
           <Route exact path="/registration">
             {user.id ? (
               // If the user is already logged in,
@@ -133,7 +121,6 @@ function App() {
               <RegisterPage />
             )}
           </Route>
-
           <Route exact path="/home">
             {user.id ? (
               // If the user is already logged in,
@@ -144,7 +131,6 @@ function App() {
               <LandingPage />
             )}
           </Route>
-
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>
             <h1>404</h1>
