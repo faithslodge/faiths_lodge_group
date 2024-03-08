@@ -92,4 +92,29 @@ router.post("/logout", (req, res) => {
     res.sendStatus(200);
 });
 
+router.put("/editAdmin/:id", rejectUnauthenticated,
+rejectUnauthorized, async (req, res) => {
+  const id = req.params.id;
+  const { isAdmin } = req.body;
+
+  if (req.user.id == id) {
+    // cannot edit the admin property for yourself
+    res.sendStatus(403);
+  }
+
+  try {
+    const queryText = `UPDATE "user" SET "is_admin" = $1
+                          WHERE "user".id = $2;`;
+
+    await pool.query(queryText, [isAdmin, id]);
+    res.sendStatus(204);
+  } catch (err) {
+    console.error(
+      "[inside user.router PUT admin edit selected user] Error in this route",
+      err
+  );
+  res.sendStatus(500);
+  }
+})
+
 module.exports = router;
