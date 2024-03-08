@@ -7,10 +7,6 @@ const MapBox = ({ orgList }) => {
   const position = ["44.985", "-93.25"]; // Coordinates for London
   const zoom = 4;
 
-  useEffect(()=>{
-
-  },[orgList])
-
   console.log(orgList);
 
   return (

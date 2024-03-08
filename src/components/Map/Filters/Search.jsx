@@ -6,15 +6,26 @@ import Stack from "@mui/joy/Stack";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import Typography from "@mui/joy/Typography";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function Search({ search, setSearch, searchFunction }) {
+export default function Search({ }) {
+  const storeOrgs = useSelector((store) => store.organizations);
+
+  const dispatch = useDispatch();
+
+  const searchFunction = (arg) => {
+    const newList = storeOrgs.filter((org) => {
+      return arg.toLowerCase() === "" ? org : org.name.toLowerCase().includes(arg);
+    });
+    dispatch({type: "SET_FILTER_ORGS", payload: newList});
+  };
+
   return (
     <div>
       <Stack spacing={1} direction="row" sx={{ mb: 2 }}>
         <FormControl
           onChange={(e) => {
-            setSearch(e.target.value);
-            searchFunction();
+            searchFunction(e.target.value);
           }}
           sx={{ flex: 1 }}
         >

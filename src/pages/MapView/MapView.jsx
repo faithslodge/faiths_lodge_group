@@ -17,22 +17,16 @@ import MapBox from "../../components/Map/MapBox/MapBox";
 
 function MapView() {
   const storeOrgs = useSelector((store) => store.organizations);
-  const [orgList, setOrgList] = useState([]);
-  const [search, setSearch] = useState("");
+  const filteredOrgs =  useSelector(store => store.filters);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setOrgList(storeOrgs);
+    dispatch({type: "SET_FILTER_ORGS", payload: storeOrgs})
   }, [storeOrgs]);
 
   const filterOrgs = (filter) => {
     setOrgList(filter);
-  };
-
-  const searchFunction = () => {
-    const newList = storeOrgs.filter((org) => {
-      return search.toLowerCase() === "" ? org : org.name.toLowerCase().includes(search);
-    });
-    setOrgList(newList);
   };
 
   return (
@@ -56,7 +50,7 @@ function MapView() {
             borderColor: "divider",
           }}
         >
-          <Search search={search} setSearch={setSearch} searchFunction={searchFunction} />
+          <Search  />
         </Stack>
 
         {/* !--- insert map into this Box, replace background img ---! */}
@@ -68,7 +62,7 @@ function MapView() {
             backgroundSize: "cover",
           }}
         >
-          <MapBox orgList={orgList} />
+          <MapBox orgList={filteredOrgs} />
         </Box>
 
         {/* Left Panel with Filters and Org Cards */}
@@ -77,7 +71,7 @@ function MapView() {
 
           {/* Organization Cards */}
           <Stack spacing={2} sx={{ overflow: "auto" }}>
-            {orgList.map((org) => (
+            {filteredOrgs.map((org) => (
               <OrganizationCard
                 key={org.id}
                 logo="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400"
