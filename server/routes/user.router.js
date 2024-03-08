@@ -15,12 +15,12 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
     res.send(req.user);
 });
 
+// GET all users from database (admins only)
 router.get(
     "/getUsers",
     rejectUnauthenticated,
     rejectUnauthorized,
     async (req, res) => {
-        // Send back user object from the session (previously queried from the database)
         try {
             const queryText = `SELECT * FROM "user";`;
 
@@ -33,9 +33,7 @@ router.get(
     }
 );
 
-// Handles POST request with new user data
-// The only thing different from this and every other post we've seen
-// is that the password gets encrypted before being inserted
+// REMOVE THIS ROUTE BEFORE APP IMPLEMENTATION
 router.post("/register", (req, res, next) => {
     const username = req.body.username;
     const password = encryptLib.encryptPassword(req.body.password);
@@ -50,8 +48,8 @@ router.post("/register", (req, res, next) => {
         });
 });
 
-// Handles POST request with new user data
 // <------------------------ POST WILL REPLACE REGISTRATION ABOVE ---------------------------->
+// POST new user (admins only)
 router.post(
     "/newUser",
     rejectUnauthenticated,
@@ -76,21 +74,19 @@ router.post(
     }
 );
 
-// Handles login form authenticate/login POST
-// userStrategy.authenticate('local') is middleware that we run on this route
-// this middleware will run our POST if successful
-// this middleware will send a 404 if not successful
+// POST login user, (user cookie in 'res' object for browser to store)
 router.post("/login", userStrategy.authenticate("local"), (req, res) => {
     res.sendStatus(200);
 });
 
-// clear all server session information about this user
+// POST logout user (clear browser cookies)
 router.post("/logout", (req, res) => {
     // Use passport's built-in method to log out the user
     req.logout();
     res.sendStatus(200);
 });
 
+// PUT to edit the is_admin field in DB, cannot edit current user (admins only)
 router.put(
     "/editAdmin/:id",
     rejectUnauthenticated,
@@ -120,6 +116,7 @@ router.put(
     }
 );
 
+// PUT to edit the current user password
 router.put(
     "/editPassword",
     rejectUnauthenticated,
@@ -143,6 +140,7 @@ router.put(
     }
 );
 
+// DELETE to delete the desired user, cannot delete current user (admins only)
 router.delete(
     "/:id",
     rejectUnauthenticated,
