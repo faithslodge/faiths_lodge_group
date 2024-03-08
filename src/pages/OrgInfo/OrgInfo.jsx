@@ -7,40 +7,50 @@ import {
   Button,
   Stack,
   Link,
+  Container,
 } from "@mui/material";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { Email, OpenInNew, Phone } from "@mui/icons-material";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const overlineFont = {
-    fontSize: 14,
-    color: "rgba(92, 118, 55, 1)",
-  };
-  
-  const boolCheck = (info) => {
-    if (info === null) {
-      return "";
-    } else if (info === true) {
-      return "Yes";
-    } else if (info === false) {
-      return "No";
-    }
-  };
+  fontSize: 14,
+  color: "rgba(92, 118, 55, 1)",
+};
 
-
+const boolCheck = (info) => {
+  if (info === null) {
+    return "";
+  } else if (info === true) {
+    return "Yes";
+  } else if (info === false) {
+    return "No";
+  }
+};
 
 const OrgInfo = () => {
-  
-  
-  
-    return (
-    <Box border="1px solid black" borderRadius={5} sx={style}>
+  const { id } = useParams();
+  console.log("ParamID:", id);
+
+  const orgStore = useSelector((orgStore) => orgStore.organizations);
+  console.log("STORE:", orgStore);
+
+  const filteredOrgArray = orgStore?.filter((item) => item.id === Number(id));
+  console.log("filteredOrgArray:", filteredOrgArray);
+
+  const org = filteredOrgArray[0];
+
+  return (
+    <Container>
       {/* Modal Info Container */}
       <Grid container>
-        {/* Left Side */}
-        <Grid item xs={6} pr={1}>
+        {/* Top */}
+        <Grid item xs={12} mb={5}>
           {/* Org Name, Verified Badge, View/Edit Btn */}
           <Stack direction="row" alignItems="center" gap={2}>
             <Typography variant="h5" component="h2">
@@ -62,10 +72,14 @@ const OrgInfo = () => {
                 />
               </Stack>
             )}
+            
+            <Button variant="text" sx={{ fontSize: "medium", ml: 5}}>
+              Edit
+            </Button>
           </Stack>
+        </Grid>
 
-          <br />
-
+        <Grid item xs={6} pr={5}>
           {/* Org Info */}
           <Typography variant="overline" sx={overlineFont}>
             <b>Organization Info</b>
@@ -139,16 +153,7 @@ const OrgInfo = () => {
         </Grid>
 
         {/* Right Side */}
-        <Grid item xs={6} pl={1}>
-          {/* Edit Button */}
-          <Typography align="right" pr={5}>
-            <Button variant="text" sx={{ fontSize: "small" }}>
-              View/Edit
-            </Button>
-          </Typography>
-
-          <br />
-
+        <Grid item xs={6} pl={5}>
           {/* Stack to place Type of Loss and Services side-by-side */}
           <Stack direction="row" alignItems="top" gap={5}>
             {/* Type of Loss */}
@@ -267,7 +272,7 @@ const OrgInfo = () => {
           </Stack>
         </Grid>
       </Grid>
-    </Box>
+    </Container>
   );
 };
 

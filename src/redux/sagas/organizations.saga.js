@@ -2,6 +2,10 @@
 import axios from "axios";
 import { put, takeLatest } from "redux-saga/effects";
 
+const handleError = (error) => {
+   alert("Organizations GET request failed:", error);
+}
+
 // fetch org data from org router
 function* fetchOrganizations() {
    try {
@@ -9,7 +13,7 @@ function* fetchOrganizations() {
       console.log("FETCH ORG response data:", response.data);
       yield put({ type: "SET_ORGANIZATIONS", payload: response.data });
    } catch (error) {
-      console.log("Organizations GET request failed:", error);
+      handleError(error)
    }
 }
 
@@ -19,7 +23,7 @@ function* createOrganizations(action) {
       yield axios.post('/api/organization', action.payload);
       yield put({ type: 'FETCH_ORGANIZATIONS' });
    } catch (error) {
-      console.log("Organizations POST request failed:", error);
+      handleError(error)
    }
 }
 
@@ -34,8 +38,7 @@ function* editOrganizations(action) {
 
 
    } catch (error) {
-      console.log('Error with user registration:', error);
-      yield put({ type: 'REGISTRATION_FAILED' });
+      handleError(error)
    }
 }
 
