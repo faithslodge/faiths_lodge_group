@@ -13,6 +13,7 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import { Email, OpenInNew, Phone } from "@mui/icons-material";
+import { useHistory } from "react-router-dom";
 
 const style = {
   position: "absolute",
@@ -41,6 +42,8 @@ const boolCheck = (info) => {
 };
 
 const MapModal = ({ open, handleClose, org }) => {
+  const history = useHistory()
+
   return (
     <div>
       <Modal
@@ -156,8 +159,11 @@ const MapModal = ({ open, handleClose, org }) => {
             <Grid item xs={6} pl={1}>
               {/* Edit Button */}
               <Typography align="right" pr={5}>
-                <Button variant="text" sx={{ fontSize: "small" }}>
-                  View/Edit
+                <Button 
+                  onClick={() => history.push(`/org/${org.id}`)}
+                  variant="text" 
+                  sx={{ fontSize: "small" }}>
+                    View/Edit
                 </Button>
               </Typography>
 
