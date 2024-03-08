@@ -1,6 +1,8 @@
 import * as React from "react";
 import {
+  Modal,
   Typography,
+  Box,
   Grid,
   Button,
   Stack,
@@ -11,9 +13,10 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import { Email, Phone } from "@mui/icons-material";
+import { Email, OpenInNew, Phone } from "@mui/icons-material";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const overlineFont = {
   fontSize: 14,
