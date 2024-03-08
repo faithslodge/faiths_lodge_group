@@ -92,29 +92,61 @@ router.post("/logout", (req, res) => {
     res.sendStatus(200);
 });
 
-router.put("/editAdmin/:id", rejectUnauthenticated,
-rejectUnauthorized, async (req, res) => {
-  const id = req.params.id;
-  const { isAdmin } = req.body;
+router.put(
+    "/editAdmin/:id",
+    rejectUnauthenticated,
+    rejectUnauthorized,
+    async (req, res) => {
+        const id = req.params.id;
+        const { isAdmin } = req.body;
 
-  if (req.user.id == id) {
-    // cannot edit the admin property for yourself
-    res.sendStatus(403);
-  }
+        try {
+            if (req.user.id == id) {
+                // cannot edit the admin property for yourself
+                res.sendStatus(403);
+            } else {
+                const queryText = `UPDATE "user" SET "is_admin" = $1
+                            WHERE "user".id = $2;`;
 
-  try {
-    const queryText = `UPDATE "user" SET "is_admin" = $1
-                          WHERE "user".id = $2;`;
+                await pool.query(queryText, [isAdmin, id]);
+                res.sendStatus(204);
+            }
+        } catch (err) {
+            console.error(
+                "[inside user.router PUT admin edit selected user] Error in this route",
+                err
+            );
+            res.sendStatus(500);
+        }
+    }
+);
 
-    await pool.query(queryText, [isAdmin, id]);
-    res.sendStatus(204);
-  } catch (err) {
-    console.error(
-      "[inside user.router PUT admin edit selected user] Error in this route",
-      err
-  );
-  res.sendStatus(500);
-  }
-})
+router.delete(
+    "/:id",
+    rejectUnauthenticated,
+    rejectUnauthorized,
+    async (req, res) => {
+        const loggedInUserId = req.user.id;
+        const userToDeleteId = req.params.id;
+
+        try {
+            if (loggedInUserId == userToDeleteId) {
+                // cannot delete yourself
+                res.sendStatus(403);
+            } else {
+                const queryText = `DELETE FROM "user" WHERE id = $1;`;
+
+                await pool.query(queryText, [userToDeleteId]);
+                res.sendStatus(204);
+            }
+        } catch (err) {
+            console.error(
+                "[inside user.router DELETE admin delete selected user] Error in this route",
+                err
+            );
+            res.sendStatus(500);
+        }
+    }
+);
 
 module.exports = router;
