@@ -46,12 +46,11 @@ const AddOrgPage = () => {
   const [serviceTypes, setServiceTypes] = useState([]);
 
   const [contact, setContact] = useState({
-    first_name: "",
-    last_name: "",
+    firstName: "",
+    lastName: "",
     phone: "",
     email: "",
     title: "",
-    organization_id: "",
   });
 
   const handleChange = (e) => {
@@ -99,7 +98,7 @@ const AddOrgPage = () => {
         },
         lossTypes,
         serviceTypes,
-        contact: contact,
+        contacts: [contact],
       },
     };
 
