@@ -1,4 +1,4 @@
-const usStates = [
+const US_STATES = [
     { name: 'ALABAMA', abbreviation: 'AL'},
     { name: 'ALASKA', abbreviation: 'AK'},
     { name: 'ARIZONA', abbreviation: 'AZ'},
@@ -52,5 +52,5 @@ const usStates = [
 ]
 
 
-export default usStates;
+export default US_STATES;
 

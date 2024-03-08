@@ -104,6 +104,7 @@ function CardContentComponent({ org }) {
           <Typography
             level="title-sm"
             sx={{
+              maxHeight: 60,
               display: "flex",
               gap: 1,
               overflow: "hidden",

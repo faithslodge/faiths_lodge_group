@@ -8,7 +8,6 @@ import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
 import ModalClose from '@mui/joy/ModalClose';
 import Stack from '@mui/joy/Stack';
-import Slider, { sliderClasses } from '@mui/joy/Slider';
 import FilterAltOutlined from '@mui/icons-material/FilterAltOutlined';
 import StateSelector from './StateSelector';
 import OrderSelector from './OrderSelector';

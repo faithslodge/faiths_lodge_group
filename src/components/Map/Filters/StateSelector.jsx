@@ -3,7 +3,7 @@ import Autocomplete from '@mui/joy/Autocomplete';
 import AutocompleteOption from '@mui/joy/AutocompleteOption';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
-import usStates from '../../../utils/states'
+import US_STATES from '../../../constants/US_STATES'
 
 export default function StateSelector() {
   return (
@@ -13,7 +13,7 @@ export default function StateSelector() {
         autoHighlight
         isOptionEqualToValue={(option, value) => option.name === value.name}
         getOptionLabel={(option) => option.name || ""}
-        options={usStates}
+        options={US_STATES}
         renderOption={(optionProps, option) => (
           <AutocompleteOption {...optionProps}>
             {option.name}
