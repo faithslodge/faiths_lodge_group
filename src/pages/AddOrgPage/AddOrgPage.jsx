@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { TextField, Checkbox, FormControlLabel, Button, FormGroup, FormControl, FormLabel, Grid } from "@mui/material";
+import {
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Button,
+  FormGroup,
+  FormControl,
+  FormLabel,
+  Grid,
+} from "@mui/material";
 import AddOrgDetails from "../../components/AddOrgDetails/AddOrgDetails";
 import AddOrgOptions from "../../components/AddOrgOptions/AddOrgOptions";
 import AddOrgAddress from "../../components/AddOrgAddress/AddOrgAddress";
-
+import AddContactOrg from "../../components/AddOrgContacts/AddOrgContacts";
 const AddOrgPage = () => {
-  // Organization Details State
+  //? Organization Details State
   const [orgName, setOrgName] = useState("");
   const [serviceExplanation, setServiceExplanation] = useState("");
   const [mission, setMission] = useState("");
@@ -22,7 +31,7 @@ const AddOrgPage = () => {
   const [instagramUrl, setInstagramUrl] = useState("");
   const [logo, setLogo] = useState(null);
 
-  // Organization Address State
+  //* Organization Address State
   const [streetAddress, setStreetAddress] = useState("");
   const [streetAddressTwo, setStreetAddressTwo] = useState("");
   const [city, setCity] = useState("");
@@ -30,9 +39,28 @@ const AddOrgPage = () => {
   const [stateAbbreviation, setStateAbbreviation] = useState("");
   const [zipCode, setZipCode] = useState("");
 
-  // Organization Options State
+  //* Organization Contact State
+
+  //! Organization Options State
   const [lossTypes, setLossTypes] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
+
+  const [contact, setContact] = useState({
+    first_name: "",
+    last_name: "",
+    phone: "",
+    email: "",
+    title: "",
+    organization_id: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setContact((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
   const dispatch = useDispatch();
 
@@ -71,6 +99,7 @@ const AddOrgPage = () => {
         },
         lossTypes,
         serviceTypes,
+        contact: contact,
       },
     };
 
@@ -83,7 +112,7 @@ const AddOrgPage = () => {
   };
 
   return (
-    <form className="add_org">
+    <section className="add_org">
       <AddOrgDetails
         setOrgName={setOrgName}
         setServiceExplanation={setServiceExplanation}
@@ -114,11 +143,11 @@ const AddOrgPage = () => {
         serviceTypes={serviceTypes}
         setServiceTypes={setServiceTypes}
       />
-
+      <AddContactOrg contact={contact} handleChange={handleChange} />
       <Button variant="contained" color="primary" onClick={submit}>
         Add
       </Button>
-    </form>
+    </section>
   );
 };
 

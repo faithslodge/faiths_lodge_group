@@ -2,7 +2,16 @@
 import React from "react";
 import react, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { TextField, Checkbox, FormControlLabel, Button, FormGroup, FormControl, FormLabel, Grid } from "@mui/material";
+import {
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Button,
+  FormGroup,
+  FormControl,
+  FormLabel,
+  Grid,
+} from "@mui/material";
 
 const AddOrgDetails = ({
   setOrgName,
@@ -22,7 +31,12 @@ const AddOrgDetails = ({
   return (
     <Grid container spacing={2}>
       <Grid item xs={6}>
-        <TextField id="name" label="Organization Name" fullWidth onChange={(event) => setOrgName(event.target.value)} />
+        <TextField
+          id="name"
+          label="Organization Name"
+          fullWidth
+          onChange={(event) => setOrgName(event.target.value)}
+        />
       </Grid>
       <Grid item xs={6}>
         <TextField
@@ -33,40 +47,100 @@ const AddOrgDetails = ({
         />
       </Grid>
       <Grid item xs={6}>
-        <TextField id="mission" label="Mission" fullWidth onChange={(event) => setMission(event.target.value)} />
+        <TextField
+          id="mission"
+          label="Mission"
+          fullWidth
+          onChange={(event) => setMission(event.target.value)}
+        />
       </Grid>
       <Grid item xs={6}>
-        <TextField id="notes" label="Notes" fullWidth onChange={(event) => setNotes(event.target.value)} />
+        <TextField
+          id="notes"
+          label="Notes"
+          fullWidth
+          onChange={(event) => setNotes(event.target.value)}
+        />
       </Grid>
       <Grid item xs={6}>
-        <TextField id="url" label="URL" fullWidth onChange={(event) => setUrl(event.target.value)} />
+        <TextField
+          id="url"
+          label="URL"
+          fullWidth
+          onChange={(event) => setUrl(event.target.value)}
+        />
       </Grid>
       <Grid item xs={6}>
-        <TextField id="phone" label="Phone" type="tel" fullWidth onChange={(event) => setPhone(event.target.value)} />
+        <TextField
+          id="phone"
+          label="Phone"
+          type="tel"
+          fullWidth
+          onChange={(event) => setPhone(event.target.value)}
+        />
       </Grid>
       <Grid item xs={6}>
-        <TextField id="email" label="Email" type="email" fullWidth onChange={(event) => setEmail(event.target.value)} />
-      </Grid>
-      <Grid item xs={6}>
-        <FormControlLabel control={<Checkbox onChange={(event) => setForProfit(event.target.checked)} />} label="For Profit" />
-      </Grid>
-      <Grid item xs={6}>
-        <FormControlLabel control={<Checkbox onChange={(event) => setFaithBased(event.target.checked)} />} label="Faith Based" />
+        <TextField
+          id="email"
+          label="Email"
+          type="email"
+          fullWidth
+          onChange={(event) => setEmail(event.target.value)}
+        />
       </Grid>
       <Grid item xs={6}>
         <FormControlLabel
-          control={<Checkbox onChange={(event) => setHasRetreatCenter(event.target.checked)} />}
+          control={
+            <Checkbox
+              onChange={(event) => setForProfit(event.target.checked)}
+            />
+          }
+          label="For Profit"
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={(event) => setFaithBased(event.target.checked)}
+            />
+          }
+          label="Faith Based"
+        />
+      </Grid>
+      <Grid item xs={6}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={(event) => setHasRetreatCenter(event.target.checked)}
+            />
+          }
           label="Has Retreat Center"
         />
       </Grid>
       <Grid item xs={6}>
-        <TextField id="linkedInUrl" label="LinkedIn URL" fullWidth onChange={(event) => setLinkedInUrl(event.target.value)} />
+        <TextField
+          id="linkedInUrl"
+          label="LinkedIn URL"
+          fullWidth
+          onChange={(event) => setLinkedInUrl(event.target.value)}
+        />
       </Grid>
       <Grid item xs={6}>
-        <TextField id="facebookUrl" label="Facebook URL" fullWidth onChange={(event) => setFacebookUrl(event.target.value)} />
+        <TextField
+          id="facebookUrl"
+          label="Facebook URL"
+          fullWidth
+          onChange={(event) => setFacebookUrl(event.target.value)}
+        />
       </Grid>
       <Grid item xs={6}>
-        <TextField id="instagramUrl" label="Instagram URL" fullWidth onChange={(event) => setInstagramUrl(event.target.value)} />
+        <TextField
+          id="instagramUrl"
+          label="Instagram URL"
+          fullWidth
+          onChange={(event) => setInstagramUrl(event.target.value)}
+        />
       </Grid>
     </Grid>
   );
