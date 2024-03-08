@@ -1,13 +1,35 @@
 import React, { useState } from 'react';
-import { Box, Stepper, Step, StepLabel, Button, Typography} from '@mui/material';
+import { Box, Stepper, Step, StepLabel, Button, Typography, TextField} from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 
 const steps = ['Enter Organization Details', 'Enter Address', 'Select Services Provided', 'Select Type of Losses', 'Add Contacts'];
+const orgKeyNames = ['name',
+    'serviceExplanation',
+    'logo',        
+    'mission',
+    'notes',
+    'url',
+    'phone',
+    'email',
+    'forProfit',
+    'faithBased',
+    'hasRetreatCenter',
+    'linkedInUrl',
+    'facebookUrl',
+    'instagramUrl']
 
 export default function TestPage() {
   const [activeStep, setActiveStep] = useState(0);
 
+  const dispatch = useDispatch();
+  const newOrg = useSelector(store => store.newOrg)
+
+  const handleChange = (arg, keyName)=>{
+    dispatch({type: "SET_ORG_OBJECT", payload: {[keyName]: arg}})
+  }
+
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    dispatch({type: "EDIT_ORG", payload: orgOne})
   };
 
   const handleBack = () => {
@@ -44,6 +66,11 @@ export default function TestPage() {
       ) : (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+          {/* <TextField label="name" value={newOrg?.name} onChange={(event)=> handleChange(event.target.value, "name")}/>
+          <TextField label="notes" value={newOrg?.notes} onChange={(event)=> handleChange(event.target.value, "notes")}/> */}
+          {orgKeyNames.map(org => (
+            <TextField label={org} value={newOrg?.org} onChange={(event)=> handleChange(event.target.value, org)}/>
+          ))}
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Button
               color="inherit"
