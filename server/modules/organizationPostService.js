@@ -80,6 +80,8 @@ async function convertCityStateToLatLong(city, state) {
 
 async function postAddress(connection, address) {
     const addressEntityForDatabase = {...address};
+    
+    // remove the full state name before storing in database
     delete addressEntityForDatabase.state;
     
     const addressQuery = `INSERT INTO "address"

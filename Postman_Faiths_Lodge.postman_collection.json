@@ -170,7 +170,7 @@
 									"raw": "{\n    \"isAdmin\": false\n}"
 								},
 								"url": {
-									"raw": "http://localhost:5001/api/user/editAdmin/3",
+									"raw": "http://localhost:5001/api/user/editAdmin/4",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -180,7 +180,7 @@
 										"api",
 										"user",
 										"editAdmin",
-										"3"
+										"4"
 									]
 								},
 								"description": "Registration"
@@ -275,7 +275,7 @@
 					"response": []
 				},
 				{
-					"name": "GET ALL organizations Copy",
+					"name": "DELETE organization by id",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -361,244 +361,376 @@
 			]
 		},
 		{
-			"name": "Options",
+			"name": "Service types",
 			"item": [
 				{
-					"name": "Service types",
-					"item": [
-						{
-							"name": "GET ALL service types",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:5001/api/option/service",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "5001",
-									"path": [
-										"api",
-										"option",
-										"service"
-									]
-								},
-								"description": "User Info"
-							},
-							"response": []
+					"name": "GET ALL service types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/option/service",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"service"
+							]
 						},
-						{
-							"name": "POST service type",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"typeToInsert\":\"example_service1\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:5001/api/option/service",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "5001",
-									"path": [
-										"api",
-										"option",
-										"service"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "PUT service type",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"typeToInsert\":\"examp\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:5001/api/option/service/15",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "5001",
-									"path": [
-										"api",
-										"option",
-										"service",
-										"15"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "DELETE service type Copy",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:5001/api/option/service/15",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "5001",
-									"path": [
-										"api",
-										"option",
-										"service",
-										"15"
-									]
-								}
-							},
-							"response": []
-						}
-					]
+						"description": "User Info"
+					},
+					"response": []
 				},
 				{
-					"name": "Loss types",
-					"item": [
-						{
-							"name": "GET ALL loss types",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:5001/api/option/loss",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "5001",
-									"path": [
-										"api",
-										"option",
-										"loss"
-									]
+					"name": "POST service type",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"typeToInsert\":\"example_service1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							},
-							"response": []
+							}
 						},
-						{
-							"name": "POST loss type",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"typeToInsert\": \"example_loss1111\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:5001/api/option/loss",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "5001",
-									"path": [
-										"api",
-										"option",
-										"loss"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "PUT loss type",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"typeToInsert\": \"example_loss111222221\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:5001/api/option/loss/14",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "5001",
-									"path": [
-										"api",
-										"option",
-										"loss",
-										"14"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "DELETE loss type Copy",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:5001/api/option/loss/14",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "5001",
-									"path": [
-										"api",
-										"option",
-										"loss",
-										"14"
-									]
-								}
-							},
-							"response": []
+						"url": {
+							"raw": "http://localhost:5001/api/option/service",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"service"
+							]
 						}
-					]
+					},
+					"response": []
+				},
+				{
+					"name": "PUT service type",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"typeToInsert\":\"examp\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/option/service/15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"service",
+								"15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE service type Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/option/service/15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"service",
+								"15"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Loss types",
+			"item": [
+				{
+					"name": "GET ALL loss types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/option/loss",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"loss"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST loss type",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"typeToInsert\": \"example_loss1111\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/option/loss",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"loss"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT loss type",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"typeToInsert\": \"example_loss111222221\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/option/loss/14",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"loss",
+								"14"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE loss type Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/option/loss/14",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"loss",
+								"14"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contact",
+			"item": [
+				{
+					"name": "GET all contacts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/contact/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"contact",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET contact by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/contact/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"contact",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST contact",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"testContactPostfName\",\n    \"lastName\": \"testContactPostlName\",\n    \"phone\": \"(555)555-5555\",\n    \"email\": \"testContactPost1@postmail.com\",\n    \"title\": \"superintendent\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/contact/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"contact",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT contact by id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"testContactPostfName\",\n    \"lastName\": \"testContactPostlName\",\n    \"phone\": \"(555)555-5556\",\n    \"email\": \"testContactPost1@postmail.com\",\n    \"title\": \"superintendent\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/contact/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"contact",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE contact by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/contact/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"contact",
+								"5"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
