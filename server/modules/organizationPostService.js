@@ -231,8 +231,7 @@ async function postContacts(contacts, organizationId, connection) {
 function generateNumberOfQueryInputs(arrayOfObjs) {
     return arrayOfObjs
         .map((obj, i) => {
-            // cou
-            const numPropertiesInObj = Object.values(obj).length;
+            const numPropertiesInObj = Object.keys(obj).length;
 
             // make one line of multi-line SQL INSERT
             return valuesInObj
@@ -244,7 +243,7 @@ function generateNumberOfQueryInputs(arrayOfObjs) {
                         // format an input b/n first and last of this line
                         return `$${i * numPropertiesInObj + (j + 1)})`;
                     } else {
-                        // format the last input of this line
+                        // format the last input of this line with ending parens
                         return `$${i * numPropertiesInObj + (j + 1)}`;
                     }
                 })
