@@ -143,16 +143,17 @@ async function postServiceTypeByOrganization(
     connection
 ) {
     if (serviceTypesIds && serviceTypesIds.length > 0) {
-        const orgWithServiceTypes = serviceTypesIds.map((id) => {
-            return { organizationId, id };
+        const mappedServiceTypesToOrg = serviceTypesIds.map((serviceTypeId) => {
+            return { organizationId, serviceTypeId };
         });
 
-        const serviceTypeInputCount =
-            generateNumberOfQueryInputs(orgWithServiceTypes);
+        const serviceTypeInputCount = generateNumberOfQueryInputs(
+            mappedServiceTypesToOrg
+        );
 
         // format values for multi-line SQL insert
-        serviceQueryParams = orgWithServiceTypes.flatMap((orgWithLossType) =>
-            Object.values(orgWithLossType)
+        serviceQueryParams = mappedServiceTypesToOrg.flatMap(
+            (orgWithLossType) => Object.values(orgWithLossType)
         );
         const serviceTypeQuery = `INSERT INTO "service_type_by_organization"
                                         (
@@ -173,14 +174,14 @@ async function postLossTypeByOrganization(
 ) {
     if (lossTypeIds && lossTypeIds.length > 0) {
         // associate the org id with this loss type
-        const orgWithLossTypes = lossTypeIds.map((id) => {
-            return { organizationId, id };
+        const mappedLossTypesToOrg = lossTypeIds.map((lossTypeId) => {
+            return { organizationId, lossTypeId };
         });
         const lossTypeInputCount =
-            generateNumberOfQueryInputs(orgWithLossTypes);
+            generateNumberOfQueryInputs(mappedLossTypesToOrg);
 
         // format for arg array for multi-line SQL insert
-        lossQueryParams = orgWithLossTypes.flatMap((orgWithType) =>
+        lossQueryParams = mappedLossTypesToOrg.flatMap((orgWithType) =>
             Object.values(orgWithType)
         );
 
@@ -223,33 +224,24 @@ async function postContacts(contacts, organizationId, connection) {
     }
 }
 
-
 // This function generates the parameter input count string for an SQL
 // query for an array of objects. It maps through the array and counts
 // the properties of the objs in the array in sequence for all elements
-// of the array. 
+// of the array.
 function generateNumberOfQueryInputs(arrayOfObjs) {
+    const numPropertiesInObj = Object.keys(arrayOfObjs[0]).length;
+    const propertiesInObj = Object.keys(arrayOfObjs[0]);
+
+    // make the multi-line insert parameter input placeholders
     return arrayOfObjs
         .map((obj, i) => {
-            const numPropertiesInObj = Object.keys(obj).length;
-
-            // make one line of multi-line SQL INSERT
-            return valuesInObj
-                .map((value, j) => {
-                    if (j === 0) {
-                        // format beginning of input with a parens of this line
-                        return `($${i * numPropertiesInObj + (j + 1)}`;
-                    } else if (j === numPropertiesInObj - 1) {
-                        // format an input b/n first and last of this line
-                        return `$${i * numPropertiesInObj + (j + 1)})`;
-                    } else {
-                        // format the last input of this line with ending parens
-                        return `$${i * numPropertiesInObj + (j + 1)}`;
-                    }
-                })
-                .join(", ");
+            // make one line of placeholders for multi-line SQL INSERT
+            const array = propertiesInObj.map((value, j) => {
+                return `$${i * numPropertiesInObj + (j + 1)}`;
+            });
+            return "(" + array.join(", ") + ")";
         })
-        .join(", "); // join all lines
+        .join(", ");
 }
 
 module.exports = postOrganizationWithDetails;
