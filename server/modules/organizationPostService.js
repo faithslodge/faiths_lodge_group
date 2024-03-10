@@ -63,6 +63,7 @@ const postOrganizationWithDetails = async (organizationDetails) => {
     }
 };
 
+// translate a city/state to a lat/long to store in DB for this org
 async function convertCityStateToLatLong(city, state) {
     const geojson = await axios.get(
         `https://nominatim.openstreetmap.org/search?q=${city}%2C+${state}&format=geojson`,
@@ -78,12 +79,13 @@ async function convertCityStateToLatLong(city, state) {
     return { latitude, longitude };
 }
 
+// INSERT an address into DB for this organization
 async function postAddress(connection, address) {
-    const addressEntityForDatabase = {...address};
-    
+    const addressEntityForDatabase = { ...address };
+
     // remove the full state name before storing in database
     delete addressEntityForDatabase.state;
-    
+
     const addressQuery = `INSERT INTO "address"
                                     (
                                         "address_line_1",
@@ -94,11 +96,15 @@ async function postAddress(connection, address) {
                                         "latitude",
                                         "longitude"
                                         ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;`;
-    const addressQueryRes = await connection.query(addressQuery, Object.values(addressEntityForDatabase));
+    const addressQueryRes = await connection.query(
+        addressQuery,
+        Object.values(addressEntityForDatabase)
+    );
 
     return addressQueryRes.rows[0].id;
 }
 
+// INSERT an organization into DB
 async function postOrganization(connection, organization) {
     const organizationQuery = `INSERT INTO "organization"
                                     (
@@ -122,83 +128,86 @@ async function postOrganization(connection, organization) {
                                         $10, $11, $12, $13, $14, $15
                                         ) RETURNING id;`;
 
-    const organizationQueryRes = await connection.query(organizationQuery, Object.values(organization));
+    const organizationQueryRes = await connection.query(
+        organizationQuery,
+        Object.values(organization)
+    );
 
     return organizationQueryRes.rows[0].id;
 }
 
+// INSERT a service type for this org in DB
 async function postServiceTypeByOrganization(
     serviceTypesIds,
     organizationId,
     connection
 ) {
     if (serviceTypesIds && serviceTypesIds.length > 0) {
-    // generate $1, $2, ... for SQL query string
-    const serviceParameterQueryString = serviceTypesIds
-        .map((id, i) => {
-            // make two query parameter placeholders per loop
-            return `($${i * 2 + 1}, $${i * 2 + 2})`;
-        })
-        .join(", ");
+        const orgWithServiceTypes = serviceTypesIds.map((id) => {
+            return { organizationId, id };
+        });
 
-    // format values for multi-line SQL insert
-    serviceQueryParams = serviceTypesIds.flatMap((id) => [organizationId, id]);
+        const serviceTypeInputCount =
+            generateNumberOfQueryInputs(orgWithServiceTypes);
+
+        // format values for multi-line SQL insert
+        serviceQueryParams = orgWithServiceTypes.flatMap((orgWithLossType) =>
+            Object.values(orgWithLossType)
+        );
         const serviceTypeQuery = `INSERT INTO "service_type_by_organization"
                                         (
                                             "organization_id",
                                             "service_id"
-                                            ) VALUES ${serviceParameterQueryString};`;
+                                            ) VALUES ${serviceTypeInputCount};`;
 
         // INSERT service_type_by_organization(s)
         await connection.query(serviceTypeQuery, serviceQueryParams);
     }
 }
 
+// INSERT a loss type association for this org in DB
 async function postLossTypeByOrganization(
     lossTypeIds,
     organizationId,
     connection
 ) {
     if (lossTypeIds && lossTypeIds.length > 0) {
-    const lossParameterQueryString = lossTypeIds
-        .map((lossType, i) => {
-            // make two query parameter placeholders per loop
-            return `($${i * 2 + 1}, $${i * 2 + 2})`;
-        })
-        .join(", ");
+        // associate the org id with this loss type
+        const orgWithLossTypes = lossTypeIds.map((id) => {
+            return { organizationId, id };
+        });
+        const lossTypeInputCount =
+            generateNumberOfQueryInputs(orgWithLossTypes);
 
-    // format for multi-line SQL insert
-    lossQueryParams = lossTypeIds.flatMap((id) => [organizationId, id]);
+        // format for arg array for multi-line SQL insert
+        lossQueryParams = orgWithLossTypes.flatMap((orgWithType) =>
+            Object.values(orgWithType)
+        );
 
         const lossTypeQuery = `INSERT INTO "loss_type_by_organization"
                                     (
                                         "organization_id",
                                         "loss_id"
-                                        ) VALUES ${lossParameterQueryString};`;
+                                        ) VALUES ${lossTypeInputCount};`;
 
         // INSERT loss_type_by_organization(s)
         await connection.query(lossTypeQuery, lossQueryParams);
     }
 }
 
+// INSERT contact into DB for this org
 async function postContacts(contacts, organizationId, connection) {
-    if ( contacts && contacts.length > 0) {
-    const contactParameterQueryString = contacts
-        .map((contact, i) => {
-            const updatedContactObject = {...contact, organizationId};
-            const contactObjKeyCount = Object.keys(updatedContactObject).length;
-            return `($${i * contactObjKeyCount + 1}, $${
-                i * contactObjKeyCount + 2
-            }, $${i * contactObjKeyCount + 3}, $${
-                i * contactObjKeyCount + 4
-            }, $${i * contactObjKeyCount + 5}, $${
-                i * contactObjKeyCount + 6
-            })`;
-        })
-        .join(", ");
+    if (contacts && contacts.length > 0) {
+        const contactsWithOrg = contacts.map((contact) => {
+            return { ...contact, organizationId };
+        });
+        const contactInputCount = generateNumberOfQueryInputs(contactsWithOrg);
 
-    // format for multi-line SQL insert
-    contactQueryParams = contacts.flatMap((contact) => [...Object.values(contact), organizationId]);
+        // format for multi-line SQL insert
+        contactQueryParams = contacts.flatMap((contact) => [
+            ...Object.values(contact),
+            organizationId,
+        ]);
 
         const contactQuery = `INSERT INTO "organization_contact"
             (
@@ -208,10 +217,40 @@ async function postContacts(contacts, organizationId, connection) {
                 "email",
                 "title",
                 "organization_id"
-                ) VALUES ${contactParameterQueryString};`;
+                ) VALUES ${contactInputCount};`;
 
         await connection.query(contactQuery, contactQueryParams);
     }
+}
+
+
+// This function generates the parameter input count string for an SQL
+// query for an array of objects. It maps through the array and counts
+// the properties of the objs in the array in sequence for all elements
+// of the array. 
+function generateNumberOfQueryInputs(arrayOfObjs) {
+    return arrayOfObjs
+        .map((obj, i) => {
+            // cou
+            const numPropertiesInObj = Object.values(obj).length;
+
+            // make one line of multi-line SQL INSERT
+            return valuesInObj
+                .map((value, j) => {
+                    if (j === 0) {
+                        // format beginning of input with a parens of this line
+                        return `($${i * numPropertiesInObj + (j + 1)}`;
+                    } else if (j === numPropertiesInObj - 1) {
+                        // format an input b/n first and last of this line
+                        return `$${i * numPropertiesInObj + (j + 1)})`;
+                    } else {
+                        // format the last input of this line
+                        return `$${i * numPropertiesInObj + (j + 1)}`;
+                    }
+                })
+                .join(", ");
+        })
+        .join(", "); // join all lines
 }
 
 module.exports = postOrganizationWithDetails;
