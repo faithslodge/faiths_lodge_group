@@ -8,6 +8,14 @@ import {
   Stack,
   Link,
   Container,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  ListItemText,
+  Checkbox,
+  OutlinedInput,
 } from "@mui/material";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -17,6 +25,7 @@ import { Email, OpenInNew, Phone } from "@mui/icons-material";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { useState } from "react";
 
 const overlineFont = {
   fontSize: 14,
@@ -33,31 +42,87 @@ const boolCheck = (info) => {
   }
 };
 
-const OrgInfo = () => {
+const OrgInfoEdit = () => {
   const { id } = useParams();
   console.log("ParamID:", id);
 
-  const orgStore = useSelector((orgStore) => orgStore.organizations);
-  console.log("STORE:", orgStore);
+  const orgStore = useSelector((store) => store.organizations);
+  console.log("orgStore:", orgStore);
 
   const filteredOrgArray = orgStore?.filter((item) => item.id === Number(id));
   console.log("filteredOrgArray:", filteredOrgArray);
 
   const org = filteredOrgArray[0];
 
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+  // Loss Types
+  const lossTypes = useSelector((store) => store.options.lossesReducer);
+  console.log("lossTypes:", lossTypes);
+
+  const [stateLossTypes, setStateLossTypes] = useState([]);
+
+  const handleLossTypeChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setStateLossTypes(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+  console.log("stateLossTypes:", stateLossTypes);
+
+  // Services Types
+  const serviceTypes = useSelector((store) => store.options.servicesReducer);
+  console.log("serviceTypes:", serviceTypes);
+
+  const [stateServiceTypes, setStateServiceTypes] = useState([]);
+
+  const handleServiceTypeChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setStateServiceTypes(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+  console.log("stateServiceTypes:", stateServiceTypes);
+
   return (
     <Container>
       {/* Modal Info Container */}
-      <Grid container>
-        {/* Top */}
-        <Grid item xs={12} mb={5}>
-          {/* Org Name, Verified Badge, View/Edit Btn */}
-          <Stack direction="row" alignItems="center" gap={2}>
-            <Typography variant="h5" component="h2">
-              {org.name}
-            </Typography>
 
-            {org.verified_by && (
+      <Grid container>
+        {/* Left */}
+        <Grid item xs={6} pr={5}>
+          {/* Org Name, Verified Badge, View/Edit Btn */}
+          <Typography variant="overline" sx={overlineFont}>
+            <b>Organization Name</b>
+          </Typography>
+
+          <br />
+
+          <Stack direction="row" alignItems="center" gap={2}>
+            <TextField
+              fullWidth
+              id="standard-helperText"
+              label="Organization Name"
+              defaultValue={org?.name}
+              variant="standard"
+            />
+
+            {org?.verified_by && (
               <Stack spacing={1} direction="row" alignItems="center" ml={1}>
                 <Typography
                   variant="caption"
@@ -72,84 +137,143 @@ const OrgInfo = () => {
                 />
               </Stack>
             )}
-            
-            <Button variant="text" sx={{ fontSize: "medium", ml: 5}}>
-              Edit
+
+            <Button variant="text" sx={{ fontSize: "medium", ml: 5 }}>
+              Save
             </Button>
           </Stack>
-        </Grid>
 
-        <Grid item xs={6} pr={5}>
-          {/* Org Info */}
+          <br />
+
+          {/* Section Title: Org Info */}
           <Typography variant="overline" sx={overlineFont}>
             <b>Organization Info</b>
           </Typography>
+
           <br />
-          <Typography variant="body2">
-            <b>Mission:</b> {org.mission}
-            <br />
-            <b>Address: </b>
-            {org.address_line_1 && `${org.address_line_1}, `}
-            {org.address_line_2 && `${org.address_line_2}, `}
-            {org.city && `${org.city}, `}
-            {org.state && `${org.state} `}
-            {org.zip && `${org.phone}`}
-            <br />
-            <b>Phone:</b> {org.phone}
-            <br />
-          </Typography>
+          <br />
 
-          {/* Email */}
-          <Stack direction="row" alignItems="center" gap={1}>
-            <Typography variant="body2" fontWeight="bold">
-              Email:{" "}
-            </Typography>
-            <Link
-              variant="body2"
-              href={`mailto:${org.email}`}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              {org.email}
-            </Link>
+          {/* Mission */}
+          <TextField
+            id="outlined-multiline-static"
+            label="Mission"
+            fullWidth
+            multiline
+            rows={4}
+            defaultValue={org?.mission}
+          />
+
+          <br />
+          <br />
+
+          {/* Address 1 & 2 */}
+          <Stack direction="row" alignItems="center" gap={3}>
+            <TextField
+              id="standard-helperText"
+              variant="standard"
+              label="Address Line 1"
+              fullWidth
+              defaultValue={org?.address_line_1}
+            />
+            <TextField
+              id="standard-helperText"
+              variant="standard"
+              label="Address Line 2"
+              fullWidth
+              defaultValue={org?.address_line_2}
+            />
           </Stack>
 
-          {/* Website */}
-          <Stack direction="row" alignItems="center" gap={1}>
-            <Typography variant="body2" fontWeight="bold">
-              Website:
-            </Typography>
-            <Link
-              variant="body2"
-              href={org.url}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              {org.url}
-            </Link>
+          <br />
+
+          {/* City State Zip */}
+          <Stack direction="row" alignItems="center" gap={3}>
+            <TextField
+              id="standard-helperText"
+              variant="standard"
+              label="City"
+              fullWidth
+              defaultValue={org?.city}
+            />
+            <TextField
+              id="standard-helperText"
+              variant="standard"
+              label="State"
+              fullWidth
+              defaultValue={org?.state}
+            />
           </Stack>
+
+          <br />
+
+          {/* Zip & Phone */}
+          <Stack direction="row" alignItems="center" gap={3}>
+            <TextField
+              id="standard-helperText"
+              variant="standard"
+              fullWidth
+              label="Zip"
+              defaultValue={org?.zip}
+            />
+
+            <TextField
+              id="standard-helperText"
+              variant="standard"
+              label="Phone"
+              fullWidth
+              defaultValue={org?.phone}
+            />
+          </Stack>
+
+          <br />
+
+          {/* Email & Website */}
+          <Stack direction="row" alignItems="center" gap={3}>
+            <TextField
+              id="standard-helperText"
+              variant="standard"
+              label="Email"
+              fullWidth
+              defaultValue={org?.email}
+            />
+            <TextField
+              id="standard-helperText"
+              variant="standard"
+              label="Website"
+              fullWidth
+              defaultValue={org?.url}
+            />
+          </Stack>
+
+          <br />
+          <br />
 
           {/* Retreat?, Faith Based?, For Profit? */}
-          <Typography variant="body2">
-            <b>Has Retreat?:</b> {boolCheck(org.has_retreat_center)}
-            <br />
-            <b>Faith Based?:</b> {boolCheck(org.faith_based)}
-            <br />
-            <b>For Profit?:</b> {boolCheck(org.for_profit)}
-            <br />
-          </Typography>
+          <Stack direction="row" alignItems="center" gap={1}>
+            <b>Has Retreat?:</b> {boolCheck(org?.has_retreat_center)}
+            <b>Faith Based?:</b> {boolCheck(org?.faith_based)}
+            <b>For Profit?:</b> {boolCheck(org?.for_profit)}
+          </Stack>
 
+          <br />
           <br />
 
           {/* Notes */}
           <Typography variant="overline" sx={overlineFont}>
             <b>Notes</b>
           </Typography>
+
           <br />
-          <Typography variant="body2">
-            {org.notes}
-            <br />
-          </Typography>
+          <br />
+
+          <TextField
+            id="outlined-multiline-static"
+            label="Notes"
+            fullWidth
+            multiline
+            rows={8}
+            defaultValue={org?.notes}
+          />
         </Grid>
 
         {/* Right Side */}
@@ -161,12 +285,38 @@ const OrgInfo = () => {
               <Typography variant="overline" sx={overlineFont}>
                 <b>Type of Loss</b>
               </Typography>
-              <Typography variant="body2" component="ul" pl={2}>
-                {org.agg_loss_type &&
-                  org.agg_loss_type?.map((losstype) => (
+
+              {/* <Typography variant="body2" component="ul" pl={2}>
+                {org?.agg_loss_type &&
+                  org?.agg_loss_type?.map((losstype) => (
                     <li key={losstype.id}>{losstype.name}</li>
                   ))}
-              </Typography>
+              </Typography> */}
+
+              <FormControl sx={{ m: 1, width: 300 }}>
+                <InputLabel id="demo-multiple-checkbox-label">
+                  Type of Loss
+                </InputLabel>
+                <Select
+                  labelId="demo-multiple-checkbox-label"
+                  id="demo-multiple-checkbox"
+                  multiple
+                  value={stateLossTypes}
+                  onChange={handleLossTypeChange}
+                  input={<OutlinedInput label="Tag" />}
+                  renderValue={(selected) => selected.join(", ")}
+                  MenuProps={MenuProps}
+                >
+                  {lossTypes.map((type) => (
+                    <MenuItem key={type.id} value={type.name}>
+                      <Checkbox
+                        checked={stateLossTypes.indexOf(type.name) > -1}
+                      />
+                      <ListItemText primary={type.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </div>
 
             {/* Service Types */}
@@ -174,12 +324,37 @@ const OrgInfo = () => {
               <Typography variant="overline" sx={overlineFont}>
                 <b>Services</b>
               </Typography>
-              <Typography variant="body2" component="ul" pl={2}>
-                {org.agg_service_type &&
-                  org.agg_service_type?.map((service) => (
+              {/* <Typography variant="body2" component="ul" pl={2}>
+                {org?.agg_service_type &&
+                  org?.agg_service_type?.map((service) => (
                     <li key={service.id}>{service.name}</li>
                   ))}
-              </Typography>
+              </Typography> */}
+
+              <FormControl sx={{ m: 1, width: 300 }}>
+                <InputLabel id="demo-multiple-checkbox-label">
+                  Service Types
+                </InputLabel>
+                <Select
+                  labelId="demo-multiple-checkbox-label"
+                  id="demo-multiple-checkbox"
+                  multiple
+                  value={stateServiceTypes}
+                  onChange={handleServiceTypeChange}
+                  input={<OutlinedInput label="Tag" />}
+                  renderValue={(selected) => selected.join(", ")}
+                  MenuProps={MenuProps}
+                >
+                  {serviceTypes.map((type) => (
+                    <MenuItem key={type.id} value={type.name}>
+                      <Checkbox
+                        checked={stateServiceTypes.indexOf(type.name) > -1}
+                      />
+                      <ListItemText primary={type.name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </div>
           </Stack>
 
@@ -194,38 +369,57 @@ const OrgInfo = () => {
           <br />
 
           {/* Map Contacts */}
-          {org.agg_contacts &&
-            org.agg_contacts?.map((contact) => (
+          {org?.agg_contacts &&
+            org?.agg_contacts?.map((contact) => (
               <div key={contact.id}>
-                <Typography
-                  variant="body2"
-                  textTransform="capitalize"
-                  fontWeight="bold"
-                  fontSize={13}
-                >
-                  {contact.firstName} {contact.lastName}
-                </Typography>
-                <Typography variant="caption" fontWeight="300" pl={1.5}>
-                  Title: {contact.title}
-                </Typography>
-                <Stack direction="row" alignItems="center" gap={1} pl={1.5}>
-                  <Phone fontSize="xsmall" />
-                  <Typography variant="body2" fontSize={12}>
-                    {contact.phone}
-                  </Typography>
+                {/* Name & Title */}
+                <Stack direction="row" alignItems="center" gap={3}>
+                  <TextField
+                    id="standard-helperText"
+                    variant="standard"
+                    fullWidth
+                    label="First Name"
+                    defaultValue={contact.firstName}
+                  />
+
+                  <TextField
+                    id="standard-helperText"
+                    variant="standard"
+                    fullWidth
+                    label="Last Name"
+                    defaultValue={contact.lastName}
+                  />
+
+                  <TextField
+                    id="standard-helperText"
+                    variant="standard"
+                    fullWidth
+                    label="Title"
+                    defaultValue={contact.title}
+                  />
                 </Stack>
-                <Stack direction="row" alignItems="center" gap={1} pl={1.5}>
-                  <Email fontSize="xsmall" />
-                  <Link
-                    variant="body2"
-                    href={`mailto:${contact.email}`}
-                    fontSize={12}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    {contact.email}
-                  </Link>
+
+                <br />
+
+                {/* Phone & Email */}
+                <Stack direction="row" alignItems="center" gap={3}>
+                  <TextField
+                    id="standard-helperText"
+                    variant="standard"
+                    fullWidth
+                    label="Phone"
+                    defaultValue={contact.phone}
+                  />
+                  <TextField
+                    id="standard-helperText"
+                    variant="standard"
+                    fullWidth
+                    label="Email"
+                    defaultValue={contact.email}
+                  />
                 </Stack>
+                <br />
+                <br />
               </div>
             ))}
 
@@ -235,40 +429,32 @@ const OrgInfo = () => {
           <Typography variant="overline" sx={overlineFont}>
             <b>Social Media</b>
           </Typography>
+
           <br />
-          <Stack direction="row" alignItems="center" gap={1}>
-            {org.facebook_url && (
-              <Link
-                href={org.facebook_url}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                <FacebookIcon fontSize="medium" />
-              </Link>
-            )}
 
-            {org.instagram_url && (
-              <Link
-                href={org.instagram_url}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                <InstagramIcon
-                  fontSize="medium"
-                  sx={{ color: "rgba(229, 71, 101, 1)" }}
-                />
-              </Link>
-            )}
+          <Stack direction="column" alignItems="left" gap={3} width="70%">
+            <TextField
+              id="standard-helperText"
+              variant="standard"
+              fullWidth
+              label="Facebook"
+              defaultValue={org?.facebook_url}
+            />
 
-            {org.linked_in_url && (
-              <Link
-                href={org.linked_in_url}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                <LinkedInIcon fontSize="medium" />
-              </Link>
-            )}
+            <TextField
+              id="standard-helperText"
+              variant="standard"
+              fullWidth
+              label="Instagram"
+              defaultValue={org?.instagram_url}
+            />
+
+            <TextField
+              id="standard-helperText"
+              variant="standard"
+              label="LinkedIn"
+              defaultValue={org?.linked_in_url}
+            />
           </Stack>
         </Grid>
       </Grid>
@@ -276,4 +462,4 @@ const OrgInfo = () => {
   );
 };
 
-export default OrgInfo;
+export default OrgInfoEdit;
