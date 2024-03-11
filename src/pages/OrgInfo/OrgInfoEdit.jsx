@@ -55,73 +55,84 @@ const boolCheck = (info) => {
   }
 };
 
-
-
 const OrgInfoEdit = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   // ! Fetch the Organization from the reducer by ID
   const { id } = useParams();
-  console.log("ParamID:", id);
+  // console.log("ParamID:", id);
 
-    const orgStore = useSelector((store) => store.organizations);
-    console.log("orgStore:", orgStore);
+  const orgStore = useSelector((store) => store.organizations);
+  // console.log("orgStore:", orgStore);
 
-    const filteredOrgArray = orgStore?.filter((item) => item.id === Number(id));
-    console.log("filteredOrgArray:", filteredOrgArray);
+  const filteredOrgArray = orgStore?.filter((item) => item.id === Number(id));
+  // console.log("filteredOrgArray:", filteredOrgArray);
 
-    let org = filteredOrgArray[0];
+  let org = filteredOrgArray[0];
 
-    const [editOrg, setEditOrg] = useState(org)
+  const [editOrg, setEditOrg] = useState(org);
 
-    // ! HANDLECHANGE()
-    const handleChange = (e) => {
+  // ! HANDLECHANGE()
+  console.log("editOrg", editOrg);
+
+  const handleChange = (e) => {
+    // console.log("e.target", e.target)
+    // console.log("e.target.id", e.target.id)
+    // console.log("e.target.value", e.target.value)
+    let keyName = e.target.id;
+    let value = e.target.value;
+    setEditOrg({ ...editOrg, [keyName]: value });
+    // dispatch({type: "EDIT_ORG", payload: { [keyName]: value}})
+  };
+  
+
+    const handleBooleanChange = (e) => {
+      // console.log("e.target", e.target)
       // console.log("e.target.id", e.target.id)
       // console.log("e.target.value", e.target.value)
-      let keyName = e.target.id
-      let value = e.target.value
-      setEditOrg({...editOrg, [keyName]: value})
+      let keyName = e.target.name;
+      let value = e.target.value;
+      setEditOrg({ ...editOrg, [keyName]: value });
       // dispatch({type: "EDIT_ORG", payload: { [keyName]: value}})
-    }
-    console.log('editOrg', editOrg);
+    };
+
+
 
   // ! Loss Types
   const lossTypes = useSelector((store) => store.options.lossesReducer);
-  console.log("lossTypes:", lossTypes);
+  // console.log("lossTypes:", lossTypes);
 
+  const [stateLossTypes, setStateLossTypes] = useState([]);
 
-    const [stateLossTypes, setStateLossTypes] = useState([]);
-
-    const handleLossTypeChange = (event) => {
-      const {
-        target: { value },
-      } = event;
-      setStateLossTypes(
-        // On autofill we get a stringified value.
-        typeof value === "string" ? value.split(",") : value
-      );
-    };
-    console.log("stateLossTypes:", stateLossTypes);
+  const handleLossTypeChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setStateLossTypes(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+  // console.log("stateLossTypes:", stateLossTypes);
 
   // ! Services Types
   const serviceTypes = useSelector((store) => store.options.servicesReducer);
-  console.log("serviceTypes:", serviceTypes);
+  // console.log("serviceTypes:", serviceTypes);
 
-    const [stateServiceTypes, setStateServiceTypes] = useState([]);
+  const [stateServiceTypes, setStateServiceTypes] = useState([]);
 
-    const handleServiceTypeChange = (event) => {
-      const {
-        target: { value },
-      } = event;
-      setStateServiceTypes(
-        // On autofill we get a stringified value.
-        typeof value === "string" ? value.split(",") : value
-      );
-    };
-    console.log("stateServiceTypes:", stateServiceTypes);
+  const handleServiceTypeChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setStateServiceTypes(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+  // console.log("stateServiceTypes:", stateServiceTypes);
 
-    // ! 
-  
+  // !
 
   return (
     <Container>
@@ -130,7 +141,10 @@ const OrgInfoEdit = () => {
       <Grid container>
         {/* Left */}
         <Grid item xs={6} pr={5}>
-          <Button variant="contained" color="success" onClick={handleChange}>TEST</Button><br />
+          <Button variant="contained" color="success" onClick={handleChange}>
+            TEST
+          </Button>
+          <br />
           {/* TITLE: ORG NAME */}
           <Typography variant="overline" sx={overlineFont}>
             <b>Organization Name</b>
@@ -287,9 +301,47 @@ const OrgInfoEdit = () => {
 
           {/* Retreat?, Faith Based?, For Profit? */}
           <Stack direction="row" alignItems="center" gap={1}>
-            <b>Has Retreat?:</b> {boolCheck(org?.has_retreat_center)}
-            <b>Faith Based?:</b> {boolCheck(org?.faith_based)}
-            <b>For Profit?:</b> {boolCheck(org?.for_profit)}
+            <FormControl fullWidth>
+              <InputLabel id="has_retreat_center_selector">Has Retreat?</InputLabel>
+              <Select
+                labelId="has_retreat_center_selector"
+                name="has_retreat_center"
+                value={editOrg?.has_retreat_center}
+                label="Has Retreat?"
+                onChange={handleBooleanChange}
+              >
+                <MenuItem value={true}>Yes</MenuItem>
+                <MenuItem value={false}>No</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth>
+              <InputLabel id="faith_based_selector">Faith Based?</InputLabel>
+              <Select
+                labelId="faith_based_selector"
+                name="faith_based"
+                value={editOrg?.faith_based}
+                label="Faith Based?"
+                onChange={handleBooleanChange}
+              >
+                <MenuItem value={true}>Yes</MenuItem>
+                <MenuItem value={false}>No</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth>
+              <InputLabel id="for_profit_selector">For Profit?</InputLabel>
+              <Select
+                labelId="for_profit_selector"
+                name="for_profit"
+                value={editOrg?.for_profit}
+                label="For Profit?"
+                onChange={handleBooleanChange}
+              >
+                <MenuItem value={true}>Yes</MenuItem>
+                <MenuItem value={false}>No</MenuItem>
+              </Select>
+            </FormControl>
           </Stack>
 
           <br />
