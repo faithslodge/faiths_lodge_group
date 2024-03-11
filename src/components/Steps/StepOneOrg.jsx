@@ -3,20 +3,23 @@ import { Box, FormControlLabel, Checkbox, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
 const orgKeyNames = [
-  "name",
-  "serviceExplanation",
-  "logo",
-  "mission",
-  "notes",
-  "url",
-  "phone",
-  "email",
-  "linkedInUrl",
-  "facebookUrl",
-  "instagramUrl",
+  { text: "Name", checkBox: false, keyName: "name" },
+  { text: "Service Explanation", checkBox: false, keyName: "serviceExplanation" },
+  { text: "Logo", checkBox: false, keyName: "logo" },
+  { text: "Mission", checkBox: false, keyName: "mission" },
+  { text: "Notes", checkBox: false, keyName: "notes" },
+  { text: "Website", checkBox: false, keyName: "url" },
+  { text: "Phone", checkBox: false, keyName: "phone" },
+  { text: "Email", checkBox: false, keyName: "email" },
+  { text: "LinkedIn", checkBox: false, keyName: "linkedInUrl" },
+  { text: "Facebook", checkBox: false, keyName: "facebookUrl" },
+  { text: "Instagram", checkBox: false, keyName: "instagramUrl" },
+  { text: "For Profit", checkBox: true, keyName: "forProfit" },
+  { text: "Faith Based", checkBox: true, keyName: "faithBased" },
+  { text: "Retreat Center", checkBox: true, keyName: "hasRetreatCenter" },
 ];
 
-const checkBoxNames = ["forProfit", "faithBased", "hasRetreatCenter"];
+// const checkBoxNames = ["forProfit", "faithBased", "hasRetreatCenter"];
 
 export default function StepOneOrg() {
   const dispatch = useDispatch();
@@ -30,24 +33,39 @@ export default function StepOneOrg() {
     <Box sx={{ width: "70%", m: "auto" }}>
       <React.Fragment>
         <Box>
-          {orgKeyNames.map((keyName, i) => (
-            <TextField
-              label={keyName}
-              value={newOrg?.keyName}
-              key={i}
-              onChange={(event) => handleChange(event.target.value, keyName)}
-            />
-          ))}
+          {orgKeyNames.map((item, i) => {
+            const path = item.keyName;
+            if (item.checkBox === false) {
+              return (
+                <TextField
+                  size="small"
+                  label={item.text}
+                  value={newOrg?.path}
+                  key={i}
+                  onChange={(event) => handleChange(event.target.value, item.keyName)}
+                />
+              );
+            }
+          })}
         </Box>
 
         <Box>
-          {checkBoxNames.map((keyName, i) => (
-            <FormControlLabel
-              control={<Checkbox checked={newOrg.keyName} onChange={(event) => handleChange(event.target.checked, keyName)} />}
-              label={keyName}
-            />
-          ))}
+          {orgKeyNames.map((item, i) => {
+            const path = item.keyName;
+            if (item.checkBox) {
+              return (
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={newOrg?.path} onChange={(event) => handleChange(event.target.checked, item.keyName)} />
+                  }
+                  label={item.text}
+                  key={i}
+                />
+              );
+            }
+          })}
         </Box>
+
       </React.Fragment>
     </Box>
   );
