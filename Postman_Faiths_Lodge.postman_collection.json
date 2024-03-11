@@ -280,7 +280,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5001/api/organization/1",
+							"raw": "http://localhost:5001/api/organization/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -289,7 +289,7 @@
 							"path": [
 								"api",
 								"organization",
-								"1"
+								"2"
 							]
 						},
 						"description": "User Info"
@@ -461,7 +461,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5001/api/option/service/15",
+							"raw": "http://localhost:5001/api/option/service/12",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -471,7 +471,7 @@
 								"api",
 								"option",
 								"service",
-								"15"
+								"12"
 							]
 						}
 					},
@@ -548,7 +548,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5001/api/option/loss/14",
+							"raw": "http://localhost:5001/api/option/loss/13",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -558,7 +558,7 @@
 								"api",
 								"option",
 								"loss",
-								"14"
+								"13"
 							]
 						}
 					},
@@ -579,7 +579,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5001/api/option/loss/14",
+							"raw": "http://localhost:5001/api/option/loss/13",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -589,7 +589,7 @@
 								"api",
 								"option",
 								"loss",
-								"14"
+								"13"
 							]
 						}
 					},
@@ -627,7 +627,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5001/api/contact/2",
+							"raw": "http://localhost:5001/api/contact/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -636,7 +636,7 @@
 							"path": [
 								"api",
 								"contact",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -649,7 +649,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"testContactPostfName\",\n    \"lastName\": \"testContactPostlName\",\n    \"phone\": \"(555)555-5555\",\n    \"email\": \"testContactPost1@postmail.com\",\n    \"title\": \"superintendent\"\n}",
+							"raw": "{\n    \"contacts\": [\n        {\n            \"firstName\": \"testContactPostfName\",\n            \"lastName\": \"testContactPostlName\",\n            \"phone\": \"(555)555-5555\",\n            \"email\": \"testContactPost1@postmail.com\",\n            \"title\": \"wizard\"\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -687,7 +687,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5001/api/contact/5",
+							"raw": "http://localhost:5001/api/contact/6",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -696,7 +696,7 @@
 							"path": [
 								"api",
 								"contact",
-								"5"
+								"6"
 							]
 						}
 					},
@@ -717,7 +717,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5001/api/contact/5",
+							"raw": "http://localhost:5001/api/contact/6",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -726,7 +726,84 @@
 							"path": [
 								"api",
 								"contact",
-								"5"
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Address",
+			"item": [
+				{
+					"name": "GET all addresses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/address/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"address",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET address by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/address/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"address",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT address by id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address_line_1\": \"123332 main street\",\n    \"address_line_2\": null,\n    \"city\": \"St. Paul\",\n    \"state\": \"Minnesota\",\n    \"stateAbbreviation\": \"MN\",\n    \"zip_code\": \"11111\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/address/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"address",
+								"1"
 							]
 						}
 					},
