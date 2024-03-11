@@ -1,8 +1,6 @@
 import * as React from "react";
 import {
-  Modal,
   Typography,
-  Box,
   Grid,
   Button,
   Stack,
@@ -13,10 +11,10 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import { Email, OpenInNew, Phone } from "@mui/icons-material";
+import { Email, Phone } from "@mui/icons-material";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const overlineFont = {
   fontSize: 14,
@@ -35,15 +33,19 @@ const boolCheck = (info) => {
 
 const OrgInfo = () => {
   const { id } = useParams();
-  console.log("ParamID:", id);
+  // console.log("ParamID:", id);
+
+  const history = useHistory()
 
   const orgStore = useSelector((orgStore) => orgStore.organizations);
-  console.log("STORE:", orgStore);
+  // console.log("STORE:", orgStore);
 
   const filteredOrgArray = orgStore?.filter((item) => item.id === Number(id));
-  console.log("filteredOrgArray:", filteredOrgArray);
+  // console.log("filteredOrgArray:", filteredOrgArray);
 
   const org = filteredOrgArray[0];
+
+
 
   return (
     <Container>
@@ -73,7 +75,7 @@ const OrgInfo = () => {
               </Stack>
             )}
             
-            <Button variant="text" sx={{ fontSize: "medium", ml: 5}}>
+            <Button onClick={() => history.push(`/orgedit/${org?.id}`)} variant="text" sx={{ fontSize: "medium", ml: 5}}>
               Edit
             </Button>
           </Stack>
