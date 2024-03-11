@@ -130,14 +130,15 @@ const OrgInfoEdit = () => {
       <Grid container>
         {/* Left */}
         <Grid item xs={6} pr={5}>
-          {/* Org Name, Verified Badge, View/Edit Btn */}
           <Button variant="contained" color="success" onClick={handleChange}>TEST</Button><br />
+          {/* TITLE: ORG NAME */}
           <Typography variant="overline" sx={overlineFont}>
             <b>Organization Name</b>
           </Typography>
 
           <br />
 
+          {/* Org Name, Verified Badge, View/Edit Btn */}
           <Stack direction="row" alignItems="center" gap={2}>
             <TextField
               fullWidth
@@ -171,7 +172,7 @@ const OrgInfoEdit = () => {
 
           <br />
 
-          {/* Section Title: Org Info */}
+          {/* TITLE: Org Info */}
           <Typography variant="overline" sx={overlineFont}>
             <b>Organization Info</b>
           </Typography>
@@ -181,12 +182,13 @@ const OrgInfoEdit = () => {
 
           {/* Mission */}
           <TextField
-            id="outlined-multiline-static"
+            id="mission"
             label="Mission"
             fullWidth
             multiline
             rows={4}
             defaultValue={org?.mission}
+            onChange={handleChange}
           />
 
           <br />
@@ -201,13 +203,15 @@ const OrgInfoEdit = () => {
               label="Address Line 1"
               fullWidth
               defaultValue={org?.address_line_1}
+              onChange={handleChange}
             />
             <TextField
-              id="standard-helperText"
+              id="address_line_2"
               variant="standard"
               label="Address Line 2"
               fullWidth
               defaultValue={org?.address_line_2}
+              onChange={handleChange}
             />
           </Stack>
 
@@ -216,18 +220,20 @@ const OrgInfoEdit = () => {
           {/* City State Zip */}
           <Stack direction="row" alignItems="center" gap={3}>
             <TextField
-              id="standard-helperText"
+              id="city"
               variant="standard"
               label="City"
               fullWidth
               defaultValue={org?.city}
+              onChange={handleChange}
             />
             <TextField
-              id="standard-helperText"
+              id="state"
               variant="standard"
               label="State"
               fullWidth
               defaultValue={org?.state}
+              onChange={handleChange}
             />
           </Stack>
 
@@ -236,19 +242,21 @@ const OrgInfoEdit = () => {
           {/* Zip & Phone */}
           <Stack direction="row" alignItems="center" gap={3}>
             <TextField
-              id="standard-helperText"
+              id="zip"
               variant="standard"
               fullWidth
               label="Zip"
               defaultValue={org?.zip}
+              onChange={handleChange}
             />
 
             <TextField
-              id="standard-helperText"
+              id="phone"
               variant="standard"
               label="Phone"
               fullWidth
               defaultValue={org?.phone}
+              onChange={handleChange}
             />
           </Stack>
 
@@ -257,18 +265,20 @@ const OrgInfoEdit = () => {
           {/* Email & Website */}
           <Stack direction="row" alignItems="center" gap={3}>
             <TextField
-              id="standard-helperText"
+              id="email"
               variant="standard"
               label="Email"
               fullWidth
               defaultValue={org?.email}
+              onChange={handleChange}
             />
             <TextField
-              id="standard-helperText"
+              id="url"
               variant="standard"
               label="Website"
               fullWidth
               defaultValue={org?.url}
+              onChange={handleChange}
             />
           </Stack>
 
@@ -294,12 +304,13 @@ const OrgInfoEdit = () => {
           <br />
 
           <TextField
-            id="outlined-multiline-static"
+            id="notes"
             label="Notes"
             fullWidth
             multiline
             rows={8}
             defaultValue={org?.notes}
+            onChange={handleChange}
           />
         </Grid>
 
@@ -461,26 +472,29 @@ const OrgInfoEdit = () => {
 
           <Stack direction="column" alignItems="left" gap={3} width="70%">
             <TextField
-              id="standard-helperText"
+              id="facebook_url"
               variant="standard"
               fullWidth
               label="Facebook"
               defaultValue={org?.facebook_url}
+              onChange={handleChange}
             />
 
             <TextField
-              id="standard-helperText"
+              id="instagram_url"
               variant="standard"
               fullWidth
               label="Instagram"
               defaultValue={org?.instagram_url}
+              onChange={handleChange}
             />
 
             <TextField
-              id="standard-helperText"
+              id="linked_in_url"
               variant="standard"
               label="LinkedIn"
               defaultValue={org?.linked_in_url}
+              onChange={handleChange}
             />
           </Stack>
         </Grid>
