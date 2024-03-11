@@ -24,7 +24,8 @@ CREATE TABLE "address" (
     "address_line_1" VARCHAR(100),
     "address_line_2" VARCHAR(100),
     "city" VARCHAR(30) NOT NULL,
-    "state" VARCHAR(2) NOT NULL,
+    "state" VARCHAR(50) NOT NULL,
+    "state_abbreviation" VARCHAR(2) NOT NULL,
     "zip_code" VARCHAR(15),
     "latitude" VARCHAR(15),
     "longitude" VARCHAR(15)
@@ -127,12 +128,14 @@ CREATE TABLE "service_type_by_organization" (
             "address_line_1",
             "city",
             "state",
+            "state_abbreviation",
             "zip_code",
             "latitude",
             "longitude"
         ) VALUES (
                     '123 main street',
                     'Minneapolis',
+                    'Minnesota',
                     'MN',
                     '55111',
                     '44.986656',

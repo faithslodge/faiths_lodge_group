@@ -1,67 +1,62 @@
 const pool = require("./pool");
 const axios = require("axios");
 
-const postOrganizationWithDetails = async (organizationDetails) => {
-    // define DB connection, and ids from created entities
-    let connection;
-    let addressId;
-    let organizationId;
+const ORG_GET_QUERY = `
+SELECT
+    o.id,
+    o.name,
+    o.verified_by,
+    o.service_explanation,
+    o.logo,
+    o.mission,
+    o.notes,
+    o.url,
+    o.phone,
+    o.email,
+    o.for_profit,
+    o.faith_based,
+    o.has_retreat_center,
+    o.linked_in_url,
+    o.facebook_url,
+    o.instagram_url,
+    o.date_verified,
+    a.address_line_1,
+    a.address_line_2,
+    a.city,
+    a.state,
+    a.zip_code,
+    a.latitude,
+    a.longitude,
+    lts.agg_loss_type,
+    sts.agg_service_type,
+    ocs.agg_contacts
+FROM organization AS o
+LEFT JOIN address AS a ON o.address_id = a.id
+LEFT JOIN (
+      SELECT
+          ltbo.organization_id,
+          ARRAY_AGG(json_build_object('id', lt.id, 'name', lt.name)) AS agg_loss_type
+      FROM loss_type_by_organization AS ltbo
+      JOIN loss_type AS lt ON ltbo.loss_id = lt.id
+      GROUP BY ltbo.organization_id
+    ) AS lts ON o.id = lts.organization_id
+LEFT JOIN (
+      SELECT
+          stbo.organization_id,
+          ARRAY_AGG(json_build_object('id', st.id, 'name', st.name)) AS agg_service_type
+      FROM service_type_by_organization AS stbo
+      JOIN service_type AS st ON stbo.service_id = st.id
+      GROUP BY stbo.organization_id
+    ) AS sts ON o.id = sts.organization_id
+LEFT JOIN (
+      SELECT
+          oc.organization_id,
+          ARRAY_AGG(json_build_object('id', oc.id, 'firstName', oc.first_name, 'lastName', oc.last_name, 'phone', oc.phone, 'email', oc.email, 'title', oc.title)) AS agg_contacts
+      FROM organization_contact AS oc
+      GROUP BY oc.organization_id
+    ) AS ocs ON o.id = ocs.organization_id;
+`;
 
-    const { city, state } = organizationDetails.address;
-    const lossTypeIds = organizationDetails.lossTypes;
-    const serviceTypesIds = organizationDetails.serviceTypes;
-    const contacts = organizationDetails.contacts;
-
-    try {
-        const { latitude, longitude } = await convertCityStateToLatLong(
-            city,
-            state
-        );
-
-        // establish connection to DB
-        connection = await pool.connect();
-
-        // Begin transaction
-        connection.query("BEGIN;");
-
-        // INSERT address
-        addressId = await postAddress(connection, {
-            ...organizationDetails.address,
-            latitude,
-            longitude,
-        });
-
-        // INSERT organization
-        organizationId = await postOrganization(connection, {
-            ...organizationDetails.org,
-            addressId,
-        });
-
-        // INSERT service types of organization
-        await postServiceTypeByOrganization(
-            serviceTypesIds,
-            organizationId,
-            connection
-        );
-
-        // INSERT loss types of organization
-        await postLossTypeByOrganization(
-            lossTypeIds,
-            organizationId,
-            connection
-        );
-
-        // INSERT organization_contact
-        await postContacts(contacts, organizationId, connection);
-
-        connection.query("COMMIT;");
-    } catch (err) {
-        connection.query("ROLLBACK;");
-        throw err; // feed error up to route handler
-    } finally {
-        connection.release();
-    }
-};
 
 // translate a city/state to a lat/long to store in DB for this org
 async function convertCityStateToLatLong(city, state) {
@@ -83,19 +78,17 @@ async function convertCityStateToLatLong(city, state) {
 async function postAddress(connection, address) {
     const addressEntityForDatabase = { ...address };
 
-    // remove the full state name before storing in database
-    delete addressEntityForDatabase.state;
-
     const addressQuery = `INSERT INTO "address"
                                     (
                                         "address_line_1",
                                         "address_line_2",
                                         "city",
                                         "state",
+                                        "state_abbreviation",
                                         "zip_code",
                                         "latitude",
                                         "longitude"
-                                        ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;`;
+                                        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;`;
     const addressQueryRes = await connection.query(
         addressQuery,
         Object.values(addressEntityForDatabase)
@@ -229,14 +222,14 @@ async function postContacts(contacts, organizationId, connection) {
 // the properties of the objs in the array in sequence for all elements
 // of the array.
 function generateNumberOfQueryInputs(arrayOfObjs) {
-    const numPropertiesInObj = Object.keys(arrayOfObjs[0]).length;
     const propertiesInObj = Object.keys(arrayOfObjs[0]);
+    const numPropertiesInObj = propertiesInObj.length;
 
     // make the multi-line insert parameter input placeholders
     return arrayOfObjs
         .map((obj, i) => {
             // make one line of placeholders for multi-line SQL INSERT
-            const array = propertiesInObj.map((value, j) => {
+            const array = propertiesInObj.map((property, j) => {
                 return `$${i * numPropertiesInObj + (j + 1)}`;
             });
             return "(" + array.join(", ") + ")";
@@ -244,4 +237,12 @@ function generateNumberOfQueryInputs(arrayOfObjs) {
         .join(", ");
 }
 
-module.exports = postOrganizationWithDetails;
+module.exports = {
+    ORG_GET_QUERY,
+    postContacts,
+    postAddress,
+    postLossTypeByOrganization,
+    postServiceTypeByOrganization,
+    postOrganization,
+    convertCityStateToLatLong,
+};
