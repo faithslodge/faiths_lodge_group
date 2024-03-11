@@ -9,8 +9,9 @@ const passport = require("./strategies/user.strategy");
 
 // Route Includes
 const userRouter = require("./routes/user.router");
-const organizationWithDetailsRouter = require("./routes/organizationWithDetails.router");
+const organizationRouter = require("./routes/organization.router");
 const contactRouter = require("./routes/contact.router");
+const addressRouter = require("./routes/address.router");
 const optionRouter = require("./routes/option.router"); // services types && loss types
 
 // Express Middleware
@@ -27,9 +28,10 @@ app.use(passport.session());
 
 // Routes
 app.use("/api/user", userRouter);
-app.use("/api/organization", organizationWithDetailsRouter);
+app.use("/api/organization", organizationRouter);
 app.use("/api/option", optionRouter);
 app.use("/api/contact", contactRouter);
+app.use("/api/address", addressRouter);
 
 // Listen Server & Port
 app.listen(PORT, () => {

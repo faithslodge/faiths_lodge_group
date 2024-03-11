@@ -1,9 +1,11 @@
 const express = require("express");
+const pool = require("../modules/pool");
+const router = express.Router();
+
 const {
     rejectUnauthenticated,
 } = require("../modules/authentication-middleware");
-const pool = require("../modules/pool");
-const router = express.Router();
+const { postContacts } = require("../modules/routerService");
 
 /**
  * GET all contacts
@@ -42,23 +44,13 @@ router.get("/:id", rejectUnauthenticated, async (req, res) => {
 });
 
 /**
- * POST make new contact for organization by id
+ * POST make new contact(s) for organization by org_id
  */
 router.post("/:org_id", rejectUnauthenticated, async (req, res) => {
-    const contact = req.body;
+    const { contacts } = req.body;
     const { org_id } = req.params;
     try {
-        const queryText = `INSERT INTO "organization_contact"
-            (
-                "first_name",
-                "last_name",
-                "phone",
-                "email",
-                "title",
-                "organization_id"
-                ) VALUES ($1, $2, $3, $4, $5, $6);`;
-
-        await pool.query(queryText, [...Object.values(contact), org_id]);
+        await postContacts(contacts, org_id, pool);
         res.sendStatus(201);
     } catch (err) {
         console.error(
