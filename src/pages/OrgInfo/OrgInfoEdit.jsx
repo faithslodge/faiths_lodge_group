@@ -27,9 +27,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useState } from "react";
 
+// Font
 const overlineFont = {
   fontSize: 14,
   color: "rgba(92, 118, 55, 1)",
+};
+
+// Drop Down Menu Styling
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
 };
 
 const boolCheck = (info) => {
@@ -42,62 +55,73 @@ const boolCheck = (info) => {
   }
 };
 
+
+
 const OrgInfoEdit = () => {
+  const dispatch = useDispatch()
+
+  // ! Fetch the Organization from the reducer by ID
   const { id } = useParams();
   console.log("ParamID:", id);
 
-  const orgStore = useSelector((store) => store.organizations);
-  console.log("orgStore:", orgStore);
+    const orgStore = useSelector((store) => store.organizations);
+    console.log("orgStore:", orgStore);
 
-  const filteredOrgArray = orgStore?.filter((item) => item.id === Number(id));
-  console.log("filteredOrgArray:", filteredOrgArray);
+    const filteredOrgArray = orgStore?.filter((item) => item.id === Number(id));
+    console.log("filteredOrgArray:", filteredOrgArray);
 
-  const org = filteredOrgArray[0];
+    let org = filteredOrgArray[0];
 
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
+    const [editOrg, setEditOrg] = useState(org)
 
-  // Loss Types
+    // ! HANDLECHANGE()
+    const handleChange = (e) => {
+      // console.log("e.target.id", e.target.id)
+      // console.log("e.target.value", e.target.value)
+      let keyName = e.target.id
+      let value = e.target.value
+      setEditOrg({...editOrg, [keyName]: value})
+      // dispatch({type: "EDIT_ORG", payload: { [keyName]: value}})
+    }
+    console.log('editOrg', editOrg);
+
+  // ! Loss Types
   const lossTypes = useSelector((store) => store.options.lossesReducer);
   console.log("lossTypes:", lossTypes);
 
-  const [stateLossTypes, setStateLossTypes] = useState([]);
 
-  const handleLossTypeChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setStateLossTypes(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
-  console.log("stateLossTypes:", stateLossTypes);
+    const [stateLossTypes, setStateLossTypes] = useState([]);
 
-  // Services Types
+    const handleLossTypeChange = (event) => {
+      const {
+        target: { value },
+      } = event;
+      setStateLossTypes(
+        // On autofill we get a stringified value.
+        typeof value === "string" ? value.split(",") : value
+      );
+    };
+    console.log("stateLossTypes:", stateLossTypes);
+
+  // ! Services Types
   const serviceTypes = useSelector((store) => store.options.servicesReducer);
   console.log("serviceTypes:", serviceTypes);
 
-  const [stateServiceTypes, setStateServiceTypes] = useState([]);
+    const [stateServiceTypes, setStateServiceTypes] = useState([]);
 
-  const handleServiceTypeChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setStateServiceTypes(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
-  console.log("stateServiceTypes:", stateServiceTypes);
+    const handleServiceTypeChange = (event) => {
+      const {
+        target: { value },
+      } = event;
+      setStateServiceTypes(
+        // On autofill we get a stringified value.
+        typeof value === "string" ? value.split(",") : value
+      );
+    };
+    console.log("stateServiceTypes:", stateServiceTypes);
+
+    // ! 
+  
 
   return (
     <Container>
@@ -107,6 +131,7 @@ const OrgInfoEdit = () => {
         {/* Left */}
         <Grid item xs={6} pr={5}>
           {/* Org Name, Verified Badge, View/Edit Btn */}
+          <Button variant="contained" color="success" onClick={handleChange}>TEST</Button><br />
           <Typography variant="overline" sx={overlineFont}>
             <b>Organization Name</b>
           </Typography>
@@ -116,10 +141,11 @@ const OrgInfoEdit = () => {
           <Stack direction="row" alignItems="center" gap={2}>
             <TextField
               fullWidth
-              id="standard-helperText"
+              id="name"
               label="Organization Name"
               defaultValue={org?.name}
               variant="standard"
+              onChange={handleChange}
             />
 
             {org?.verified_by && (
@@ -170,6 +196,7 @@ const OrgInfoEdit = () => {
           <Stack direction="row" alignItems="center" gap={3}>
             <TextField
               id="standard-helperText"
+              key="address_line_1"
               variant="standard"
               label="Address Line 1"
               fullWidth

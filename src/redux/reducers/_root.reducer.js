@@ -5,6 +5,7 @@ import options from './options.reducer';
 import organizations from './organizations.reducer';
 import filters from './filter.reducer';
 import newOrg from './newOrg.reducer';
+import editOrg from './editOrg.reducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   organizations,
   filters,
   newOrg,
+  editOrg
 });
 
 export default rootReducer;
