@@ -5,7 +5,7 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import US_STATES from '../../../constants/US_STATES'
 
-export default function StateSelector() {
+export default function StateSelector({handleChange}) {
   return (
     <FormControl>
       <FormLabel>State</FormLabel>
@@ -15,10 +15,11 @@ export default function StateSelector() {
         getOptionLabel={(option) => option.name || ""}
         options={US_STATES}
         renderOption={(optionProps, option) => (
-          <AutocompleteOption {...optionProps}>
+          <AutocompleteOption {...optionProps} id={option.id} >
             {option.name}
           </AutocompleteOption>
         )}
+        onChange={handleChange}
         slotProps={{
           input: {
             autoComplete: 'new-password', // disable autocomplete and autofill

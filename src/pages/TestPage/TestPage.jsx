@@ -5,6 +5,8 @@ import StepOneOrg from "../../components/Steps/StepOneOrg";
 import StepTwoAddress from "../../components/Steps/StepTwoAddress";
 import StepThreeLosses from "../../components/Steps/StepThreeLosses";
 import StepFourServices from "../../components/Steps/StepFourServices";
+import StepFiveContacts from "../../components/Steps/StepFiveContacts";
+import StepSixReview from "../../components/Steps/StepSixReview";
 
 const steps = [
   "Enter Organization Details",
@@ -12,17 +14,15 @@ const steps = [
   "Select Services Provided",
   "Select Type of Losses",
   "Add Contacts",
+  "Review"
 ];
 
 export default function TestPage() {
   const [activeStep, setActiveStep] = useState(0);
+  const newContact = useSelector((store) => store.newOrg.newContact);
+  const newOrg = useSelector((store) => store.newOrg);
 
   const dispatch = useDispatch();
-  const newOrg = useSelector((store) => store.newOrg.newOrgReducer);
-
-  const handleChange = (arg, keyName) => {
-    dispatch({ type: "SET_ORG_OBJECT", payload: { [keyName]: arg } });
-  };
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -32,9 +32,38 @@ export default function TestPage() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  function handleContacts() {
+    dispatch({ type: "COMPLETE_CONTACTS", payload: newContact });
+    // dispatch({
+    //   type: "CREATE_ORGANIZATION",
+    //   payload: { organizationDetails: newOrg },
+    // });
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  }
+
+  function handleSubmit() {
+    dispatch({
+      type: "CREATE_ORGANIZATION",
+      payload: { organizationDetails: newOrg },
+    });
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  }
+
   const handleReset = () => {
     setActiveStep(0);
   };
+
+  const buttonView = ()=>{
+    if(activeStep === steps.length - 1 ) {
+        return <Button onClick={handleSubmit}>SUBMIT</Button>
+      } 
+    if(activeStep === steps.length - 2 ){
+       return <Button onClick={handleContacts}>NEXT</Button>
+    }
+    else{
+        return <Button onClick={handleNext}>NEXT</Button>
+    }
+  }
 
   const stepView = () => {
     switch (activeStep) {
@@ -46,6 +75,10 @@ export default function TestPage() {
         return <StepThreeLosses />;
       case 3:
         return <StepFourServices />;
+      case 4:
+        return <StepFiveContacts />;
+      case 5:
+        return <StepSixReview />;
       default:
         return <h1>default</h1>;
     }
@@ -75,11 +108,7 @@ export default function TestPage() {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-          <>
-            <h1>{activeStep}</h1>
-            {stepView()}
-          </>
+          {stepView()}
 
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Button color="inherit" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
@@ -87,7 +116,7 @@ export default function TestPage() {
             </Button>
             <Box sx={{ flex: "1 1 auto" }} />
 
-            <Button onClick={handleNext}>{activeStep === steps.length - 1 ? "Finish" : "Next"}</Button>
+            {buttonView()}
           </Box>
         </React.Fragment>
       )}
