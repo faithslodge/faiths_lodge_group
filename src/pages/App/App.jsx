@@ -28,6 +28,7 @@ import AddOrgPage from "../AddOrgPage/AddOrgPage";
 import "./App.css";
 import TestPage from "../TestPage/TestPage";
 import OrgInfoEdit from "../OrgInfo/OrgInfoEdit";
+import TeamPage from "../Team/Team";
 
 // Test comment
 
@@ -57,6 +58,12 @@ function App() {
             path="/about"
           >
             <AboutPage />
+          </Route>
+          <Route
+            exact
+            path="/team"
+          >
+            <TeamPage />
           </Route>
           // ! Need to delete test page before release
           <Route
