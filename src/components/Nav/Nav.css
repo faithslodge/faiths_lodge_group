@@ -3,9 +3,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  height: 100px;
   margin: 0 0 30px;
-  background-color: #00acb0;
+  background-image: linear-gradient(290deg, #658149, #fffffe);
   overflow: hidden;
 }
 
@@ -24,11 +24,26 @@
 .navLink {
   display: inline-block;
   color: #f2f2f2;
-  background-color: #00acb0;
+  text-align: center;
+  padding: 24px 14px;
+  text-decoration: none;
+  font-size: 18px;
+
+  /* these last two make the logout button in
+  the nav bar look like another link */
+  border: none;
+  cursor: pointer;
+  outline: 0;
+}
+
+.navLinkButton {
+  display: inline-block;
+  background-color: transparent;
+  color: white;
   text-align: center;
   padding: 24px 10px;
   text-decoration: none;
-  font-size: 15px;
+  font-size: 18px;
 
   /* these last two make the logout button in
   the nav bar look like another link */
@@ -38,5 +53,9 @@
 }
 
 .navLink:hover {
-  background-color: #008183;
+  color: #544f49;
+}
+
+.navLinkButton:hover {
+  color: #544f49;
 }
