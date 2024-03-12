@@ -29,6 +29,7 @@ import "./App.css";
 import TestPage from "../TestPage/TestPage";
 import OrgInfoEdit from "../OrgInfo/OrgInfoEdit";
 import TeamPage from "../Team/Team";
+import AdminPage from "../AdminPage/AdminPage";
 
 // Test comment
 
@@ -51,6 +52,7 @@ function App() {
         <Switch>
           {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
           <Redirect exact from="/" to="/home" />
+
           {/* Visiting localhost:5173/about will show the about page. */}
           <Route
             // shows AboutPage at all times (logged in or not)
@@ -59,9 +61,14 @@ function App() {
           >
             <AboutPage />
           </Route>
-          <Route exact path="/team">
+
+          <Route
+            exact
+            path="/team"
+          >
             <TeamPage />
           </Route>
+
           // ! Need to delete test page before release
           <Route
             // page for testing components
@@ -70,6 +77,7 @@ function App() {
           >
             <TestPage />
           </Route>
+
           {/* For protected routes, the view could show one of several things on the same route.
             Visiting localhost:5173/user will show the UserPage if the user is logged in.
             If the user is not logged in, the ProtectedRoute will show the LoginPage (component).
@@ -81,26 +89,32 @@ function App() {
           >
             <UserPage />
           </ProtectedRoute>
+
           {/* Route for MapView */}
           <ProtectedRoute exact path="/map">
             <MapView />
           </ProtectedRoute>
+
           {/* Route for ListView */}
           <ProtectedRoute exact path="/list">
             <ListView />
           </ProtectedRoute>
+
           {/* Route for AddOrg */}
           <ProtectedRoute exact path="/addorg">
             <AddOrgPage />
           </ProtectedRoute>
+
           {/* Route for OptionsPage */}
           <ProtectedRoute exact path="/options">
             <OptionsPage />
           </ProtectedRoute>
+
           {/* Route for OrgInfo */}
           <ProtectedRoute exact path="/org/:id">
             <OrgInfo />
           </ProtectedRoute>
+
           {/* Route for Editing OrgInfo */}
           <ProtectedRoute exact path="/orgedit/:id">
             <OrgInfoEdit />
@@ -113,6 +127,15 @@ function App() {
           >
             <InfoPage />
           </ProtectedRoute>
+
+          <ProtectedRoute
+            // logged in shows InfoPage else shows LoginPage
+            exact
+            path="/admin"
+          >
+            {user.is_admin && <AdminPage />}
+          </ProtectedRoute>
+
           <Route exact path="/login">
             {user.id ? (
               // If the user is already logged in,
