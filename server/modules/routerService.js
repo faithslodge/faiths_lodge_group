@@ -88,6 +88,7 @@ async function postAddress(connection, address) {
                                         "latitude",
                                         "longitude"
                                         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;`;
+
     const addressQueryRes = await connection.query(addressQuery, [
         address.addressLineOne,
         address.addressLineTwo,
@@ -163,9 +164,10 @@ async function postServiceTypeByOrganization(
         );
 
         // format values for multi-line SQL insert
-        serviceQueryParams = mappedServiceTypesToOrg.flatMap(
+        const serviceQueryParams = mappedServiceTypesToOrg.flatMap(
             (orgWithLossType) => Object.values(orgWithLossType)
         );
+
         const serviceTypeQuery = `INSERT INTO "service_type_by_organization"
                                         (
                                             "organization_id",
@@ -192,7 +194,7 @@ async function postLossTypeByOrganization(
             generateNumberOfQueryInputs(mappedLossTypesToOrg);
 
         // format for arg array for multi-line SQL insert
-        lossQueryParams = mappedLossTypesToOrg.flatMap((orgWithType) =>
+        const lossQueryParams = mappedLossTypesToOrg.flatMap((orgWithType) =>
             Object.values(orgWithType)
         );
 
@@ -216,7 +218,7 @@ async function postContacts(contacts, organizationId, connection) {
         const contactInputCount = generateNumberOfQueryInputs(contactsWithOrg);
 
         // format for multi-line SQL insert
-        contactQueryParams = contacts.flatMap((contact) => [
+        const contactQueryParams = contacts.flatMap((contact) => [
             contact.firstName,
             contact.lastName,
             contact.phone,
@@ -341,7 +343,7 @@ async function putContacts(contacts, organizationId, connection) {
         const numPropertiesInContactObj = Object.keys(contacts[0]).length;
 
         // calculate the position for inserting org id into SQL query params
-        let orgIdPositionInQuery = `$${
+        const orgIdPositionInQuery = `$${
             contacts.length * numPropertiesInContactObj + 1
         }`;
 
@@ -399,9 +401,7 @@ async function deleteContactsOmittedFromOrgUpdate(
         });
 
         // calculate the position for inserting org id into SQL query params
-        let orgIdPositionInQuery = `$${
-            inputIdCount.length + 1
-        }`;
+        const orgIdPositionInQuery = `$${inputIdCount.length + 1}`;
 
         const inputIdPlaceholder = `(${inputIdCount.join(", ")})`;
 
