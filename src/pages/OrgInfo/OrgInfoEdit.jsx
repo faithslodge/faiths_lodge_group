@@ -57,24 +57,20 @@ const boolCheck = (info) => {
 
 const OrgInfoEdit = () => {
   const dispatch = useDispatch();
-
   // ! Fetch the Organization from the reducer by ID
   const { id } = useParams();
   // console.log("ParamID:", id);
-
   const orgStore = useSelector((store) => store.organizations);
   // console.log("orgStore:", orgStore);
-
   const filteredOrgArray = orgStore?.filter((item) => item.id === Number(id));
   // console.log("filteredOrgArray:", filteredOrgArray);
-
   let org = filteredOrgArray[0];
+  console.log("org:", org);
 
   const [editOrg, setEditOrg] = useState(org);
+  console.log("EDIT ORG:", editOrg);
 
   // ! HANDLECHANGE()
-  console.log("editOrg", editOrg);
-
   const handleChange = (e) => {
     // console.log("e.target", e.target)
     // console.log("e.target.id", e.target.id)
@@ -84,56 +80,131 @@ const OrgInfoEdit = () => {
     setEditOrg({ ...editOrg, [keyName]: value });
     // dispatch({type: "EDIT_ORG", payload: { [keyName]: value}})
   };
-  
 
-    const handleBooleanChange = (e) => {
-      // console.log("e.target", e.target)
-      // console.log("e.target.id", e.target.id)
-      // console.log("e.target.value", e.target.value)
-      let keyName = e.target.name;
-      let value = e.target.value;
-      setEditOrg({ ...editOrg, [keyName]: value });
-      // dispatch({type: "EDIT_ORG", payload: { [keyName]: value}})
-    };
-
-
+  const handleBooleanChange = (e) => {
+    // console.log("e.target", e.target)
+    // console.log("e.target.name", e.target.name)
+    // console.log("e.target.value", e.target.value)
+    let keyName = e.target.name;
+    let value = e.target.value;
+    setEditOrg({ ...editOrg, [keyName]: value });
+    // dispatch({type: "EDIT_ORG", payload: { [keyName]: value}})
+  };
 
   // ! Loss Types
-  const lossTypes = useSelector((store) => store.options.lossesReducer);
-  // console.log("lossTypes:", lossTypes);
+  // previous types for rendering dropdown checkboxes checked if the type was previously selected
+  const previousLossTypes = org?.agg_loss_type.map((type) => type.name);
+  // console.log("previousLossTypes:", previousLossTypes);
 
-  const [stateLossTypes, setStateLossTypes] = useState([]);
+  // get all possible types from the reducer to render available types to select
+  const storeLossTypes = useSelector((store) => store.options.lossesReducer);
+  // console.log("storeLossTypes:", storeLossTypes);
 
+  // map just the type names to render in the dropdown
+  const lossTypeNames = storeLossTypes.map((type) => type.name);
+  // console.log("lossTypeNames:", lossTypeNames);
+
+  // local state to set currently checked types
+  const [stateLossTypes, setStateLossTypes] = useState(previousLossTypes);
+  // console.log("stateLossTypes:", stateLossTypes);
+
+  // onchange, set the local state to the current value of the dropdown (array)
   const handleLossTypeChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setStateLossTypes(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+    setStateLossTypes(event.target.value);
+    // console.log("Loss type change event:", event);
   };
   // console.log("stateLossTypes:", stateLossTypes);
 
   // ! Services Types
-  const serviceTypes = useSelector((store) => store.options.servicesReducer);
-  // console.log("serviceTypes:", serviceTypes);
+  // previous types for rendering dropdown checkboxes checked if the type was previously selected
+  const previousServiceTypes = org?.agg_service_type.map((type) => type.name);
+  // console.log("previousServiceTypes:", previousServiceTypes);
 
-  const [stateServiceTypes, setStateServiceTypes] = useState([]);
+  // get all possible types from the reducer to render available types to select
+  const storeServiceTypes = useSelector(
+    (store) => store.options.servicesReducer
+  );
+  // console.log("storeServiceTypes:", storeServiceTypes);
 
+  // map just the type names to render in the dropdown
+  const serviceTypeNames = storeServiceTypes.map((type) => type.name);
+  // console.log("serviceTypeNames:", serviceTypeNames);
+
+  // local state to set currently checked types
+  const [stateServiceTypes, setStateServiceTypes] =
+    useState(previousServiceTypes);
+  // console.log("stateServiceTypes:", stateServiceTypes);
+
+  // onchange, set the local state to the current value of the dropdown (array)
   const handleServiceTypeChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setStateServiceTypes(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+    setStateServiceTypes(event.target.value);
+    // console.log("Service type change event:", event);
   };
   // console.log("stateServiceTypes:", stateServiceTypes);
 
-  // !
 
+  // filter the service/loss types in the local state, 
+  // compare to the store values, return the store ids for the type in an array
+  const fetchTypeIds = (storeTypeArr, stateTypeArr) => {
+    const filteredIds = [];
+    // console.log("storeTypeArr:", storeTypeArr);
+    // console.log("stateTypeArr:", stateTypeArr);
+    for (let storeType of storeTypeArr) {
+      for (let stateType of stateTypeArr) {
+        if (stateType === storeType.name) {
+          filteredIds.push(storeType.id);
+        }
+      }
+    }
+    // console.log("FilteredIds:", filteredIds);
+    return filteredIds;
+  };
+
+  // dispatch edited org info in correct format
+  // payload = {{org}, {address}, [lossType (ids)], [serviceType (ids)], [{contacts}]}
+
+  const handleSave = () => {
+    const org = {
+      date_verified: editOrg.date_verified,
+      email: editOrg.email,
+      facebook_url: editOrg.facebook_url,
+      faith_based: editOrg.faith_based,
+      for_profit: editOrg.for_profit,
+      has_retreat_center: editOrg.has_retreat_center,
+      id: editOrg.id,
+      instagram_url: editOrg.instagram_url,
+      linked_in_url: editOrg.linked_in_url,
+      logo: editOrg.logo,
+      mission: editOrg.mission,
+      name: editOrg.name,
+      notes: editOrg.notes,
+      phone: editOrg.phone,
+      service_explanation: editOrg.service_explanation,
+      url: editOrg.url,
+      verified_by: editOrg.verified_by,
+    };
+    const address = {
+      address_line_1: editOrg.address_line_1,
+      address_line_2: editOrg.address_line_2,
+      city: editOrg.city,
+      state: editOrg.state,
+      zip_code: editOrg.zip_code,
+      latitude: editOrg.latitude,
+      longitude: editOrg.longitude,
+    };
+    const lossTypes = fetchTypeIds(storeLossTypes, stateLossTypes);
+    const serviceTypes = fetchTypeIds(storeServiceTypes, stateServiceTypes);
+
+    let payload = {
+      org,
+      address,
+      lossTypes,
+      serviceTypes,
+    };
+    console.log("PAYLOAD:", payload);
+  };
+
+  // ! RENDER
   return (
     <Container>
       {/* Modal Info Container */}
@@ -141,7 +212,7 @@ const OrgInfoEdit = () => {
       <Grid container>
         {/* Left */}
         <Grid item xs={6} pr={5}>
-          <Button variant="contained" color="success" onClick={handleChange}>
+          <Button variant="contained" color="success" onClick={handleSave}>
             TEST
           </Button>
           <br />
@@ -302,7 +373,9 @@ const OrgInfoEdit = () => {
           {/* Retreat?, Faith Based?, For Profit? */}
           <Stack direction="row" alignItems="center" gap={1}>
             <FormControl fullWidth>
-              <InputLabel id="has_retreat_center_selector">Has Retreat?</InputLabel>
+              <InputLabel id="has_retreat_center_selector">
+                Has Retreat?
+              </InputLabel>
               <Select
                 labelId="has_retreat_center_selector"
                 name="has_retreat_center"
@@ -368,20 +441,13 @@ const OrgInfoEdit = () => {
 
         {/* Right Side */}
         <Grid item xs={6} pl={5}>
-          {/* Stack to place Type of Loss and Services side-by-side */}
+          {/* Type of Loss and Services */}
           <Stack direction="row" alignItems="top" gap={5}>
             {/* Type of Loss */}
             <div>
               <Typography variant="overline" sx={overlineFont}>
                 <b>Type of Loss</b>
               </Typography>
-
-              {/* <Typography variant="body2" component="ul" pl={2}>
-                {org?.agg_loss_type &&
-                  org?.agg_loss_type?.map((losstype) => (
-                    <li key={losstype.id}>{losstype.name}</li>
-                  ))}
-              </Typography> */}
 
               <FormControl sx={{ m: 1, width: 300 }}>
                 <InputLabel id="demo-multiple-checkbox-label">
@@ -397,12 +463,10 @@ const OrgInfoEdit = () => {
                   renderValue={(selected) => selected.join(", ")}
                   MenuProps={MenuProps}
                 >
-                  {lossTypes.map((type) => (
-                    <MenuItem key={type.id} value={type.name}>
-                      <Checkbox
-                        checked={stateLossTypes.indexOf(type.name) > -1}
-                      />
-                      <ListItemText primary={type.name} />
+                  {lossTypeNames.map((type, i) => (
+                    <MenuItem value={type} key={i}>
+                      <Checkbox checked={stateLossTypes?.includes(type)} />
+                      <ListItemText primary={type} />
                     </MenuItem>
                   ))}
                 </Select>
@@ -414,12 +478,6 @@ const OrgInfoEdit = () => {
               <Typography variant="overline" sx={overlineFont}>
                 <b>Services</b>
               </Typography>
-              {/* <Typography variant="body2" component="ul" pl={2}>
-                {org?.agg_service_type &&
-                  org?.agg_service_type?.map((service) => (
-                    <li key={service.id}>{service.name}</li>
-                  ))}
-              </Typography> */}
 
               <FormControl sx={{ m: 1, width: 300 }}>
                 <InputLabel id="demo-multiple-checkbox-label">
@@ -435,12 +493,10 @@ const OrgInfoEdit = () => {
                   renderValue={(selected) => selected.join(", ")}
                   MenuProps={MenuProps}
                 >
-                  {serviceTypes.map((type) => (
-                    <MenuItem key={type.id} value={type.name}>
-                      <Checkbox
-                        checked={stateServiceTypes.indexOf(type.name) > -1}
-                      />
-                      <ListItemText primary={type.name} />
+                  {serviceTypeNames.map((type, i) => (
+                    <MenuItem value={type} key={i}>
+                      <Checkbox checked={stateServiceTypes?.includes(type)} />
+                      <ListItemText primary={type} />
                     </MenuItem>
                   ))}
                 </Select>
