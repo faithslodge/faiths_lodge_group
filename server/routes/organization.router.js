@@ -113,12 +113,17 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
 
     // define DB connection
     let connection;
+    let newContacts;
+    let editContacts;
 
-    // Grab newly generated contacts to add to this organization
-    const newContacts = contacts.filter((contact) => !contact.id);
+    if (contacts && contacts.length > 0) {
+        // Grab newly generated contacts to add to this organization
+    newContacts = contacts.filter((contact) => !contact.id);
 
     // Grab contacts to edit
-    const editContacts = contacts.filter((contact) => contact.id);
+    editContacts = contacts.filter((contact) => contact.id);
+    }
+    
 
     try {
         const { latitude, longitude } = await convertCityStateToLatLong(
