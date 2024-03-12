@@ -108,7 +108,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
     const { organizationId } = req.params;
     const { address, lossTypes, serviceTypes, contacts, org } =
-        req.body.editOrg;
+        req.body.updateOrg;
 
     // define DB connection
     let connection;
