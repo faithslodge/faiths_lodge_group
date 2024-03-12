@@ -10,6 +10,7 @@ export default function StepSixReview() {
   return (
     <Box sx={{ width: "70%", m: "auto" }}>
       <React.Fragment>
+        <br/>
         <Box>
         <Typography variant="h5">Organization Details</Typography>
           <Typography>Organization Name: {newOrg.org.name}</Typography>

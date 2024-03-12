@@ -1,8 +1,14 @@
 import React from "react";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Grid, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
-const orgKeyNames = ["firstName", "lastName", "phone", "email", "title"];
+const orgKeyNames = [
+  { text: "First Name", checkBox: false, keyName: "firstName", size: 8 },
+  { text: "Last Name", checkBox: false, keyName: "lastName", size: 8 },
+  { text: "Title", checkBox: false, keyName: "title", size: 8 },
+  { text: "Phone", checkBox: false, keyName: "phone", size: 8 },
+  { text: "Email", checkBox: false, keyName: "email", size: 8 },
+];
 
 export default function StepFiveContacts() {
   const dispatch = useDispatch();
@@ -12,22 +18,30 @@ export default function StepFiveContacts() {
     dispatch({ type: "SET_NEW_CONTACT", payload: { [keyName]: arg } });
   };
 
-  const handleSave = () => {
-    dispatch({ type: "COMPLETE_CONTACTS", payload: newOrg });
-  };
-
   return (
-    <Box sx={{ width: "70%", m: "auto" }}>
+    <Box sx={{ width: "60%", m: "auto" }}>
       <React.Fragment>
-        {orgKeyNames.map((keyName, i) => (
-          <TextField
-            label={keyName}
-            value={newOrg?.keyName}
-            key={i}
-            onChange={(event) => handleChange(event.target.value, keyName)}
-          />
-        ))}
-        {/* <Button onClick={handleSave} variant="contained" color="primary" >Save contact</Button> */}
+        <br />
+        <center>
+          <Typography variant="h4">Organization Contact</Typography>
+        </center>
+        <Grid container spacing={3} sx={{ justifyContent: "center" }}>
+          {orgKeyNames.map((elem, i) => {
+            const path = elem.keyName;
+            return (
+              <Grid item xs={elem.size} key={i}>
+                <TextField
+                  variant="standard"
+                  label={elem.text}
+                  value={newOrg?.path}
+                  key={i}
+                  sx={{ width: "100%" }}
+                  onChange={(event) => handleChange(event.target.value, elem.keyName)}
+                />
+              </Grid>
+            );
+          })}
+        </Grid>
       </React.Fragment>
     </Box>
   );

@@ -85,7 +85,7 @@ export default function TestPage() {
   };
 
   return (
-    <Box sx={{ width: "70%", m: "auto" }}>
+    <Box sx={{ width: "70%", m: "auto", minHeight: 600, display: "flex", flexDirection: "column"}}>
       <Stepper activeStep={activeStep}>
         {steps.map((label) => {
           const stepProps = {};
