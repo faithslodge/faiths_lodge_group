@@ -4,6 +4,7 @@ import { IMaskInput } from "react-imask";
 
 const PhoneNumberFormatter = forwardRef(function TextMaskCustom(props, ref) {
   const { onChange, ...other } = props;
+  console.log("PROPS",props)
   return (
     <IMaskInput
       {...other}
@@ -12,14 +13,14 @@ const PhoneNumberFormatter = forwardRef(function TextMaskCustom(props, ref) {
         "#": /[1-9]/,
       }}
       inputRef={ref}
-      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      onAccept={(value) => onChange({ target: { id: props.id, value } })}
       overwrite
     />
   );
 });
 
 // PhoneNumberFormatter.propTypes = {
-//   name: PropTypes.string.isRequired,
+//   id: PropTypes.string.isRequired,
 //   onChange: PropTypes.func.isRequired,
 // };
 
