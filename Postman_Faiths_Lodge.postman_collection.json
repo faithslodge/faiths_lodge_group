@@ -303,7 +303,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"organizationDetails\": {\n        \"org\": {\n            \"name\": \"fakeOrg\",\n            \"logo\": null,\n            \"serviceExplanation\": \"lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"mission\": \"lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"notes\": \"lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"url\": \"https://www.fakeOrg.com\",\n            \"phone\": \"(555)555-5555\",\n            \"email\": \"fakeOrg@postmail.com\",\n            \"forProfit\": false,\n            \"faithBased\": true,\n            \"hasRetreatCenter\": true,\n            \"linkedInUrl\": \"https://www.linkedIn.com/fakeOrg\",\n            \"facebookUrl\": \"https://www.facebook.com/fakeOrg\",\n            \"instagramUrl\": \"https://www.instagram.com/fakeOrg\"\n        },\n        \"address\": {\n            \"addressLineOne\": \"123 main street\",\n            \"addressLineTwo\": null,\n            \"city\": \"Minneapolis\",\n            \"state\": \"Minnesota\",\n            \"stateAbbreviation\": \"MN\",\n            \"zipCode\": \"11111\"\n        },\n        \"lossTypes\": [\n            2,\n            5\n        ],\n        \"serviceTypes\": [\n            1,\n            3\n        ],\n        \"contacts\": [\n            {\n                \"firstName\": \"firstName1\",\n                \"lastName\": \"lastName1\",\n                \"phone\": \"(555)555-5555\",\n                \"email\": \"fakeUser1@postmail.com\",\n                \"title\": \"president\"\n            },\n            {\n                \"firstName\": \"firstName2\",\n                \"lastName\": \"lastName2\",\n                \"phone\": \"(555)555-5555\",\n                \"email\": \"fakeUser2@postmail.com\",\n                \"title\": \"director\"\n            }\n        ]\n    }\n}",
+							"raw": "{\n    \"organizationDetails\": {\n        \"org\": {\n            \"name\": \"fakeOrg\",\n            \"logo\": null,\n            \"serviceExplanation\": \"SERVICE_EXPLANATION ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"mission\": \"MISSION ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"notes\": \"NOTES ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"url\": \"https://www.fakeOrg.com\",\n            \"phone\": \"(555)555-5555\",\n            \"email\": \"fakeOrg@postmail.com\",\n            \"forProfit\": false,\n            \"faithBased\": true,\n            \"hasRetreatCenter\": true,\n            \"linkedInUrl\": \"https://www.linkedIn.com/fakeOrg\",\n            \"facebookUrl\": \"https://www.facebook.com/fakeOrg\",\n            \"instagramUrl\": \"https://www.instagram.com/fakeOrg\"\n        },\n        \"address\": {\n            \"addressLineOne\": \"123 main street\",\n            \"addressLineTwo\": null,\n            \"city\": \"Minneapolis\",\n            \"state\": \"Minnesota\",\n            \"stateAbbreviation\": \"MN\",\n            \"zipCode\": \"11111\"\n        },\n        \"lossTypes\": [\n            2,\n            5\n        ],\n        \"serviceTypes\": [\n            1,\n            3\n        ],\n        \"contacts\": [\n            {\n                \"firstName\": \"firstName1\",\n                \"lastName\": \"lastName1\",\n                \"phone\": \"(555)555-5555\",\n                \"email\": \"fakeUser1@postmail.com\",\n                \"title\": \"president\"\n            },\n            {\n                \"firstName\": \"firstName2\",\n                \"lastName\": \"lastName2\",\n                \"phone\": \"(555)555-5555\",\n                \"email\": \"fakeUser2@postmail.com\",\n                \"title\": \"director\"\n            }\n        ]\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -352,6 +352,37 @@
 								"api",
 								"organization",
 								""
+							]
+						},
+						"description": "User Info"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT organization by id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"updateOrg\": {\n        \"org\": {\n            \"name\": \"editOrg\",\n            \"logo\": null,\n            \"serviceExplanation\": \"edit ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"mission\": \"edit ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"notes\": \"edit ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"url\": \"https://www.editfakeOrg.com\",\n            \"phone\": \"(edit555-5555\",\n            \"email\": \"editfakeOrg@postmail.com\",\n            \"forProfit\": true,\n            \"faithBased\": false,\n            \"hasRetreatCenter\": false,\n            \"linkedInUrl\": \"https://www.editlinkedIn.com/fakeOrg\",\n            \"facebookUrl\": \"https://www.editfacebook.com/fakeOrg\",\n            \"instagramUrl\": \"https://www.editinstagram.com/fakeOrg\"\n        },\n        \"address\": {\n            \"addressLineOne\": \"123 edit street\",\n            \"addressLineTwo\": null,\n            \"city\": \"Minneapolis\",\n            \"state\": \"Minnesota\",\n            \"stateAbbreviation\": \"MN\",\n            \"zipCode\": \"11111\"\n        },\n        \"lossTypes\": [\n            2,\n            5\n        ],\n        \"serviceTypes\": [\n            1,\n            3\n        ],\n        \"contacts\": [\n            {\n                \"id\": 1,\n                \"firstName\": \"editFirstName\",\n                \"lastName\": \"editlastName\",\n                \"phone\": \"(555)edit-5555\",\n                \"email\": \"editFirstName@postmail.com\",\n                \"title\": \"supreme leader\"\n            },\n            {\n                \"id\": 5,\n                \"firstName\": \"editFirstName2\",\n                \"lastName\": \"editLastName2\",\n                \"phone\": \"(555)edit-5555\",\n                \"email\": \"editfakeUser2@postmail.com\",\n                \"title\": \"supreme direc\"\n            },\n            {\n                \"firstName\": \"newFirst\",\n                \"lastName\": \"newLast\",\n                \"phone\": \"(555)new-5555\",\n                \"email\": \"newfakeUser2@postmail.com\",\n                \"title\": \"supreme new\"\n            }\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/organization/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"organization",
+								"1"
 							]
 						},
 						"description": "User Info"
@@ -657,7 +688,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5001/api/contact/2",
+							"raw": "http://localhost:5001/api/contact/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -666,7 +697,7 @@
 							"path": [
 								"api",
 								"contact",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -687,7 +718,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5001/api/contact/6",
+							"raw": "http://localhost:5001/api/contact/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -696,7 +727,7 @@
 							"path": [
 								"api",
 								"contact",
-								"6"
+								"1"
 							]
 						}
 					},

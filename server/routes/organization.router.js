@@ -19,6 +19,7 @@ const {
     deleteServiceTypeAssociations,
     putContacts,
     deleteContactsOmittedFromOrgUpdate,
+    getContactIdsToDeleteFromOrg
 } = require("../modules/routerService");
 
 /**
@@ -145,11 +146,13 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
 
         // DELETE CURRENT LOSS TYPE ASSOCIATIONS
         await deleteLossTypeAssociations(connection, organizationId);
+        
         // POST GIVEN LOSS TYPE ASSOCIATIONS
         await postLossTypeByOrganization(lossTypes, organizationId, connection);
 
         // DELETE CURRENT SERVICE TYPE ASSOCIATIONS
         await deleteServiceTypeAssociations(connection, organizationId);
+        
         // POST GIVEN SERVICE TYPE ASSOCIATIONS
         await postServiceTypeByOrganization(
             serviceTypes,
@@ -158,19 +161,7 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
         );
 
         // DELETE MISSING CONTACTS
-        const contactGetText = `SELECT * FROM "organization_contact" WHERE "organization_id" = $1;`;
-        const getContactsInOrgResult = await connection.query(contactGetText, [
-            organizationId,
-        ]);
-        const currentContactsInOrg = getContactsInOrgResult.rows;
-
-        const currentContactsInOrgIds = currentContactsInOrg.map(
-            (contact) => contact.id
-        );
-        const editContactsIds = editContacts.map((contact) => contact.id);
-        contactIdsToDelete = editContactsIds.filter(
-            (id) => !currentContactsInOrgIds.includes(id)
-        );
+        const contactIdsToDelete = await getContactIdsToDeleteFromOrg(connection, editContacts, organizationId);
         await deleteContactsOmittedFromOrgUpdate(
             connection,
             organizationId,
@@ -179,6 +170,7 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
 
         // EDIT THE CONTACTS BY ID
         await putContacts(editContacts, organizationId, connection);
+        
         // ADD NEW CONTACTS
         await postContacts(newContacts, organizationId, connection);
 
