@@ -170,45 +170,46 @@ const OrgInfoEdit = () => {
   // payload = {{org}, {address}, [lossType (ids)], [serviceType (ids)], [{contacts}]}
   const handleSave = () => {
     const org = {
-      date_verified: editOrg.date_verified,
+      // dateVerified: editOrg.date_verified,
       email: editOrg.email,
-      facebook_url: editOrg.facebook_url,
-      faith_based: editOrg.faith_based,
-      for_profit: editOrg.for_profit,
-      has_retreat_center: editOrg.has_retreat_center,
+      facebookUrl: editOrg.facebook_url,
+      faithBased: editOrg.faith_based,
+      forProfit: editOrg.for_profit,
+      hasRetreatCenter: editOrg.has_retreat_center,
       id: editOrg.id,
-      instagram_url: editOrg.instagram_url,
-      linked_in_url: editOrg.linked_in_url,
+      instagramUrl: editOrg.instagram_url,
+      linkedInUrl: editOrg.linked_in_url,
       logo: editOrg.logo,
       mission: editOrg.mission,
       name: editOrg.name,
       notes: editOrg.notes,
       phone: editOrg.phone,
-      service_explanation: editOrg.service_explanation,
+      serviceExplanation: editOrg.service_explanation,
       url: editOrg.url,
-      verified_by: editOrg.verified_by,
+      // verifiedBy: editOrg.verified_by,
     };
     const address = {
-      address_line_1: editOrg.address_line_1,
-      address_line_2: editOrg.address_line_2,
+      addressLineOne: editOrg.address_line_1,
+      addressLineTwo: editOrg.address_line_2,
       city: editOrg.city,
       state: editOrg.state,
-      zip_code: editOrg.zip_code,
+      stateAbbreviation: editOrg.state_abbreviation,
+      zipCode: editOrg.zip_code,
       latitude: editOrg.latitude,
       longitude: editOrg.longitude,
     };
     const lossTypes = fetchTypeIds(storeLossTypes, stateLossTypes);
     const serviceTypes = fetchTypeIds(storeServiceTypes, stateServiceTypes);
     const contacts = editOrg.agg_contacts
-    let updateOrg = {
+    let payload = {updateOrg:{
       org,
       address,
       lossTypes,
       serviceTypes,
       contacts
-    };
-    console.log("PAYLOAD:", updateOrg);
-    dispatch({type: "EDIT_ORG_UPDATE", payload: updateOrg})
+    }};
+    console.log("PAYLOAD:", payload);
+    dispatch({type: "EDIT_ORG_UPDATE", payload: payload})
     
   };
 
