@@ -421,19 +421,21 @@ async function getContactIdsToDeleteFromOrg(
     contactsToKeep,
     organizationId
 ) {
-    const contactGetText = `SELECT * FROM "organization_contact" WHERE "organization_id" = $1;`;
-    const getContactsInOrgResult = await connection.query(contactGetText, [
-        organizationId,
-    ]);
-    const currentContactsInOrg = getContactsInOrgResult.rows;
-
-    const currentContactIds = currentContactsInOrg.map((contact) => contact.id);
-
-    const contactIdsToKeep = contactsToKeep.map((contact) => contact.id);
-    const contactIdsToDelete = currentContactIds.filter(
-        (id) => !contactIdsToKeep.includes(id)
-    );
-    return contactIdsToDelete;
+    if (contactsToKeep && contactsToKeep.length > 0) {
+        const contactGetText = `SELECT * FROM "organization_contact" WHERE "organization_id" = $1;`;
+        const getContactsInOrgResult = await connection.query(contactGetText, [
+            organizationId,
+        ]);
+        const currentContactsInOrg = getContactsInOrgResult.rows;
+    
+        const currentContactIds = currentContactsInOrg.map((contact) => contact.id);
+    
+        const contactIdsToKeep = contactsToKeep.map((contact) => contact.id);
+        const contactIdsToDelete = currentContactIds.filter(
+            (id) => !contactIdsToKeep.includes(id)
+        );
+        return contactIdsToDelete;
+    }
 }
 
 module.exports = {
