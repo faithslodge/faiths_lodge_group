@@ -43,7 +43,8 @@ router.get("/:id", rejectUnauthenticated, async (req, res) => {
 });
 
 /**
- * POST address performed during organization POST, omitted here
+ * POST address performed during organization POST, inside
+ * routerService.js.
  */
 
 /**
