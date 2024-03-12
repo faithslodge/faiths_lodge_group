@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import StateSelector from "../Map/Filters/StateSelector";
 import US_STATES from "../../constants/US_STATES";
 
-// const orgKeyNames = ["addressLineOne", "addressLineTwo", "city", "state", "zipCode"];
+// Array used to conditionally render and style different form inputs
 const orgKeyNames = [
   { text: "Address Line 1", isRequired: false, keyName: "addressLineOne", size: 5 },
   { text: "Address Line 2", isRequired: false, keyName: "addressLineTwo", size: 5 },
