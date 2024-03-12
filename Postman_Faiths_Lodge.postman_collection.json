@@ -1,0 +1,861 @@
+{
+	"info": {
+		"_postman_id": "ac6e703b-8c63-4a02-b582-479e82238f55",
+		"name": "Postman_Faiths_Lodge",
+		"description": "Routes setup to test registration, login, and getting basic user data from the server.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31640839"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Login/Register",
+					"item": [
+						{
+							"name": "Register",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\":\"new-user\",\n    \"password\":\"1234\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:5001/api/user/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"user",
+										"register"
+									]
+								},
+								"description": "Registration"
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\":\"new-user\",\n    \"password\":\"1234\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:5001/api/user/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"user",
+										"login"
+									]
+								},
+								"description": "Login"
+							},
+							"response": []
+						},
+						{
+							"name": "GET logged in user",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5001/api/user/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"user",
+										""
+									]
+								},
+								"description": "User Info"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admin actions",
+					"item": [
+						{
+							"name": "Admin register new user",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\":\"dusty@gmail.com\",\n    \"isAdmin\": true\n}"
+								},
+								"url": {
+									"raw": "http://localhost:5001/api/user/newUser",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"user",
+										"newUser"
+									]
+								},
+								"description": "Registration"
+							},
+							"response": []
+						},
+						{
+							"name": "GET all users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5001/api/user/getUsers",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"user",
+										"getUsers"
+									]
+								},
+								"description": "User Info"
+							},
+							"response": []
+						},
+						{
+							"name": "Admin edit is_admin of user by id",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"isAdmin\": false\n}"
+								},
+								"url": {
+									"raw": "http://localhost:5001/api/user/editAdmin/4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"user",
+										"editAdmin",
+										"4"
+									]
+								},
+								"description": "Registration"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User actions",
+					"item": [
+						{
+							"name": "User password change",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"password\": \"1234\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:5001/api/user/editPassword",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"user",
+										"editPassword"
+									]
+								},
+								"description": "Registration"
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE delete user",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5001/api/user/7",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"user",
+										"7"
+									]
+								},
+								"description": "User Info"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Organization",
+			"item": [
+				{
+					"name": "GET ALL organizations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/organization/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"organization",
+								""
+							]
+						},
+						"description": "User Info"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE organization by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/organization/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"organization",
+								"2"
+							]
+						},
+						"description": "User Info"
+					},
+					"response": []
+				},
+				{
+					"name": "POST new organization v1",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"organizationDetails\": {\n        \"org\": {\n            \"name\": \"fakeOrg\",\n            \"logo\": null,\n            \"serviceExplanation\": \"lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"mission\": \"lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"notes\": \"lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"url\": \"https://www.fakeOrg.com\",\n            \"phone\": \"(555)555-5555\",\n            \"email\": \"fakeOrg@postmail.com\",\n            \"forProfit\": false,\n            \"faithBased\": true,\n            \"hasRetreatCenter\": true,\n            \"linkedInUrl\": \"https://www.linkedIn.com/fakeOrg\",\n            \"facebookUrl\": \"https://www.facebook.com/fakeOrg\",\n            \"instagramUrl\": \"https://www.instagram.com/fakeOrg\"\n        },\n        \"address\": {\n            \"addressLineOne\": \"123 main street\",\n            \"addressLineTwo\": null,\n            \"city\": \"Minneapolis\",\n            \"state\": \"Minnesota\",\n            \"stateAbbreviation\": \"MN\",\n            \"zipCode\": \"11111\"\n        },\n        \"lossTypes\": [\n            2,\n            5\n        ],\n        \"serviceTypes\": [\n            1,\n            3\n        ],\n        \"contacts\": [\n            {\n                \"firstName\": \"firstName1\",\n                \"lastName\": \"lastName1\",\n                \"phone\": \"(555)555-5555\",\n                \"email\": \"fakeUser1@postmail.com\",\n                \"title\": \"president\"\n            },\n            {\n                \"firstName\": \"firstName2\",\n                \"lastName\": \"lastName2\",\n                \"phone\": \"(555)555-5555\",\n                \"email\": \"fakeUser2@postmail.com\",\n                \"title\": \"director\"\n            }\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/organization/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"organization",
+								""
+							]
+						},
+						"description": "User Info"
+					},
+					"response": []
+				},
+				{
+					"name": "POST new organization v2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"organizationDetails\": {\n        \"org\": {\n            \"name\": \"fakeOrg2\",\n            \"logo\": null,\n            \"serviceExplanation\": \"lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"mission\": \"lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"notes\": \"lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum\",\n            \"url\": \"https://www.fakeOrg.com\",\n            \"phone\": \"(555)555-5555\",\n            \"email\": \"fakeOrg@postmail.com\",\n            \"forProfit\": false,\n            \"faithBased\": true,\n            \"hasRetreatCenter\": true,\n            \"linkedInUrl\": \"https://www.linkedIn.com/fakeOrg\",\n            \"facebookUrl\": \"https://www.facebook.com/fakeOrg\",\n            \"instagramUrl\": \"https://www.instagram.com/fakeOrg\"\n        },\n        \"address\": {\n            \"addressLineOne\": \"123 main street\",\n            \"addressLineTwo\": null,\n            \"city\": \"Minneapolis\",\n            \"state\": \"Minnesota\",\n            \"stateAbbreviation\": \"MN\",\n            \"zipCode\": \"11111\"\n        },\n        \"lossTypes\": [],\n        \"serviceTypes\": [],\n        \"contacts\": []\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/organization/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"organization",
+								""
+							]
+						},
+						"description": "User Info"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Service types",
+			"item": [
+				{
+					"name": "GET ALL service types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/option/service",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"service"
+							]
+						},
+						"description": "User Info"
+					},
+					"response": []
+				},
+				{
+					"name": "POST service type",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"typeToInsert\":\"example_service1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/option/service",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"service"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT service type",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"typeToInsert\":\"examp\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/option/service/15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"service",
+								"15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE service type Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/option/service/12",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"service",
+								"12"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Loss types",
+			"item": [
+				{
+					"name": "GET ALL loss types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/option/loss",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"loss"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST loss type",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"typeToInsert\": \"example_loss1111\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/option/loss",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"loss"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT loss type",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"typeToInsert\": \"example_loss111222221\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/option/loss/13",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"loss",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE loss type Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/option/loss/13",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"option",
+								"loss",
+								"13"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contact",
+			"item": [
+				{
+					"name": "GET all contacts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/contact/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"contact",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET contact by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/contact/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"contact",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST contact",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"contacts\": [\n        {\n            \"firstName\": \"testContactPostfName\",\n            \"lastName\": \"testContactPostlName\",\n            \"phone\": \"(555)555-5555\",\n            \"email\": \"testContactPost1@postmail.com\",\n            \"title\": \"wizard\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/contact/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"contact",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT contact by id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"testContactPostfName\",\n    \"lastName\": \"testContactPostlName\",\n    \"phone\": \"(555)555-5556\",\n    \"email\": \"testContactPost1@postmail.com\",\n    \"title\": \"superintendent\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/contact/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"contact",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE contact by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/contact/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"contact",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Address",
+			"item": [
+				{
+					"name": "GET all addresses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/address/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"address",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET address by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/address/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"address",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT address by id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address_line_1\": \"123332 main street\",\n    \"address_line_2\": null,\n    \"city\": \"St. Paul\",\n    \"state\": \"Minnesota\",\n    \"stateAbbreviation\": \"MN\",\n    \"zip_code\": \"11111\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5001/api/address/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"address",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3rd Party APIs",
+			"item": [
+				{
+					"name": "Nominatim city/state to lat/long",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"user-agent": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "TESTINGapi",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://nominatim.openstreetmap.org/search?q=Minneapolis%2C+Minnesota&format=geojson",
+							"protocol": "https",
+							"host": [
+								"nominatim",
+								"openstreetmap",
+								"org"
+							],
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Minneapolis%2C+Minnesota"
+								},
+								{
+									"key": "format",
+									"value": "geojson"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

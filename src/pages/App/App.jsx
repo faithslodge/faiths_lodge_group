@@ -27,6 +27,8 @@ import AddOrgPage from "../AddOrgPage/AddOrgPage";
 
 import "./App.css";
 import TestPage from "../TestPage/TestPage";
+import OrgInfoEdit from "../OrgInfo/OrgInfoEdit";
+import TeamPage from "../Team/Team";
 
 // Test comment
 
@@ -38,6 +40,8 @@ function App() {
   useEffect(() => {
     dispatch({ type: "FETCH_USER" });
     dispatch({type:'FETCH_ORGANIZATIONS'})
+    dispatch({type: 'FETCH_LOSSES'})
+    dispatch({type: 'FETCH_SERVICES'})
   }, [dispatch]);
 
   return (
@@ -54,6 +58,12 @@ function App() {
             path="/about"
           >
             <AboutPage />
+          </Route>
+          <Route
+            exact
+            path="/team"
+          >
+            <TeamPage />
           </Route>
           // ! Need to delete test page before release
           <Route
@@ -93,6 +103,10 @@ function App() {
           {/* Route for OrgInfo */}
           <ProtectedRoute exact path="/org/:id">
             <OrgInfo />
+          </ProtectedRoute>
+          {/* Route for Editing OrgInfo */}
+          <ProtectedRoute exact path="/orgedit/:id">
+            <OrgInfoEdit />
           </ProtectedRoute>
           <ProtectedRoute
             // logged in shows InfoPage else shows LoginPage

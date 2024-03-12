@@ -8,8 +8,8 @@ const AddContactOrg = ({ contact, handleChange }) => {
         <Grid item xs={12} sm={6}>
           <TextField
             label="First Name"
-            name="first_name"
-            value={contact.first_name}
+            name="firstName"
+            value={contact.firstName}
             onChange={handleChange}
             fullWidth
           />
@@ -17,8 +17,8 @@ const AddContactOrg = ({ contact, handleChange }) => {
         <Grid item xs={12} sm={6}>
           <TextField
             label="Last Name"
-            name="last_name"
-            value={contact.last_name}
+            name="lastName"
+            value={contact.lastName}
             onChange={handleChange}
             fullWidth
           />

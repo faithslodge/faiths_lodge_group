@@ -3,7 +3,9 @@ import errors from './errors.reducer';
 import user from './user.reducer';
 import options from './options.reducer';
 import organizations from './organizations.reducer';
-import filters from './filter.reducer'
+import filters from './filter.reducer';
+import newOrg from './newOrg.reducer';
+import editOrg from './editOrg.reducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -17,6 +19,8 @@ const rootReducer = combineReducers({
   options, // contains type of loss and services provided for forms/selection menus
   organizations,
   filters,
+  newOrg,
+  editOrg
 });
 
 export default rootReducer;
