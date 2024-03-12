@@ -1,20 +1,46 @@
+import { combineReducers } from "redux"
 
 
 const editOrg = (state = {}, action) => {
     switch (action.type) {
         case "EDIT_ORG":
             return {...state, ...action.payload}
-        case "EDIT_SERVICE_TYPES":
-            return [...state.serviceTypes, ...action.payload]
-        case "EDIT_LOSS_TYPES":
-            return [...state.lossTypes, ...action.payload]
-        case "EDIT_ADDRESS":
-            return {...state.serviceTypes, ...action.payload}
-        case "EDIT_CONTACTS":
-            return [...state.contacts, ...action.payload]
         default:
             return state
     }
 }
 
-export default editOrg
+const editOrgServiceTypes = (state = [], action) => {
+    switch (action.type) {
+        case "EDIT_ORG_SERVICE_TYPES":
+            return action.payload
+        default:
+            return state
+    }
+}
+
+const editOrgLossTypes = (state = [], action) => {
+    switch (action.type) {
+        case "EDIT_ORG_LOSS_TYPES":
+            return action.payload
+        default:
+            return state
+    }
+}
+
+const editOrgContacts = (state = [], action) => {
+    switch (action.type) {
+        case "EDIT_ORG_CONTACTS":
+            return [...state, ...action.payload]
+        default:
+            return state
+    }
+}
+
+
+export default combineReducers({
+    editOrg,
+    editOrgServiceTypes,
+    editOrgLossTypes,
+    editOrgContacts
+})
