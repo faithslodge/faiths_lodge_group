@@ -162,6 +162,7 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
 
         // DELETE MISSING CONTACTS
         const contactIdsToDelete = await getContactIdsToDeleteFromOrg(connection, editContacts, organizationId);
+        
         await deleteContactsOmittedFromOrgUpdate(
             connection,
             organizationId,
@@ -170,7 +171,7 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
 
         // EDIT THE CONTACTS BY ID
         await putContacts(editContacts, organizationId, connection);
-        
+
         // ADD NEW CONTACTS
         await postContacts(newContacts, organizationId, connection);
 
