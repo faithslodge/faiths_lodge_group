@@ -1,5 +1,6 @@
 import React from 'react';
 import './Footer.css';
+import { Link } from '@mui/material';
 
 // This is one of our simplest components
 // It doesn't have local state, so it can be a function component.
@@ -7,7 +8,18 @@ import './Footer.css';
 // or even care what the redux state is, so it doesn't need 'connect()'
 
 function Footer() {
-  return <footer>&copy; Faith's Lodge</footer>;
+  return (
+    <footer>
+      <div>
+        <p>&copy; Faith's Lodge</p>
+      </div>
+      <div>
+        <Link className="navLink" to="/about">
+          About
+        </Link>
+      </div>
+    </footer>
+  )
 }
 
 export default Footer;

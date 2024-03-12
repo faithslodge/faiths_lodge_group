@@ -43,10 +43,6 @@ function Nav() {
             <LogOutButton className="navLinkButton" />
           </>
         )}
-
-        <Link className="navLink" to="/about">
-          About
-        </Link>
       </div>
     </div>
   );
