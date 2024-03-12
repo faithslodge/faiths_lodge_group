@@ -132,11 +132,13 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
         // Begin transaction
         await connection.query("BEGIN;");
 
+        // EDIT ORG
         let addressId = await putOrganization(connection, {
             ...org,
             organizationId,
         });
 
+        // EDIT ADDRESS
         await putAddress(connection, {
             ...address,
             latitude,
@@ -162,7 +164,7 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
 
         // DELETE MISSING CONTACTS
         const contactIdsToDelete = await getContactIdsToDeleteFromOrg(connection, editContacts, organizationId);
-        
+
         await deleteContactsOmittedFromOrgUpdate(
             connection,
             organizationId,
@@ -203,7 +205,7 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
         connection.query("BEGIN;");
 
         const organizationDelQuery = `DELETE FROM organization
-    WHERE organization.id = $1 RETURNING organization.address_id;`;
+            WHERE organization.id = $1 RETURNING organization.address_id;`;
 
         // delete organization
         const organizationDelResponse = await connection.query(
@@ -217,7 +219,7 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
         const addressDelQuery = `DELETE FROM address
                                 WHERE address.id = $1;`;
 
-        const addressDelResponse = await connection.query(addressDelQuery, [
+        await connection.query(addressDelQuery, [
             addressId,
         ]);
 
@@ -228,7 +230,7 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
         // Cancel transaction
         connection.query("ROLLBACK;");
         console.error(
-            "[inside organization.router PUT edit org] Error in this route",
+            "[inside organization.router DELETE org] Error in this route",
             err
         );
         res.sendStatus(500);
