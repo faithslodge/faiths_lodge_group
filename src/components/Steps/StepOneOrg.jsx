@@ -3,6 +3,7 @@ import { Box, FormControlLabel, Checkbox, TextField, Stack, Grid, Typography } f
 import { useDispatch, useSelector } from "react-redux";
 import { size } from "@floating-ui/core";
 
+// Array used to conditionally render and style different form inputs
 const orgKeyNames = [
   { text: "Organization Name", checkBox: false, keyName: "name", size: 5, variant: "standard", isRequired: true },
   { text: "Website", checkBox: false, keyName: "url", size: 5, variant: "standard" },
@@ -19,10 +20,6 @@ const orgKeyNames = [
   { text: "Faith Based", checkBox: true, keyName: "faithBased" },
   { text: "Retreat Center", checkBox: true, keyName: "hasRetreatCenter" },
 ];
-
-const styleProps = {};
-
-// const checkBoxNames = ["forProfit", "faithBased", "hasRetreatCenter"];
 
 export default function StepOneOrg() {
   const dispatch = useDispatch();

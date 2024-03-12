@@ -2,6 +2,7 @@ import React from "react";
 import { Box, TextField, Grid, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
+// Array used to conditionally render and style different form inputs
 const orgKeyNames = [
   { text: "First Name", checkBox: false, keyName: "firstName", size: 8 },
   { text: "Last Name", checkBox: false, keyName: "lastName", size: 8 },

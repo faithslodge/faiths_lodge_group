@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { FormControl, FormLabel, FormGroup, FormControlLabel, Checkbox, Box, Typography } from "@mui/material";
+import React from "react";
+import { FormControl, FormGroup, FormControlLabel, Checkbox, Box, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function StepThreeLosses() {

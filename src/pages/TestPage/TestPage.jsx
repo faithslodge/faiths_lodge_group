@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Stepper, Step, StepLabel, Button, Typography, TextField } from "@mui/material";
+import { Box, Stepper, Step, StepLabel, Button, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import StepOneOrg from "../../components/Steps/StepOneOrg";
 import StepTwoAddress from "../../components/Steps/StepTwoAddress";
@@ -34,10 +34,6 @@ export default function TestPage() {
 
   function handleContacts() {
     dispatch({ type: "COMPLETE_CONTACTS", payload: newContact });
-    // dispatch({
-    //   type: "CREATE_ORGANIZATION",
-    //   payload: { organizationDetails: newOrg },
-    // });
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   }
 
