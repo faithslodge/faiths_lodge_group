@@ -108,6 +108,7 @@ function App() {
           <ProtectedRoute exact path="/orgedit/:id">
             <OrgInfoEdit />
           </ProtectedRoute>
+          
           <ProtectedRoute
             // logged in shows InfoPage else shows LoginPage
             exact

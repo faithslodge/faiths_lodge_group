@@ -56,8 +56,28 @@ const boolCheck = (info) => {
   }
 };
 
-const OrgInfoEdit = () => {
+// ! filter the service/loss types in the local state
+// compare to the store values, return the store ids for the type in an array
+const fetchTypeIds = (storeTypeArr, stateTypeArr) => {
+  const filteredIds = [];
+  // console.log("storeTypeArr:", storeTypeArr);
+  // console.log("stateTypeArr:", stateTypeArr);
+  for (let storeType of storeTypeArr) {
+    for (let stateType of stateTypeArr) {
+      if (stateType === storeType.name) {
+        filteredIds.push(storeType.id);
+      }
+    }
+  }
+  // console.log("FilteredIds:", filteredIds);
+  return filteredIds;
+};
 
+
+
+
+const OrgInfoEdit = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
   // ! Fetch the Organization from the reducer by ID
   const { id } = useParams();
@@ -97,15 +117,15 @@ const OrgInfoEdit = () => {
 
   // ! Loss Types
   // previous types for rendering dropdown checkboxes checked if the type was previously selected
-  const previousLossTypes = org?.agg_loss_type.map((type) => type.name);
+  const previousLossTypes = org?.agg_loss_type.map((type) => type?.name);
   // console.log("previousLossTypes:", previousLossTypes);
 
   // get all possible types from the reducer to render available types to select
-  const storeLossTypes = useSelector((store) => store.options.lossesReducer);
+  const storeLossTypes = useSelector((store) => store?.options.lossesReducer);
   // console.log("storeLossTypes:", storeLossTypes);
 
   // map just the type names to render in the dropdown
-  const lossTypeNames = storeLossTypes.map((type) => type.name);
+  const lossTypeNames = storeLossTypes?.map((type) => type?.name);
   // console.log("lossTypeNames:", lossTypeNames);
 
   // local state to set currently checked types
@@ -119,20 +139,19 @@ const OrgInfoEdit = () => {
   };
   // console.log("stateLossTypes:", stateLossTypes);
 
-
   // ! Services Types
   // previous types for rendering dropdown checkboxes checked if the type was previously selected
-  const previousServiceTypes = org?.agg_service_type.map((type) => type.name);
+  const previousServiceTypes = org?.agg_service_type.map((type) => type?.name);
   // console.log("previousServiceTypes:", previousServiceTypes);
 
   // get all possible types from the reducer to render available types to select
   const storeServiceTypes = useSelector(
-    (store) => store.options.servicesReducer
+    (store) => store?.options.servicesReducer
   );
   // console.log("storeServiceTypes:", storeServiceTypes);
 
   // map just the type names to render in the dropdown
-  const serviceTypeNames = storeServiceTypes.map((type) => type.name);
+  const serviceTypeNames = storeServiceTypes?.map((type) => type.name);
   // console.log("serviceTypeNames:", serviceTypeNames);
 
   // local state to set currently checked types
@@ -147,23 +166,9 @@ const OrgInfoEdit = () => {
   };
   // console.log("stateServiceTypes:", stateServiceTypes);
 
-  
-  // ! filter the service/loss types in the local state 
-  // compare to the store values, return the store ids for the type in an array
-  const fetchTypeIds = (storeTypeArr, stateTypeArr) => {
-    const filteredIds = [];
-    // console.log("storeTypeArr:", storeTypeArr);
-    // console.log("stateTypeArr:", stateTypeArr);
-    for (let storeType of storeTypeArr) {
-      for (let stateType of stateTypeArr) {
-        if (stateType === storeType.name) {
-          filteredIds.push(storeType.id);
-        }
-      }
-    }
-    // console.log("FilteredIds:", filteredIds);
-    return filteredIds;
-  };
+  // ! Contacts
+  // const [stateContacts, setStateContacts] = useState(org?.agg_contacts);
+  // console.log("stateContacts:", stateContacts);
 
   // ! Dispatch Edits
   // dispatch edited org info in correct format
@@ -200,31 +205,27 @@ const OrgInfoEdit = () => {
     };
     const lossTypes = fetchTypeIds(storeLossTypes, stateLossTypes);
     const serviceTypes = fetchTypeIds(storeServiceTypes, stateServiceTypes);
-    const contacts = editOrg.agg_contacts
-    let payload = {updateOrg:{
-      org,
-      address,
-      lossTypes,
-      serviceTypes,
-      contacts
-    }};
+    const contacts = editOrg.agg_contacts;
+    let payload = {
+      updateOrg: {
+        org,
+        address,
+        lossTypes,
+        serviceTypes,
+        contacts,
+      },
+    };
     console.log("PAYLOAD:", payload);
-    dispatch({type: "EDIT_ORG_UPDATE", payload: payload})
-    
+    dispatch({ type: "EDIT_ORG_UPDATE", payload: payload });
+    history.push("/map");
   };
 
   // ! RENDER
   return (
     <Container>
-      {/* Modal Info Container */}
-
-      <Grid container>
+      <Grid container columnSpacing={12}>
         {/* Left */}
-        <Grid item xs={6} pr={5}>
-          <Button variant="contained" color="success" onClick={handleSave}>
-            TEST
-          </Button>
-          <br />
+        <Grid item xs={6}>
           {/* TITLE: ORG NAME */}
           <Typography variant="overline" sx={overlineFont}>
             <b>Organization Name</b>
@@ -259,7 +260,11 @@ const OrgInfoEdit = () => {
               </Stack>
             )}
 
-            <Button variant="text" sx={{ fontSize: "medium", ml: 5 }}>
+            <Button
+              variant="text"
+              onClick={handleSave}
+              sx={{ fontSize: "medium", ml: 5 }}
+            >
               Save
             </Button>
           </Stack>
@@ -270,20 +275,6 @@ const OrgInfoEdit = () => {
           <Typography variant="overline" sx={overlineFont}>
             <b>Organization Info</b>
           </Typography>
-
-          <br />
-          <br />
-
-          {/* Mission */}
-          <TextField
-            id="mission"
-            label="Mission"
-            fullWidth
-            multiline
-            rows={4}
-            defaultValue={org?.mission}
-            onChange={handleChange}
-          />
 
           <br />
           <br />
@@ -429,6 +420,33 @@ const OrgInfoEdit = () => {
           <br />
           <br />
 
+          {/* Mission */}
+          <TextField
+            id="mission"
+            label="Mission"
+            fullWidth
+            multiline
+            rows={4}
+            defaultValue={org?.mission}
+            onChange={handleChange}
+          />
+
+          <br />
+          <br />
+
+          <TextField
+            id="service_explanation"
+            label="Service Explanation"
+            fullWidth
+            multiline
+            rows={6}
+            defaultValue={org?.service_explanation}
+            onChange={handleChange}
+          />
+        </Grid>
+
+        {/* Right Side */}
+        <Grid item xs={6}>
           {/* Notes */}
           <Typography variant="overline" sx={overlineFont}>
             <b>Notes</b>
@@ -442,23 +460,24 @@ const OrgInfoEdit = () => {
             label="Notes"
             fullWidth
             multiline
-            rows={8}
+            rows={6}
             defaultValue={org?.notes}
             onChange={handleChange}
           />
-        </Grid>
 
-        {/* Right Side */}
-        <Grid item xs={6} pl={5}>
+          <br />
+          <br />
+          <br />
+
           {/* Type of Loss and Services */}
-          <Stack direction="row" alignItems="top" gap={5}>
+          <Stack direction={{ xs: 'column', xl: 'row' }} gap={{xs: 2, xl: 4}}>
             {/* Type of Loss */}
-            <div>
+            <Stack direction="column" gap={1}>
               <Typography variant="overline" sx={overlineFont}>
                 <b>Type of Loss</b>
               </Typography>
 
-              <FormControl sx={{ m: 1, width: 300 }}>
+              <FormControl sx={{ width: 250 }}>
                 <InputLabel id="demo-multiple-checkbox-label">
                   Type of Loss
                 </InputLabel>
@@ -480,15 +499,15 @@ const OrgInfoEdit = () => {
                   ))}
                 </Select>
               </FormControl>
-            </div>
+            </Stack>
 
             {/* Service Types */}
-            <div>
+            <Stack direction="column" gap={1}>
               <Typography variant="overline" sx={overlineFont}>
                 <b>Services</b>
               </Typography>
 
-              <FormControl sx={{ m: 1, width: 300 }}>
+              <FormControl sx={{ width: 250 }}>
                 <InputLabel id="demo-multiple-checkbox-label">
                   Service Types
                 </InputLabel>
@@ -510,7 +529,7 @@ const OrgInfoEdit = () => {
                   ))}
                 </Select>
               </FormControl>
-            </div>
+            </Stack>
           </Stack>
 
           <br />
@@ -525,58 +544,58 @@ const OrgInfoEdit = () => {
 
           {/* Map Contacts */}
           {/* {org?.agg_contacts &&
-            org?.agg_contacts?.map((contact) => (
-              <div key={contact.id}>
-                
-                <Stack direction="row" alignItems="center" gap={3}>
-                  <TextField
-                    id="standard-helperText"
-                    variant="standard"
-                    fullWidth
-                    label="First Name"
-                    defaultValue={contact.firstName}
-                  />
+              org?.agg_contacts?.map((contact) => (
+                <div key={contact.id}>
+                  
+                  <Stack direction="row" alignItems="center" gap={3}>
+                    <TextField
+                      id="standard-helperText"
+                      variant="standard"
+                      fullWidth
+                      label="First Name"
+                      defaultValue={contact.firstName}
+                    />
 
-                  <TextField
-                    id="standard-helperText"
-                    variant="standard"
-                    fullWidth
-                    label="Last Name"
-                    defaultValue={contact.lastName}
-                  />
+                    <TextField
+                      id="standard-helperText"
+                      variant="standard"
+                      fullWidth
+                      label="Last Name"
+                      defaultValue={contact.lastName}
+                    />
 
-                  <TextField
-                    id="standard-helperText"
-                    variant="standard"
-                    fullWidth
-                    label="Title"
-                    defaultValue={contact.title}
-                  />
-                </Stack>
+                    <TextField
+                      id="standard-helperText"
+                      variant="standard"
+                      fullWidth
+                      label="Title"
+                      defaultValue={contact.title}
+                    />
+                  </Stack>
 
-                <br />
+                  <br />
 
 
-                <Stack direction="row" alignItems="center" gap={3}>
-                  <TextField
-                    id="standard-helperText"
-                    variant="standard"
-                    fullWidth
-                    label="Phone"
-                    defaultValue={contact.phone}
-                  />
-                  <TextField
-                    id="standard-helperText"
-                    variant="standard"
-                    fullWidth
-                    label="Email"
-                    defaultValue={contact.email}
-                  />
-                </Stack>
-                <br />
-                <br />
-              </div>
-            ))} */}
+                  <Stack direction="row" alignItems="center" gap={3}>
+                    <TextField
+                      id="standard-helperText"
+                      variant="standard"
+                      fullWidth
+                      label="Phone"
+                      defaultValue={contact.phone}
+                    />
+                    <TextField
+                      id="standard-helperText"
+                      variant="standard"
+                      fullWidth
+                      label="Email"
+                      defaultValue={contact.email}
+                    />
+                  </Stack>
+                  <br />
+                  <br />
+                </div>
+              ))} */}
 
           {/* Map Contacts */}
           {org?.agg_contacts &&
