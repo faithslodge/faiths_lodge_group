@@ -13,6 +13,12 @@ const {
     postServiceTypeByOrganization,
     postOrganization,
     convertCityStateToLatLong,
+    putOrganization,
+    putAddress,
+    deleteLossTypeAssociations,
+    deleteServiceTypeAssociations,
+    putContacts,
+    deleteContactsOmittedFromOrgUpdate,
 } = require("../modules/routerService");
 
 /**
@@ -35,17 +41,14 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
  * POST make new organization
  */
 router.post("/", rejectUnauthenticated, async (req, res) => {
-    const { organizationDetails } = req.body;
-    
+    const { org, address, lossTypes, serviceTypes, contacts } =
+        req.body.organizationDetails;
+    const { city, state } = address;
+
     // define DB connection, and ids from created entities
     let connection;
     let addressId;
     let organizationId;
-
-    const { city, state } = organizationDetails.address;
-    const lossTypeIds = organizationDetails.lossTypes;
-    const serviceTypesIds = organizationDetails.serviceTypes;
-    const contacts = organizationDetails.contacts;
 
     try {
         const { latitude, longitude } = await convertCityStateToLatLong(
@@ -57,66 +60,140 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
         connection = await pool.connect();
 
         // Begin transaction
-        connection.query("BEGIN;");
+        await connection.query("BEGIN;");
 
         // INSERT address
         addressId = await postAddress(connection, {
-            ...organizationDetails.address,
+            ...address,
             latitude,
             longitude,
         });
 
         // INSERT organization
         organizationId = await postOrganization(connection, {
-            ...organizationDetails.org,
+            ...org,
             addressId,
         });
 
         // INSERT service types of organization
         await postServiceTypeByOrganization(
-            serviceTypesIds,
+            serviceTypes,
             organizationId,
             connection
         );
 
         // INSERT loss types of organization
-        await postLossTypeByOrganization(
-            lossTypeIds,
-            organizationId,
-            connection
-        );
+        await postLossTypeByOrganization(lossTypes, organizationId, connection);
 
         // INSERT organization_contact
         await postContacts(contacts, organizationId, connection);
 
-        connection.query("COMMIT;");
+        await connection.query("COMMIT;");
         res.sendStatus(201);
     } catch (err) {
-        connection.query("ROLLBACK;");
+        await connection.query("ROLLBACK;");
         console.error(
             "[inside organization.router POST new org] Error in this route",
             err
         );
         res.sendStatus(500);
     } finally {
-        connection.release();
+        await connection.release();
     }
 });
 
 /**
  * PUT edit organization
  */
-router.put("/:id", rejectUnauthenticated, async (req, res) => {
+router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
     const { organizationId } = req.params;
-    const { organizationDetails } = req.body;
+    const { address, lossTypes, serviceTypes, contacts, org } =
+        req.body.editOrg;
+
+    // define DB connection
+    let connection;
+
+    // Grab newly generated contacts to add to this organization
+    const newContacts = contacts.filter((contact) => !contact.id);
+
+    // Grab contacts to edit
+    const editContacts = contacts.filter((contact) => contact.id);
+
     try {
+        const { latitude, longitude } = await convertCityStateToLatLong(
+            address.city,
+            address.state
+        );
+
+        // establish connection to DB
+        connection = await pool.connect();
+
+        // Begin transaction
+        await connection.query("BEGIN;");
+
+        let addressId = await putOrganization(connection, {
+            ...org,
+            organizationId,
+        });
+
+        await putAddress(connection, {
+            ...address,
+            latitude,
+            longitude,
+            addressId,
+        });
+
+        // DELETE CURRENT LOSS TYPE ASSOCIATIONS
+        await deleteLossTypeAssociations(connection, organizationId);
+        // POST GIVEN LOSS TYPE ASSOCIATIONS
+        await postLossTypeByOrganization(lossTypes, organizationId, connection);
+
+        // DELETE CURRENT SERVICE TYPE ASSOCIATIONS
+        await deleteServiceTypeAssociations(connection, organizationId);
+        // POST GIVEN SERVICE TYPE ASSOCIATIONS
+        await postServiceTypeByOrganization(
+            serviceTypes,
+            organizationId,
+            connection
+        );
+
+        // DELETE MISSING CONTACTS
+        const contactGetText = `SELECT * FROM "organization_contact" WHERE "organization_id" = $1;`;
+        const getContactsInOrgResult = await connection.query(contactGetText, [
+            organizationId,
+        ]);
+        const currentContactsInOrg = getContactsInOrgResult.rows;
+
+        const currentContactsInOrgIds = currentContactsInOrg.map(
+            (contact) => contact.id
+        );
+        const editContactsIds = editContacts.map((contact) => contact.id);
+        contactIdsToDelete = editContactsIds.filter(
+            (id) => !currentContactsInOrgIds.includes(id)
+        );
+        await deleteContactsOmittedFromOrgUpdate(
+            connection,
+            organizationId,
+            contactIdsToDelete
+        );
+
+        // EDIT THE CONTACTS BY ID
+        await putContacts(editContacts, organizationId, connection);
+        // ADD NEW CONTACTS
+        await postContacts(newContacts, organizationId, connection);
+
+        await connection.query("COMMIT;");
         res.sendStatus(204);
     } catch (err) {
+        // Cancel transaction
+        await connection.query("ROLLBACK;");
         console.error(
             "[inside organization.router PUT edit org] Error in this route",
             err
         );
         res.sendStatus(500);
+    } finally {
+        await connection.release();
     }
 });
 

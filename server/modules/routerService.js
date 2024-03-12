@@ -20,6 +20,7 @@ SELECT
     o.facebook_url,
     o.instagram_url,
     o.date_verified,
+    a.id AS address_id,
     a.address_line_1,
     a.address_line_2,
     a.city,
@@ -57,7 +58,6 @@ LEFT JOIN (
     ) AS ocs ON o.id = ocs.organization_id;
 `;
 
-
 // translate a city/state to a lat/long to store in DB for this org
 async function convertCityStateToLatLong(city, state) {
     const geojson = await axios.get(
@@ -76,8 +76,6 @@ async function convertCityStateToLatLong(city, state) {
 
 // INSERT an address into DB for this organization
 async function postAddress(connection, address) {
-    const addressEntityForDatabase = { ...address };
-
     const addressQuery = `INSERT INTO "address"
                                     (
                                         "address_line_1",
@@ -89,10 +87,16 @@ async function postAddress(connection, address) {
                                         "latitude",
                                         "longitude"
                                         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;`;
-    const addressQueryRes = await connection.query(
-        addressQuery,
-        Object.values(addressEntityForDatabase)
-    );
+    const addressQueryRes = await connection.query(addressQuery, [
+        address.addressLineOne,
+        address.addressLineTwo,
+        address.city,
+        address.state,
+        address.stateAbbreviation,
+        address.zipCode,
+        address.latitude,
+        address.longitude,
+    ]);
 
     return addressQueryRes.rows[0].id;
 }
@@ -121,10 +125,23 @@ async function postOrganization(connection, organization) {
                                         $10, $11, $12, $13, $14, $15
                                         ) RETURNING id;`;
 
-    const organizationQueryRes = await connection.query(
-        organizationQuery,
-        Object.values(organization)
-    );
+    const organizationQueryRes = await connection.query(organizationQuery, [
+        organization.name,
+        organization.serviceExplanation,
+        organization.logo,
+        organization.mission,
+        organization.notes,
+        organization.url,
+        organization.phone,
+        organization.email,
+        organization.forProfit,
+        organization.faithBased,
+        organization.hasRetreatCenter,
+        organization.linkedInUrl,
+        organization.facebookUrl,
+        organization.instagramUrl,
+        organization.addressId,
+    ]);
 
     return organizationQueryRes.rows[0].id;
 }
@@ -199,7 +216,11 @@ async function postContacts(contacts, organizationId, connection) {
 
         // format for multi-line SQL insert
         contactQueryParams = contacts.flatMap((contact) => [
-            ...Object.values(contact),
+            contact.firstName,
+            contact.lastName,
+            contact.phone,
+            contact.email,
+            contact.title,
             organizationId,
         ]);
 
@@ -237,6 +258,157 @@ function generateNumberOfQueryInputs(arrayOfObjs) {
         .join(", ");
 }
 
+// UPDATE an organization in DB
+async function putOrganization(connection, organization) {
+    console.log("organization:", organization);
+    const organizationQuery = `UPDATE "organization" SET
+                                        "name" = $1,
+                                        "service_explanation" = $2,
+                                        "logo" = $3,
+                                        "mission" = $4,
+                                        "notes" = $5,
+                                        "url" = $6,
+                                        "phone" = $7,
+                                        "email" = $8,
+                                        "for_profit" = $9,
+                                        "faith_based" = $10,
+                                        "has_retreat_center" = $11,
+                                        "linked_in_url" = $12,
+                                        "facebook_url" = $13,
+                                        "instagram_url" = $14
+                                WHERE id = $15 RETURNING "address_id";`;
+
+    const organizationQueryRes = await connection.query(organizationQuery, [
+        organization.name,
+        organization.serviceExplanation,
+        organization.logo,
+        organization.mission,
+        organization.notes,
+        organization.url,
+        organization.phone,
+        organization.email,
+        organization.forProfit,
+        organization.faithBased,
+        organization.hasRetreatCenter,
+        organization.linkedInUrl,
+        organization.facebookUrl,
+        organization.instagramUrl,
+        organization.organizationId,
+    ]);
+
+    return organizationQueryRes.rows[0].address_id;
+}
+
+// UPDATE an address in DB for this organization
+async function putAddress(connection, address) {
+    const addressQuery = `UPDATE "address"
+                                SET
+                                    "address_line_1" = $1,
+                                    "address_line_2" = $2,
+                                    "city" = $3,
+                                    "state" = $4,
+                                    "state_abbreviation" = $5,
+                                    "zip_code" = $6,
+                                    "latitude" = $7,
+                                    "longitude" = $8
+                                WHERE id = $9;`;
+    await connection.query(addressQuery, [
+        address.addressLineOne,
+        address.addressLineTwo,
+        address.city,
+        address.state,
+        address.stateAbbreviation,
+        address.zipCode,
+        address.latitude,
+        address.longitude,
+        address.addressId,
+    ]);
+}
+
+// UPDATE contacts in DB for this organization
+async function putContacts(contacts, organizationId, connection) {
+    const orgIdAsInt = parseInt(organizationId);
+    if (contacts && contacts.length > 0) {
+        // generate number of query inputs without the ids
+        let contactsCopy = [...contacts];
+        contactsCopy = contactsCopy.map((contact) => {
+            const editContact = { ...contact };
+            delete editContact.id;
+            return editContact;
+        });
+        const contactInputCount = generateNumberOfQueryInputs(contacts);
+
+        const numPropertiesInContactObj = Object.keys(contacts[0]).length;
+        // format for multi-line SQL insert
+        let orgIdPositionInQuery = `$${
+            contacts.length * numPropertiesInContactObj + 1
+        }`;
+        const contactQueryParams = contacts.flatMap((contact) => {
+            return [
+                contact.id,
+                contact.firstName,
+                contact.lastName,
+                contact.phone,
+                contact.email,
+                contact.title,
+            ];
+        });
+
+        const contactQuery = `UPDATE organization_contact SET
+                                    "first_name" = updated_contact.first_name,
+                                    "last_name" = updated_contact.last_name,
+                                    "phone" = updated_contact.phone,
+                                    "email" = updated_contact.email,
+                                    "title" = updated_contact.title
+                                    FROM (VALUES ${contactInputCount}) AS updated_contact(id, first_name, last_name, phone, email, title)
+                                    WHERE organization_contact.organization_id = ${orgIdPositionInQuery} AND organization_contact.id = updated_contact.id::INT;`;
+
+        await connection.query(contactQuery, [
+            ...contactQueryParams,
+            orgIdAsInt,
+        ]);
+    }
+}
+
+// DELETE all loss type associations for given organization
+async function deleteLossTypeAssociations(connection, organizationId) {
+    const lossQuery = `DELETE FROM "loss_type_by_organization"
+                            WHERE organization_id = $1;`;
+    await connection.query(lossQuery, [organizationId]);
+}
+
+// DELETE all service type associations for given organization
+async function deleteServiceTypeAssociations(connection, organizationId) {
+    const serviceQuery = `DELETE FROM "service_type_by_organization"
+                            WHERE organization_id = $1;`;
+    await connection.query(serviceQuery, [organizationId]);
+}
+
+// DELETE contacts missing from organization update
+async function deleteContactsOmittedFromOrgUpdate(
+    connection,
+    organizationId,
+    contactIds
+) {
+    if (contactIds && contactIds.length > 0) {
+        const inputIds = `(${contactIds.join(", ")})`;
+
+        console.log(
+            "[inside deleteContactsOmittedFromOrgUpdate] inputIds:",
+            inputIds
+        );
+
+        const serviceQuery = `WITH delete_contact AS (
+                                SELECT id
+                                FROM organization_contact
+                                WHERE id IN $1 AND organization_id = $2
+                            )
+	DELETE FROM organization_contact
+    WHERE id IN (SELECT id FROM delete_contact);`;
+        await connection.query(serviceQuery, [inputIds, organizationId]);
+    }
+}
+
 module.exports = {
     ORG_GET_QUERY,
     postContacts,
@@ -245,4 +417,10 @@ module.exports = {
     postServiceTypeByOrganization,
     postOrganization,
     convertCityStateToLatLong,
+    putOrganization,
+    putAddress,
+    deleteLossTypeAssociations,
+    deleteServiceTypeAssociations,
+    putContacts,
+    deleteContactsOmittedFromOrgUpdate,
 };
