@@ -26,6 +26,7 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 // Font
 const overlineFont = {
@@ -199,15 +200,16 @@ const OrgInfoEdit = () => {
     const lossTypes = fetchTypeIds(storeLossTypes, stateLossTypes);
     const serviceTypes = fetchTypeIds(storeServiceTypes, stateServiceTypes);
     const contacts = editOrg.agg_contacts
-    let payload = {
+    let updateOrg = {
       org,
       address,
       lossTypes,
       serviceTypes,
       contacts
     };
-    console.log("PAYLOAD:", payload);
-    dispatch({type: "EDIT_ORG_UPDATE", payload: payload})
+    console.log("PAYLOAD:", updateOrg);
+    dispatch({type: "EDIT_ORG_UPDATE", payload: updateOrg})
+    
   };
 
   // ! RENDER

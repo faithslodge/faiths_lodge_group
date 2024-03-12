@@ -3,8 +3,8 @@ import { put, takeLatest } from "redux-saga/effects";
 
 
 function* editOrgUpdate(action) {
-    yield takeLatest(axios.put(`/api/organization/${action.payload.org.id}`, action.payload));
-
+    yield axios.put(`/api/organization/${action.payload.org.id}`, action.payload);
+    yield console.log("action.payload", action.payload)
  }
 
  function* editOrgSaga() {
