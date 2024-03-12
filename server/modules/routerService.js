@@ -25,6 +25,7 @@ SELECT
     a.address_line_2,
     a.city,
     a.state,
+    a.state_abbreviation,
     a.zip_code,
     a.latitude,
     a.longitude,
