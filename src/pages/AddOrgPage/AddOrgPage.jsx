@@ -80,7 +80,7 @@ export default function AddOrgPage() {
   };
 
   return (
-    <Box sx={{ width: "70%", m: "auto", minHeight: 600, display: "flex", flexDirection: "column" }}>
+    <Box sx={{ width: "80%", m: "auto", minHeight: 700, display: "flex", flexDirection: "column" }}>
       <Stepper activeStep={activeStep}>
         {steps.map((label) => {
           const stepProps = {};

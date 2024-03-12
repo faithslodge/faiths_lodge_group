@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, FormControlLabel, Checkbox, TextField, Stack, Grid, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { size } from "@floating-ui/core";
+import PhoneNumberFormatter from "../../utils/PhoneNumberFormatter/PhoneNubmerFormatter";
 
 // Array used to conditionally render and style different form inputs
 const orgKeyNames = [
   { text: "Organization Name", checkBox: false, keyName: "name", size: 5, variant: "standard", isRequired: true },
   { text: "Website", checkBox: false, keyName: "url", size: 5, variant: "standard" },
   { text: "Logo", checkBox: false, keyName: "logo", size: 2, variant: "standard" },
-  { text: "Phone", checkBox: false, keyName: "phone", size: 5, variant: "standard" },
+  { text: "Phone", checkBox: false, keyName: "phone", size: 5, variant: "standard" , inputProps: {inputComponent: PhoneNumberFormatter}},
   { text: "Email", checkBox: false, keyName: "email", size: 5, variant: "standard" },
   { text: "Service Explanation", checkBox: false, keyName: "serviceExplanation", size: 6, rows: 3, variant: "outlined" },
   { text: "Mission", checkBox: false, keyName: "mission", size: 6, rows: 3, variant: "outlined" },
@@ -50,6 +50,7 @@ export default function StepOneOrg() {
                     rows={item.rows}
                     value={newOrg?.path}
                     sx={{ width: "100%" }}
+                    InputProps={item.inputProps}
                     onChange={(event) => handleChange(event.target.value, item.keyName)}
                   />
                 </Grid>

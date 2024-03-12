@@ -27,6 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
+import PhoneNumberFormatter from "../../utils/PhoneNumberFormatter/PhoneNubmerFormatter";
 
 // Font
 const overlineFont = {
@@ -351,6 +352,9 @@ const OrgInfoEdit = () => {
               fullWidth
               defaultValue={org?.phone}
               onChange={handleChange}
+              InputProps={{
+                inputComponent: PhoneNumberFormatter,
+              }}
             />
           </Stack>
 
