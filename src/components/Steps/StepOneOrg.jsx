@@ -1,25 +1,25 @@
 import React, { useState } from "react";
-import { Box, FormControlLabel, Checkbox, TextField } from "@mui/material";
+import { Box, FormControlLabel, Checkbox, TextField, Stack, Grid, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { size } from "@floating-ui/core";
 
+// Array used to conditionally render and style different form inputs
 const orgKeyNames = [
-  { text: "Name", checkBox: false, keyName: "name" },
-  { text: "Service Explanation", checkBox: false, keyName: "serviceExplanation" },
-  { text: "Logo", checkBox: false, keyName: "logo" },
-  { text: "Mission", checkBox: false, keyName: "mission" },
-  { text: "Notes", checkBox: false, keyName: "notes" },
-  { text: "Website", checkBox: false, keyName: "url" },
-  { text: "Phone", checkBox: false, keyName: "phone" },
-  { text: "Email", checkBox: false, keyName: "email" },
-  { text: "LinkedIn", checkBox: false, keyName: "linkedInUrl" },
-  { text: "Facebook", checkBox: false, keyName: "facebookUrl" },
-  { text: "Instagram", checkBox: false, keyName: "instagramUrl" },
+  { text: "Organization Name", checkBox: false, keyName: "name", size: 5, variant: "standard", isRequired: true },
+  { text: "Website", checkBox: false, keyName: "url", size: 5, variant: "standard" },
+  { text: "Logo", checkBox: false, keyName: "logo", size: 2, variant: "standard" },
+  { text: "Phone", checkBox: false, keyName: "phone", size: 5, variant: "standard" },
+  { text: "Email", checkBox: false, keyName: "email", size: 5, variant: "standard" },
+  { text: "Service Explanation", checkBox: false, keyName: "serviceExplanation", size: 6, rows: 3, variant: "outlined" },
+  { text: "Mission", checkBox: false, keyName: "mission", size: 6, rows: 3, variant: "outlined" },
+  { text: "Notes", checkBox: false, keyName: "notes", size: 12, rows: 3, variant: "outlined" },
+  { text: "LinkedIn", checkBox: false, keyName: "linkedInUrl", size: 4, variant: "standard" },
+  { text: "Facebook", checkBox: false, keyName: "facebookUrl", size: 4, variant: "standard" },
+  { text: "Instagram", checkBox: false, keyName: "instagramUrl", size: 4, variant: "standard" },
   { text: "For Profit", checkBox: true, keyName: "forProfit" },
   { text: "Faith Based", checkBox: true, keyName: "faithBased" },
   { text: "Retreat Center", checkBox: true, keyName: "hasRetreatCenter" },
 ];
-
-// const checkBoxNames = ["forProfit", "faithBased", "hasRetreatCenter"];
 
 export default function StepOneOrg() {
   const dispatch = useDispatch();
@@ -32,40 +32,52 @@ export default function StepOneOrg() {
   return (
     <Box sx={{ width: "70%", m: "auto" }}>
       <React.Fragment>
-        <Box>
+        <br />
+        <center>
+          <Typography variant="h4">Organization Details</Typography>
+        </center>
+        <Grid container spacing={3}>
           {orgKeyNames.map((item, i) => {
             const path = item.keyName;
             if (item.checkBox === false) {
               return (
-                <TextField
-                  size="small"
-                  label={item.text}
-                  value={newOrg?.path}
-                  key={i}
-                  onChange={(event) => handleChange(event.target.value, item.keyName)}
-                />
+                <Grid item xs={item.size} key={i}>
+                  <TextField
+                    variant={item.variant}
+                    required={item.isRequired}
+                    multiline
+                    label={item.text}
+                    rows={item.rows}
+                    value={newOrg?.path}
+                    sx={{ width: "100%" }}
+                    onChange={(event) => handleChange(event.target.value, item.keyName)}
+                  />
+                </Grid>
               );
             }
           })}
-        </Box>
+        </Grid>
 
-        <Box>
+        <br />
+        <br />
+
+        <Grid container spacing={3}>
           {orgKeyNames.map((item, i) => {
             const path = item.keyName;
             if (item.checkBox) {
               return (
-                <FormControlLabel
-                  control={
-                    <Checkbox checked={newOrg?.path} onChange={(event) => handleChange(event.target.checked, item.keyName)} />
-                  }
-                  label={item.text}
-                  key={i}
-                />
+                <Grid item xs={3} key={i}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox checked={newOrg?.path} onChange={(event) => handleChange(event.target.checked, item.keyName)} />
+                    }
+                    label={item.text}
+                  />
+                </Grid>
               );
             }
           })}
-        </Box>
-
+        </Grid>
       </React.Fragment>
     </Box>
   );

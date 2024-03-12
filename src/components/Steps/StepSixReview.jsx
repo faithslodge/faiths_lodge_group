@@ -2,16 +2,15 @@ import React from "react";
 import { Box, Typography, FormControlLabel, Checkbox } from "@mui/material";
 import { useSelector } from "react-redux";
 
-const orgKeyNames = ["firstName", "lastName", "phone", "email", "title"];
-
 export default function StepSixReview() {
   const newOrg = useSelector((store) => store.newOrg);
 
   return (
     <Box sx={{ width: "70%", m: "auto" }}>
       <React.Fragment>
+        <br />
         <Box>
-        <Typography variant="h5">Organization Details</Typography>
+          <Typography variant="h5">Organization Details</Typography>
           <Typography>Organization Name: {newOrg.org.name}</Typography>
           <Typography>Service Explination: {newOrg.org.serviceExplanation}</Typography>
           <Typography>Mission: {newOrg.org.mission}</Typography>
@@ -27,7 +26,7 @@ export default function StepSixReview() {
           <Typography>Notes: {newOrg.org.notes}</Typography>
         </Box>
         <Box>
-        <Typography variant="h5">Address</Typography>
+          <Typography variant="h5">Address</Typography>
           <Typography>Address Line 1: {newOrg.address.addressLineOne}</Typography>
           <Typography>Address Line 2: {newOrg.address.addressLineTwo}</Typography>
           <Typography>City: {newOrg.address.city}</Typography>

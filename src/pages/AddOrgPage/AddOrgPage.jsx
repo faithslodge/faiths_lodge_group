@@ -1,153 +1,120 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import {
-  TextField,
-  Checkbox,
-  FormControlLabel,
-  Button,
-  FormGroup,
-  FormControl,
-  FormLabel,
-  Grid,
-} from "@mui/material";
-import AddOrgDetails from "../../components/AddOrgDetails/AddOrgDetails";
-import AddOrgOptions from "../../components/AddOrgOptions/AddOrgOptions";
-import AddOrgAddress from "../../components/AddOrgAddress/AddOrgAddress";
-import AddContactOrg from "../../components/AddOrgContacts/AddOrgContacts";
-const AddOrgPage = () => {
-  //? Organization Details State
-  const [orgName, setOrgName] = useState("");
-  const [serviceExplanation, setServiceExplanation] = useState("");
-  const [mission, setMission] = useState("");
-  const [notes, setNotes] = useState("");
-  const [url, setUrl] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [forProfit, setForProfit] = useState(false);
-  const [faithBased, setFaithBased] = useState(false);
-  const [hasRetreatCenter, setHasRetreatCenter] = useState(false);
-  const [linkedInUrl, setLinkedInUrl] = useState("");
-  const [facebookUrl, setFacebookUrl] = useState("");
-  const [instagramUrl, setInstagramUrl] = useState("");
-  const [logo, setLogo] = useState(null);
+import React, { useState } from "react";
+import { Box, Stepper, Step, StepLabel, Button, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import StepOneOrg from "../../components/Steps/StepOneOrg";
+import StepTwoAddress from "../../components/Steps/StepTwoAddress";
+import StepThreeLosses from "../../components/Steps/StepThreeLosses";
+import StepFourServices from "../../components/Steps/StepFourServices";
+import StepFiveContacts from "../../components/Steps/StepFiveContacts";
+import StepSixReview from "../../components/Steps/StepSixReview";
 
-  //* Organization Address State
-  const [streetAddress, setStreetAddress] = useState("");
-  const [streetAddressTwo, setStreetAddressTwo] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [stateAbbreviation, setStateAbbreviation] = useState("");
-  const [zipCode, setZipCode] = useState("");
+const steps = [
+  "Enter Organization Details",
+  "Enter Address",
+  "Select Services Provided",
+  "Select Type of Losses",
+  "Add Contacts",
+  "Review",
+];
 
-  //* Organization Contact State
-
-  //! Organization Options State
-  const [lossTypes, setLossTypes] = useState([]);
-  const [serviceTypes, setServiceTypes] = useState([]);
-
-  const [contact, setContact] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    email: "",
-    title: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setContact((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+export default function AddOrgPage() {
+  const [activeStep, setActiveStep] = useState(0);
+  const newContact = useSelector((store) => store.newOrg.newContact);
+  const newOrg = useSelector((store) => store.newOrg);
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch({ type: "FETCH_LOSSES" });
-    dispatch({ type: "FETCH_SERVICES" });
-  }, []);
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
 
-  const submit = (event) => {
-    event.preventDefault();
-    const newOrg = {
-      organizationDetails: {
-        org: {
-          name: orgName,
-          serviceExplanation,
-          logo,
-          mission,
-          notes,
-          url,
-          phone,
-          email,
-          forProfit,
-          faithBased,
-          hasRetreatCenter,
-          linkedInUrl,
-          facebookUrl,
-          instagramUrl,
-        },
-        address: {
-          addressLineOne: streetAddress,
-          addressLineTwo: streetAddressTwo,
-          city,
-          state,
-          stateAbbreviation,
-          zipCode,
-        },
-        lossTypes,
-        serviceTypes,
-        contacts: [contact],
-      },
-    };
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
 
-    console.log(newOrg);
+  function handleContacts() {
+    dispatch({ type: "COMPLETE_CONTACTS", payload: newContact });
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  }
 
+  function handleSubmit() {
     dispatch({
       type: "CREATE_ORGANIZATION",
-      payload: newOrg,
+      payload: { organizationDetails: newOrg },
     });
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  }
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+
+  const buttonView = () => {
+    if (activeStep === steps.length - 1) {
+      return <Button onClick={handleSubmit}>SUBMIT</Button>;
+    }
+    if (activeStep === steps.length - 2) {
+      return <Button onClick={handleContacts}>NEXT</Button>;
+    } else {
+      return <Button onClick={handleNext}>NEXT</Button>;
+    }
+  };
+
+  const stepView = () => {
+    switch (activeStep) {
+      case 0:
+        return <StepOneOrg />;
+      case 1:
+        return <StepTwoAddress />;
+      case 2:
+        return <StepThreeLosses />;
+      case 3:
+        return <StepFourServices />;
+      case 4:
+        return <StepFiveContacts />;
+      case 5:
+        return <StepSixReview />;
+      default:
+        return <h1>default</h1>;
+    }
   };
 
   return (
-    <section className="add_org">
-      <AddOrgDetails
-        setOrgName={setOrgName}
-        setServiceExplanation={setServiceExplanation}
-        setMission={setMission}
-        setNotes={setNotes}
-        setUrl={setUrl}
-        setPhone={setPhone}
-        setEmail={setEmail}
-        setForProfit={setForProfit}
-        setFaithBased={setFaithBased}
-        setHasRetreatCenter={setHasRetreatCenter}
-        setLinkedInUrl={setLinkedInUrl}
-        setFacebookUrl={setFacebookUrl}
-        setInstagramUrl={setInstagramUrl}
-      />
-      <AddOrgAddress
-        setStreetAddress={setStreetAddress}
-        setStreetAddressTwo={setStreetAddressTwo}
-        setCity={setCity}
-        setState={setState}
-        setStateAbbreviation={setStateAbbreviation}
-        setZipCode={setZipCode}
-      />
+    <Box sx={{ width: "70%", m: "auto", minHeight: 600, display: "flex", flexDirection: "column" }}>
+      <Stepper activeStep={activeStep}>
+        {steps.map((label) => {
+          const stepProps = {};
+          const labelProps = {};
+          return (
+            <Step key={label} {...stepProps}>
+              <StepLabel {...labelProps}>{label}</StepLabel>
+            </Step>
+          );
+        })}
+      </Stepper>
 
-      <AddOrgOptions
-        lossTypes={lossTypes}
-        setLossTypes={setLossTypes}
-        serviceTypes={serviceTypes}
-        setServiceTypes={setServiceTypes}
-      />
-      <AddContactOrg contact={contact} handleChange={handleChange} />
-      <Button variant="contained" color="primary" onClick={submit}>
-        Add
-      </Button>
-    </section>
+      {activeStep === steps.length ? (
+        <React.Fragment>
+          <Typography sx={{ mt: 2, mb: 1 }}>All steps completed - you&apos;re finished</Typography>
+          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+            <Box sx={{ flex: "1 1 auto" }} />
+            <Button onClick={handleReset}>Reset</Button>
+          </Box>
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          {stepView()}
+
+          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+            <Button color="inherit" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
+              Back
+            </Button>
+            <Box sx={{ flex: "1 1 auto" }} />
+
+            {buttonView()}
+          </Box>
+        </React.Fragment>
+      )}
+    </Box>
   );
-};
-
-export default AddOrgPage;
+}

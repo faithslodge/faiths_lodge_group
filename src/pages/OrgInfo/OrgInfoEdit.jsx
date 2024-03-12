@@ -26,6 +26,7 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 // Font
 const overlineFont = {
@@ -55,74 +56,164 @@ const boolCheck = (info) => {
   }
 };
 
-
-
 const OrgInfoEdit = () => {
-  const dispatch = useDispatch()
 
+  const dispatch = useDispatch();
   // ! Fetch the Organization from the reducer by ID
   const { id } = useParams();
-  console.log("ParamID:", id);
+  // console.log("ParamID:", id);
+  const orgStore = useSelector((store) => store.organizations);
+  // console.log("orgStore:", orgStore);
+  const filteredOrgArray = orgStore?.filter((item) => item.id === Number(id));
+  // console.log("filteredOrgArray:", filteredOrgArray);
+  let org = filteredOrgArray[0];
+  console.log("org:", org);
 
-    const orgStore = useSelector((store) => store.organizations);
-    console.log("orgStore:", orgStore);
+  const [editOrg, setEditOrg] = useState(org);
+  console.log("EDIT ORG:", editOrg);
 
-    const filteredOrgArray = orgStore?.filter((item) => item.id === Number(id));
-    console.log("filteredOrgArray:", filteredOrgArray);
+  // ! HANDLECHANGE()
+  // handle string value changes
+  const handleChange = (e) => {
+    // console.log("e.target", e.target)
+    // console.log("e.target.id", e.target.id)
+    // console.log("e.target.value", e.target.value)
+    let keyName = e.target.id;
+    let value = e.target.value;
+    setEditOrg({ ...editOrg, [keyName]: value });
+    // dispatch({type: "EDIT_ORG", payload: { [keyName]: value}})
+  };
 
-    let org = filteredOrgArray[0];
-
-    const [editOrg, setEditOrg] = useState(org)
-
-    // ! HANDLECHANGE()
-    const handleChange = (e) => {
-      // console.log("e.target.id", e.target.id)
-      // console.log("e.target.value", e.target.value)
-      let keyName = e.target.id
-      let value = e.target.value
-      setEditOrg({...editOrg, [keyName]: value})
-      // dispatch({type: "EDIT_ORG", payload: { [keyName]: value}})
-    }
-    console.log('editOrg', editOrg);
+  // handleBoolean dropdown changes
+  const handleBooleanChange = (e) => {
+    // console.log("e.target", e.target)
+    // console.log("e.target.name", e.target.name)
+    // console.log("e.target.value", e.target.value)
+    let keyName = e.target.name;
+    let value = e.target.value;
+    setEditOrg({ ...editOrg, [keyName]: value });
+    // dispatch({type: "EDIT_ORG", payload: { [keyName]: value}})
+  };
 
   // ! Loss Types
-  const lossTypes = useSelector((store) => store.options.lossesReducer);
-  console.log("lossTypes:", lossTypes);
+  // previous types for rendering dropdown checkboxes checked if the type was previously selected
+  const previousLossTypes = org?.agg_loss_type.map((type) => type.name);
+  // console.log("previousLossTypes:", previousLossTypes);
 
+  // get all possible types from the reducer to render available types to select
+  const storeLossTypes = useSelector((store) => store.options.lossesReducer);
+  // console.log("storeLossTypes:", storeLossTypes);
 
-    const [stateLossTypes, setStateLossTypes] = useState([]);
+  // map just the type names to render in the dropdown
+  const lossTypeNames = storeLossTypes.map((type) => type.name);
+  // console.log("lossTypeNames:", lossTypeNames);
 
-    const handleLossTypeChange = (event) => {
-      const {
-        target: { value },
-      } = event;
-      setStateLossTypes(
-        // On autofill we get a stringified value.
-        typeof value === "string" ? value.split(",") : value
-      );
-    };
-    console.log("stateLossTypes:", stateLossTypes);
+  // local state to set currently checked types
+  const [stateLossTypes, setStateLossTypes] = useState(previousLossTypes);
+  // console.log("stateLossTypes:", stateLossTypes);
+
+  // onchange, set the local state to the current value of the dropdown (array)
+  const handleLossTypeChange = (event) => {
+    setStateLossTypes(event.target.value);
+    // console.log("Loss type change event:", event);
+  };
+  // console.log("stateLossTypes:", stateLossTypes);
+
 
   // ! Services Types
-  const serviceTypes = useSelector((store) => store.options.servicesReducer);
-  console.log("serviceTypes:", serviceTypes);
+  // previous types for rendering dropdown checkboxes checked if the type was previously selected
+  const previousServiceTypes = org?.agg_service_type.map((type) => type.name);
+  // console.log("previousServiceTypes:", previousServiceTypes);
 
-    const [stateServiceTypes, setStateServiceTypes] = useState([]);
+  // get all possible types from the reducer to render available types to select
+  const storeServiceTypes = useSelector(
+    (store) => store.options.servicesReducer
+  );
+  // console.log("storeServiceTypes:", storeServiceTypes);
 
-    const handleServiceTypeChange = (event) => {
-      const {
-        target: { value },
-      } = event;
-      setStateServiceTypes(
-        // On autofill we get a stringified value.
-        typeof value === "string" ? value.split(",") : value
-      );
-    };
-    console.log("stateServiceTypes:", stateServiceTypes);
+  // map just the type names to render in the dropdown
+  const serviceTypeNames = storeServiceTypes.map((type) => type.name);
+  // console.log("serviceTypeNames:", serviceTypeNames);
 
-    // ! 
+  // local state to set currently checked types
+  const [stateServiceTypes, setStateServiceTypes] =
+    useState(previousServiceTypes);
+  // console.log("stateServiceTypes:", stateServiceTypes);
+
+  // onchange, set the local state to the current value of the dropdown (array)
+  const handleServiceTypeChange = (event) => {
+    setStateServiceTypes(event.target.value);
+    // console.log("Service type change event:", event);
+  };
+  // console.log("stateServiceTypes:", stateServiceTypes);
+
   
+  // ! filter the service/loss types in the local state 
+  // compare to the store values, return the store ids for the type in an array
+  const fetchTypeIds = (storeTypeArr, stateTypeArr) => {
+    const filteredIds = [];
+    // console.log("storeTypeArr:", storeTypeArr);
+    // console.log("stateTypeArr:", stateTypeArr);
+    for (let storeType of storeTypeArr) {
+      for (let stateType of stateTypeArr) {
+        if (stateType === storeType.name) {
+          filteredIds.push(storeType.id);
+        }
+      }
+    }
+    // console.log("FilteredIds:", filteredIds);
+    return filteredIds;
+  };
 
+  // ! Dispatch Edits
+  // dispatch edited org info in correct format
+  // payload = {{org}, {address}, [lossType (ids)], [serviceType (ids)], [{contacts}]}
+  const handleSave = () => {
+    const org = {
+      // dateVerified: editOrg.date_verified,
+      email: editOrg.email,
+      facebookUrl: editOrg.facebook_url,
+      faithBased: editOrg.faith_based,
+      forProfit: editOrg.for_profit,
+      hasRetreatCenter: editOrg.has_retreat_center,
+      id: editOrg.id,
+      instagramUrl: editOrg.instagram_url,
+      linkedInUrl: editOrg.linked_in_url,
+      logo: editOrg.logo,
+      mission: editOrg.mission,
+      name: editOrg.name,
+      notes: editOrg.notes,
+      phone: editOrg.phone,
+      serviceExplanation: editOrg.service_explanation,
+      url: editOrg.url,
+      // verifiedBy: editOrg.verified_by,
+    };
+    const address = {
+      addressLineOne: editOrg.address_line_1,
+      addressLineTwo: editOrg.address_line_2,
+      city: editOrg.city,
+      state: editOrg.state,
+      stateAbbreviation: editOrg.state_abbreviation,
+      zipCode: editOrg.zip_code,
+      latitude: editOrg.latitude,
+      longitude: editOrg.longitude,
+    };
+    const lossTypes = fetchTypeIds(storeLossTypes, stateLossTypes);
+    const serviceTypes = fetchTypeIds(storeServiceTypes, stateServiceTypes);
+    const contacts = editOrg.agg_contacts
+    let payload = {updateOrg:{
+      org,
+      address,
+      lossTypes,
+      serviceTypes,
+      contacts
+    }};
+    console.log("PAYLOAD:", payload);
+    dispatch({type: "EDIT_ORG_UPDATE", payload: payload})
+    
+  };
+
+  // ! RENDER
   return (
     <Container>
       {/* Modal Info Container */}
@@ -130,14 +221,18 @@ const OrgInfoEdit = () => {
       <Grid container>
         {/* Left */}
         <Grid item xs={6} pr={5}>
-          {/* Org Name, Verified Badge, View/Edit Btn */}
-          <Button variant="contained" color="success" onClick={handleChange}>TEST</Button><br />
+          <Button variant="contained" color="success" onClick={handleSave}>
+            TEST
+          </Button>
+          <br />
+          {/* TITLE: ORG NAME */}
           <Typography variant="overline" sx={overlineFont}>
             <b>Organization Name</b>
           </Typography>
 
           <br />
 
+          {/* Org Name, Verified Badge, View/Edit Btn */}
           <Stack direction="row" alignItems="center" gap={2}>
             <TextField
               fullWidth
@@ -171,7 +266,7 @@ const OrgInfoEdit = () => {
 
           <br />
 
-          {/* Section Title: Org Info */}
+          {/* TITLE: Org Info */}
           <Typography variant="overline" sx={overlineFont}>
             <b>Organization Info</b>
           </Typography>
@@ -181,12 +276,13 @@ const OrgInfoEdit = () => {
 
           {/* Mission */}
           <TextField
-            id="outlined-multiline-static"
+            id="mission"
             label="Mission"
             fullWidth
             multiline
             rows={4}
             defaultValue={org?.mission}
+            onChange={handleChange}
           />
 
           <br />
@@ -201,13 +297,15 @@ const OrgInfoEdit = () => {
               label="Address Line 1"
               fullWidth
               defaultValue={org?.address_line_1}
+              onChange={handleChange}
             />
             <TextField
-              id="standard-helperText"
+              id="address_line_2"
               variant="standard"
               label="Address Line 2"
               fullWidth
               defaultValue={org?.address_line_2}
+              onChange={handleChange}
             />
           </Stack>
 
@@ -216,18 +314,20 @@ const OrgInfoEdit = () => {
           {/* City State Zip */}
           <Stack direction="row" alignItems="center" gap={3}>
             <TextField
-              id="standard-helperText"
+              id="city"
               variant="standard"
               label="City"
               fullWidth
               defaultValue={org?.city}
+              onChange={handleChange}
             />
             <TextField
-              id="standard-helperText"
+              id="state"
               variant="standard"
               label="State"
               fullWidth
               defaultValue={org?.state}
+              onChange={handleChange}
             />
           </Stack>
 
@@ -236,19 +336,21 @@ const OrgInfoEdit = () => {
           {/* Zip & Phone */}
           <Stack direction="row" alignItems="center" gap={3}>
             <TextField
-              id="standard-helperText"
+              id="zip"
               variant="standard"
               fullWidth
               label="Zip"
               defaultValue={org?.zip}
+              onChange={handleChange}
             />
 
             <TextField
-              id="standard-helperText"
+              id="phone"
               variant="standard"
               label="Phone"
               fullWidth
               defaultValue={org?.phone}
+              onChange={handleChange}
             />
           </Stack>
 
@@ -257,18 +359,20 @@ const OrgInfoEdit = () => {
           {/* Email & Website */}
           <Stack direction="row" alignItems="center" gap={3}>
             <TextField
-              id="standard-helperText"
+              id="email"
               variant="standard"
               label="Email"
               fullWidth
               defaultValue={org?.email}
+              onChange={handleChange}
             />
             <TextField
-              id="standard-helperText"
+              id="url"
               variant="standard"
               label="Website"
               fullWidth
               defaultValue={org?.url}
+              onChange={handleChange}
             />
           </Stack>
 
@@ -277,9 +381,49 @@ const OrgInfoEdit = () => {
 
           {/* Retreat?, Faith Based?, For Profit? */}
           <Stack direction="row" alignItems="center" gap={1}>
-            <b>Has Retreat?:</b> {boolCheck(org?.has_retreat_center)}
-            <b>Faith Based?:</b> {boolCheck(org?.faith_based)}
-            <b>For Profit?:</b> {boolCheck(org?.for_profit)}
+            <FormControl fullWidth>
+              <InputLabel id="has_retreat_center_selector">
+                Has Retreat?
+              </InputLabel>
+              <Select
+                labelId="has_retreat_center_selector"
+                name="has_retreat_center"
+                value={editOrg?.has_retreat_center}
+                label="Has Retreat?"
+                onChange={handleBooleanChange}
+              >
+                <MenuItem value={true}>Yes</MenuItem>
+                <MenuItem value={false}>No</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth>
+              <InputLabel id="faith_based_selector">Faith Based?</InputLabel>
+              <Select
+                labelId="faith_based_selector"
+                name="faith_based"
+                value={editOrg?.faith_based}
+                label="Faith Based?"
+                onChange={handleBooleanChange}
+              >
+                <MenuItem value={true}>Yes</MenuItem>
+                <MenuItem value={false}>No</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth>
+              <InputLabel id="for_profit_selector">For Profit?</InputLabel>
+              <Select
+                labelId="for_profit_selector"
+                name="for_profit"
+                value={editOrg?.for_profit}
+                label="For Profit?"
+                onChange={handleBooleanChange}
+              >
+                <MenuItem value={true}>Yes</MenuItem>
+                <MenuItem value={false}>No</MenuItem>
+              </Select>
+            </FormControl>
           </Stack>
 
           <br />
@@ -294,31 +438,25 @@ const OrgInfoEdit = () => {
           <br />
 
           <TextField
-            id="outlined-multiline-static"
+            id="notes"
             label="Notes"
             fullWidth
             multiline
             rows={8}
             defaultValue={org?.notes}
+            onChange={handleChange}
           />
         </Grid>
 
         {/* Right Side */}
         <Grid item xs={6} pl={5}>
-          {/* Stack to place Type of Loss and Services side-by-side */}
+          {/* Type of Loss and Services */}
           <Stack direction="row" alignItems="top" gap={5}>
             {/* Type of Loss */}
             <div>
               <Typography variant="overline" sx={overlineFont}>
                 <b>Type of Loss</b>
               </Typography>
-
-              {/* <Typography variant="body2" component="ul" pl={2}>
-                {org?.agg_loss_type &&
-                  org?.agg_loss_type?.map((losstype) => (
-                    <li key={losstype.id}>{losstype.name}</li>
-                  ))}
-              </Typography> */}
 
               <FormControl sx={{ m: 1, width: 300 }}>
                 <InputLabel id="demo-multiple-checkbox-label">
@@ -334,12 +472,10 @@ const OrgInfoEdit = () => {
                   renderValue={(selected) => selected.join(", ")}
                   MenuProps={MenuProps}
                 >
-                  {lossTypes.map((type) => (
-                    <MenuItem key={type.id} value={type.name}>
-                      <Checkbox
-                        checked={stateLossTypes.indexOf(type.name) > -1}
-                      />
-                      <ListItemText primary={type.name} />
+                  {lossTypeNames.map((type, i) => (
+                    <MenuItem value={type} key={i}>
+                      <Checkbox checked={stateLossTypes?.includes(type)} />
+                      <ListItemText primary={type} />
                     </MenuItem>
                   ))}
                 </Select>
@@ -351,12 +487,6 @@ const OrgInfoEdit = () => {
               <Typography variant="overline" sx={overlineFont}>
                 <b>Services</b>
               </Typography>
-              {/* <Typography variant="body2" component="ul" pl={2}>
-                {org?.agg_service_type &&
-                  org?.agg_service_type?.map((service) => (
-                    <li key={service.id}>{service.name}</li>
-                  ))}
-              </Typography> */}
 
               <FormControl sx={{ m: 1, width: 300 }}>
                 <InputLabel id="demo-multiple-checkbox-label">
@@ -372,12 +502,10 @@ const OrgInfoEdit = () => {
                   renderValue={(selected) => selected.join(", ")}
                   MenuProps={MenuProps}
                 >
-                  {serviceTypes.map((type) => (
-                    <MenuItem key={type.id} value={type.name}>
-                      <Checkbox
-                        checked={stateServiceTypes.indexOf(type.name) > -1}
-                      />
-                      <ListItemText primary={type.name} />
+                  {serviceTypeNames.map((type, i) => (
+                    <MenuItem value={type} key={i}>
+                      <Checkbox checked={stateServiceTypes?.includes(type)} />
+                      <ListItemText primary={type} />
                     </MenuItem>
                   ))}
                 </Select>
@@ -396,10 +524,10 @@ const OrgInfoEdit = () => {
           <br />
 
           {/* Map Contacts */}
-          {org?.agg_contacts &&
+          {/* {org?.agg_contacts &&
             org?.agg_contacts?.map((contact) => (
               <div key={contact.id}>
-                {/* Name & Title */}
+                
                 <Stack direction="row" alignItems="center" gap={3}>
                   <TextField
                     id="standard-helperText"
@@ -428,7 +556,7 @@ const OrgInfoEdit = () => {
 
                 <br />
 
-                {/* Phone & Email */}
+
                 <Stack direction="row" alignItems="center" gap={3}>
                   <TextField
                     id="standard-helperText"
@@ -448,6 +576,42 @@ const OrgInfoEdit = () => {
                 <br />
                 <br />
               </div>
+            ))} */}
+
+          {/* Map Contacts */}
+          {org?.agg_contacts &&
+            org?.agg_contacts?.map((contact) => (
+              <div key={contact.id}>
+                <Typography
+                  variant="body2"
+                  textTransform="capitalize"
+                  fontWeight="bold"
+                  fontSize={13}
+                >
+                  {contact.firstName} {contact.lastName}
+                </Typography>
+                <Typography variant="caption" fontWeight="300" pl={1.5}>
+                  Title: {contact.title}
+                </Typography>
+                <Stack direction="row" alignItems="center" gap={1} pl={1.5}>
+                  <Phone fontSize="xsmall" />
+                  <Typography variant="body2" fontSize={12}>
+                    {contact.phone}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" alignItems="center" gap={1} pl={1.5}>
+                  <Email fontSize="xsmall" />
+                  <Link
+                    variant="body2"
+                    href={`mailto:${contact.email}`}
+                    fontSize={12}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    {contact.email}
+                  </Link>
+                </Stack>
+              </div>
             ))}
 
           <br />
@@ -461,26 +625,29 @@ const OrgInfoEdit = () => {
 
           <Stack direction="column" alignItems="left" gap={3} width="70%">
             <TextField
-              id="standard-helperText"
+              id="facebook_url"
               variant="standard"
               fullWidth
               label="Facebook"
               defaultValue={org?.facebook_url}
+              onChange={handleChange}
             />
 
             <TextField
-              id="standard-helperText"
+              id="instagram_url"
               variant="standard"
               fullWidth
               label="Instagram"
               defaultValue={org?.instagram_url}
+              onChange={handleChange}
             />
 
             <TextField
-              id="standard-helperText"
+              id="linked_in_url"
               variant="standard"
               label="LinkedIn"
               defaultValue={org?.linked_in_url}
+              onChange={handleChange}
             />
           </Stack>
         </Grid>

@@ -1,10 +1,17 @@
 import React from "react";
-import { Box, TextField } from "@mui/material";
+import { Box, TextField, Grid, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import StateSelector from "../Map/Filters/StateSelector";
 import US_STATES from "../../constants/US_STATES";
 
-const orgKeyNames = ["addressLineOne", "addressLineTwo", "city", "state", "zipCode"];
+// Array used to conditionally render and style different form inputs
+const orgKeyNames = [
+  { text: "Address Line 1", isRequired: false, keyName: "addressLineOne", size: 5 },
+  { text: "Address Line 2", isRequired: false, keyName: "addressLineTwo", size: 5 },
+  { text: "City", isRequired: true, keyName: "city", size: 2 },
+  { text: "State", isRequired: true, keyName: "state", size: 5 },
+  { text: "Zip", isRequired: false, keyName: "zipCode", size: 5 },
+];
 
 export default function StepTwoAddress() {
   const dispatch = useDispatch();
@@ -28,26 +35,40 @@ export default function StepTwoAddress() {
   };
 
   return (
-    <Box sx={{ width: "70%", m: "auto" }}>
-      <React.Fragment>
-        {orgKeyNames.map((keyName, i) =>
-          keyName === "state" ? (
-            <StateSelector
-              key={i}
-              handleChange={(event) => {
-                handleState(event.target.id);
-              }}
-            />
-          ) : (
-            <TextField
-              label={keyName}
-              value={newOrg?.keyName}
-              key={i}
-              onChange={(event) => handleChange(event.target.value, keyName)}
-            />
-          )
-        )}
-      </React.Fragment>
+    <Box sx={{ width: "50%", m: "auto" }}>
+      <br />
+      <center>
+          <Typography variant="h4">Organization Address</Typography>
+        </center>
+      <Grid container spacing={3} sx={{justifyContent: "center"}}>
+        {orgKeyNames.map((elem, i) => {
+          const path = elem.keyName;
+          if (elem.keyName === "state") {
+            return (
+              <Grid item xs={8} key={i} >
+                <StateSelector
+                  handleChange={(event) => {
+                    handleState(event.target.id);
+                  }}
+                />
+              </Grid>
+            );
+          } else {
+            return (
+              <Grid item xs={8} key={i}>
+                <TextField
+                  variant="standard"
+                  required={elem.isRequired}
+                  label={elem.text}
+                  value={newOrg?.path}
+                  sx={{ width: "100%" }}
+                  onChange={(event) => handleChange(event.target.value, elemkeyName)}
+                />
+              </Grid>
+            );
+          }
+        })}
+      </Grid>
     </Box>
   );
 }
