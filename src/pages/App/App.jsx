@@ -39,9 +39,9 @@ function App() {
 
   useEffect(() => {
     dispatch({ type: "FETCH_USER" });
-    dispatch({type:'FETCH_ORGANIZATIONS'})
-    dispatch({type: 'FETCH_LOSSES'})
-    dispatch({type: 'FETCH_SERVICES'})
+    dispatch({ type: "FETCH_ORGANIZATIONS" });
+    dispatch({ type: "FETCH_LOSSES" });
+    dispatch({ type: "FETCH_SERVICES" });
   }, [dispatch]);
 
   return (
@@ -59,10 +59,7 @@ function App() {
           >
             <AboutPage />
           </Route>
-          <Route
-            exact
-            path="/team"
-          >
+          <Route exact path="/team">
             <TeamPage />
           </Route>
           // ! Need to delete test page before release
