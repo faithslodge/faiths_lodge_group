@@ -12,27 +12,27 @@ const columns = [
     field: "name",
     headerName: "Name",
   },
-  {
-    field: "address_line_1",
-    headerName: "Address",
-  },
+  // {
+  //   field: "address_line_1",
+  //   headerName: "Address",
+  // },
   {
     field: "state",
     headerName: "State",
   },
-  {
-    field: "zip_code",
-    headerName: "Zip",
-  },
+  // {
+  //   field: "zip_code",
+  //   headerName: "Zip",
+  // },
   {
     field: "phone",
     headerName: "Phone",
   },
 
-  {
-    field: "agg_loss_type",
-    headerName: "Loss Type",
-  },
+  // {
+  //   field: "agg_loss_type",
+  //   headerName: "Loss Type",
+  // },
 ];
 
 //agg_loss_type
