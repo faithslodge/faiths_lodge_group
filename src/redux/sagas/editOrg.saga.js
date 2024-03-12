@@ -1,13 +1,15 @@
+import axios from "axios";
 import { put, takeLatest } from "redux-saga/effects";
 
 
-function* setEditOrg(action){
-    yield put({type: 'EDIT_ORG', payload: action.payload})
-}
+function* editOrgUpdate(action) {
+    yield takeLatest(axios.put(`/api/organization/${action.payload.org.id}`, action.payload));
 
-function* editOrgSaga() {
-    yield takeLatest("SET_EDIT_ORG", setEditOrg);
  }
- 
+
+ function* editOrgSaga() {
+    yield takeLatest("EDIT_ORG_UPDATE", editOrgUpdate);
+ }
+
  export default editOrgSaga;
  

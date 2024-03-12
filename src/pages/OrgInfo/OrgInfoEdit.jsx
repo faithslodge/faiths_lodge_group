@@ -56,6 +56,7 @@ const boolCheck = (info) => {
 };
 
 const OrgInfoEdit = () => {
+
   const dispatch = useDispatch();
   // ! Fetch the Organization from the reducer by ID
   const { id } = useParams();
@@ -71,6 +72,7 @@ const OrgInfoEdit = () => {
   console.log("EDIT ORG:", editOrg);
 
   // ! HANDLECHANGE()
+  // handle string value changes
   const handleChange = (e) => {
     // console.log("e.target", e.target)
     // console.log("e.target.id", e.target.id)
@@ -81,6 +83,7 @@ const OrgInfoEdit = () => {
     // dispatch({type: "EDIT_ORG", payload: { [keyName]: value}})
   };
 
+  // handleBoolean dropdown changes
   const handleBooleanChange = (e) => {
     // console.log("e.target", e.target)
     // console.log("e.target.name", e.target.name)
@@ -115,6 +118,7 @@ const OrgInfoEdit = () => {
   };
   // console.log("stateLossTypes:", stateLossTypes);
 
+
   // ! Services Types
   // previous types for rendering dropdown checkboxes checked if the type was previously selected
   const previousServiceTypes = org?.agg_service_type.map((type) => type.name);
@@ -142,8 +146,8 @@ const OrgInfoEdit = () => {
   };
   // console.log("stateServiceTypes:", stateServiceTypes);
 
-
-  // filter the service/loss types in the local state, 
+  
+  // ! filter the service/loss types in the local state 
   // compare to the store values, return the store ids for the type in an array
   const fetchTypeIds = (storeTypeArr, stateTypeArr) => {
     const filteredIds = [];
@@ -160,9 +164,9 @@ const OrgInfoEdit = () => {
     return filteredIds;
   };
 
+  // ! Dispatch Edits
   // dispatch edited org info in correct format
   // payload = {{org}, {address}, [lossType (ids)], [serviceType (ids)], [{contacts}]}
-
   const handleSave = () => {
     const org = {
       date_verified: editOrg.date_verified,
@@ -194,14 +198,16 @@ const OrgInfoEdit = () => {
     };
     const lossTypes = fetchTypeIds(storeLossTypes, stateLossTypes);
     const serviceTypes = fetchTypeIds(storeServiceTypes, stateServiceTypes);
-
+    const contacts = editOrg.agg_contacts
     let payload = {
       org,
       address,
       lossTypes,
       serviceTypes,
+      contacts
     };
     console.log("PAYLOAD:", payload);
+    dispatch({type: "EDIT_ORG_UPDATE", payload: payload})
   };
 
   // ! RENDER
@@ -515,10 +521,10 @@ const OrgInfoEdit = () => {
           <br />
 
           {/* Map Contacts */}
-          {org?.agg_contacts &&
+          {/* {org?.agg_contacts &&
             org?.agg_contacts?.map((contact) => (
               <div key={contact.id}>
-                {/* Name & Title */}
+                
                 <Stack direction="row" alignItems="center" gap={3}>
                   <TextField
                     id="standard-helperText"
@@ -547,7 +553,7 @@ const OrgInfoEdit = () => {
 
                 <br />
 
-                {/* Phone & Email */}
+
                 <Stack direction="row" alignItems="center" gap={3}>
                   <TextField
                     id="standard-helperText"
@@ -566,6 +572,42 @@ const OrgInfoEdit = () => {
                 </Stack>
                 <br />
                 <br />
+              </div>
+            ))} */}
+
+          {/* Map Contacts */}
+          {org?.agg_contacts &&
+            org?.agg_contacts?.map((contact) => (
+              <div key={contact.id}>
+                <Typography
+                  variant="body2"
+                  textTransform="capitalize"
+                  fontWeight="bold"
+                  fontSize={13}
+                >
+                  {contact.firstName} {contact.lastName}
+                </Typography>
+                <Typography variant="caption" fontWeight="300" pl={1.5}>
+                  Title: {contact.title}
+                </Typography>
+                <Stack direction="row" alignItems="center" gap={1} pl={1.5}>
+                  <Phone fontSize="xsmall" />
+                  <Typography variant="body2" fontSize={12}>
+                    {contact.phone}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" alignItems="center" gap={1} pl={1.5}>
+                  <Email fontSize="xsmall" />
+                  <Link
+                    variant="body2"
+                    href={`mailto:${contact.email}`}
+                    fontSize={12}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    {contact.email}
+                  </Link>
+                </Stack>
               </div>
             ))}
 
