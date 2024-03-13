@@ -16,6 +16,7 @@ import {
   ListItemText,
   Checkbox,
   OutlinedInput,
+  Card,
 } from "@mui/material";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -73,9 +74,6 @@ const fetchTypeIds = (storeTypeArr, stateTypeArr) => {
   // console.log("FilteredIds:", filteredIds);
   return filteredIds;
 };
-
-
-
 
 const OrgInfoEdit = () => {
   const history = useHistory();
@@ -224,7 +222,7 @@ const OrgInfoEdit = () => {
   // ! RENDER
   return (
     <Container>
-      <Grid container columnSpacing={12}>
+      <Grid container>
         {/* Left */}
         <Grid item xs={6}>
           {/* TITLE: ORG NAME */}
@@ -262,7 +260,7 @@ const OrgInfoEdit = () => {
             )}
 
             <Button
-              variant="text"
+              variant="outlined"
               onClick={handleSave}
               sx={{ fontSize: "medium", ml: 5 }}
             >
@@ -271,7 +269,11 @@ const OrgInfoEdit = () => {
           </Stack>
 
           <br />
+        </Grid>
+      </Grid>
 
+      <Grid container pt={4}>
+        <Grid item xs={6} pr={5}>
           {/* TITLE: Org Info */}
           <Typography variant="overline" sx={overlineFont}>
             <b>Organization Info</b>
@@ -450,7 +452,8 @@ const OrgInfoEdit = () => {
         </Grid>
 
         {/* Right Side */}
-        <Grid item xs={6}>
+
+        <Grid item xs={6} pl={5}>
           {/* Notes */}
           <Typography variant="overline" sx={overlineFont}>
             <b>Notes</b>
@@ -474,7 +477,7 @@ const OrgInfoEdit = () => {
           <br />
 
           {/* Type of Loss and Services */}
-          <Stack direction={{ xs: 'column', xl: 'row' }} gap={{xs: 2, xl: 4}}>
+          <Stack direction={{ xs: "column", xl: "row" }} gap={{ xs: 2, xl: 4 }}>
             {/* Type of Loss */}
             <Stack direction="column" gap={1}>
               <Typography variant="overline" sx={overlineFont}>
@@ -537,107 +540,6 @@ const OrgInfoEdit = () => {
           </Stack>
 
           <br />
-          <br />
-
-          {/* Point of Contact */}
-          <Typography variant="overline" sx={overlineFont}>
-            <b>POINTS OF CONTACT</b>
-          </Typography>
-
-          <br />
-
-          {/* Map Contacts */}
-          {/* {org?.agg_contacts &&
-              org?.agg_contacts?.map((contact) => (
-                <div key={contact.id}>
-                  
-                  <Stack direction="row" alignItems="center" gap={3}>
-                    <TextField
-                      id="standard-helperText"
-                      variant="standard"
-                      fullWidth
-                      label="First Name"
-                      defaultValue={contact.firstName}
-                    />
-
-                    <TextField
-                      id="standard-helperText"
-                      variant="standard"
-                      fullWidth
-                      label="Last Name"
-                      defaultValue={contact.lastName}
-                    />
-
-                    <TextField
-                      id="standard-helperText"
-                      variant="standard"
-                      fullWidth
-                      label="Title"
-                      defaultValue={contact.title}
-                    />
-                  </Stack>
-
-                  <br />
-
-
-                  <Stack direction="row" alignItems="center" gap={3}>
-                    <TextField
-                      id="standard-helperText"
-                      variant="standard"
-                      fullWidth
-                      label="Phone"
-                      defaultValue={contact.phone}
-                    />
-                    <TextField
-                      id="standard-helperText"
-                      variant="standard"
-                      fullWidth
-                      label="Email"
-                      defaultValue={contact.email}
-                    />
-                  </Stack>
-                  <br />
-                  <br />
-                </div>
-              ))} */}
-
-          {/* Map Contacts */}
-          {org?.agg_contacts &&
-            org?.agg_contacts?.map((contact) => (
-              <div key={contact.id}>
-                <Typography
-                  variant="body2"
-                  textTransform="capitalize"
-                  fontWeight="bold"
-                  fontSize={13}
-                >
-                  {contact.firstName} {contact.lastName}
-                </Typography>
-                <Typography variant="caption" fontWeight="300" pl={1.5}>
-                  Title: {contact.title}
-                </Typography>
-                <Stack direction="row" alignItems="center" gap={1} pl={1.5}>
-                  <Phone fontSize="xsmall" />
-                  <Typography variant="body2" fontSize={12}>
-                    {contact.phone}
-                  </Typography>
-                </Stack>
-                <Stack direction="row" alignItems="center" gap={1} pl={1.5}>
-                  <Email fontSize="xsmall" />
-                  <Link
-                    variant="body2"
-                    href={`mailto:${contact.email}`}
-                    fontSize={12}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    {contact.email}
-                  </Link>
-                </Stack>
-              </div>
-            ))}
-
-          <br />
 
           {/* Social Media */}
           <Typography variant="overline" sx={overlineFont}>
@@ -674,6 +576,72 @@ const OrgInfoEdit = () => {
             />
           </Stack>
         </Grid>
+      </Grid>
+
+
+      {/* Point of Contact */}
+      <Grid container pt={5} rowGap={3} justifyContent="space-between">
+        <Grid item xs={12}>
+          <Typography variant="overline" sx={overlineFont}>
+            <b>POINTS OF CONTACT</b>
+          </Typography>
+        </Grid>
+
+        {/* Map Contacts */}
+        {org?.agg_contacts &&
+          org?.agg_contacts?.map((contact) => (
+            <Grid
+              item
+              key={contact.id}
+              xs={5.5}
+              sx={{boxShadow: 2, border: "0.5px solid black", borderRadius: 1, p: 3}}
+            >
+              <Stack direction="row" alignItems="center" gap={3}>
+                <TextField
+                  id="standard-helperText"
+                  variant="standard"
+                  fullWidth
+                  label="First Name"
+                  defaultValue={contact.firstName}
+                />
+
+                <TextField
+                  id="standard-helperText"
+                  variant="standard"
+                  fullWidth
+                  label="Last Name"
+                  defaultValue={contact.lastName}
+                />
+
+                <TextField
+                  id="standard-helperText"
+                  variant="standard"
+                  fullWidth
+                  label="Title"
+                  defaultValue={contact.title}
+                />
+              </Stack>
+
+              <br />
+
+              <Stack direction="row" alignItems="center" gap={3}>
+                <TextField
+                  id="standard-helperText"
+                  variant="standard"
+                  fullWidth
+                  label="Phone"
+                  defaultValue={contact.phone}
+                />
+                <TextField
+                  id="standard-helperText"
+                  variant="standard"
+                  fullWidth
+                  label="Email"
+                  defaultValue={contact.email}
+                />
+              </Stack>
+            </Grid>
+          ))}
       </Grid>
     </Container>
   );
