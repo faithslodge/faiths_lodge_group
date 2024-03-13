@@ -62,11 +62,10 @@ router.post("/:org_id", rejectUnauthenticated, async (req, res) => {
 });
 
 /**
- * PUT update contact by id
+ * PUT update contact by id, id located in contact obj
  */
-router.put("/:id", rejectUnauthenticated, async (req, res) => {
-    const contact = req.body;
-    const { id } = req.params;
+router.put("/", rejectUnauthenticated, async (req, res) => {
+    const { id, firstName, lastName, phone, email, title } = req.body;
 
     try {
         const queryText = `UPDATE "organization_contact" 
@@ -77,7 +76,7 @@ router.put("/:id", rejectUnauthenticated, async (req, res) => {
                                     "title" = $5
                                 WHERE id=$6;`;
 
-        await pool.query(queryText, [...Object.values(contact), id]);
+        await pool.query(queryText, [firstName, lastName, phone, email, title, id]);
         res.sendStatus(204);
     } catch (err) {
         console.error(
@@ -89,9 +88,9 @@ router.put("/:id", rejectUnauthenticated, async (req, res) => {
 });
 
 /**
- * DELETE contact by id
+ * DELETE contact by id, id located in contact obj
  */
-router.delete("/:id", rejectUnauthenticated, async (req, res) => {
+router.delete("/:", rejectUnauthenticated, async (req, res) => {
     const { id } = req.params;
 
     try {

@@ -9,7 +9,8 @@ const router = express.Router();
  * GET all types of services
  */
 router.get("/service", rejectUnauthenticated, async (req, res) => {
-    const queryText = `SELECT * FROM "service_type"`;
+    const queryText = `SELECT * FROM "service_type"
+                        ORDER BY name ASC;`;
     try {
         const dbRes = await pool.query(queryText);
         res.status(200).send(dbRes.rows);
@@ -29,7 +30,7 @@ router.post("/service", rejectUnauthenticated, async (req, res) => {
     const { typeToInsert } = req.body;
     try {
         const queryText = `INSERT INTO "service_type"
-                                ("name") VALUES ($1)`;
+                                ("name") VALUES ($1);`;
 
         await pool.query(queryText, [typeToInsert]);
         res.sendStatus(201);
@@ -88,8 +89,8 @@ router.delete("/service/:id", rejectUnauthenticated, async (req, res) => {
  */
 router.get("/loss", rejectUnauthenticated, async (req, res) => {
     try {
-        const queryText = `SELECT * FROM "loss_type"`;
-
+        const queryText = `SELECT * FROM "loss_type";
+        ORDER BY name ASC;`;
         const dbRes = await pool.query(queryText);
         res.status(200).send(dbRes.rows);
     } catch (err) {
@@ -109,7 +110,7 @@ router.post("/loss", rejectUnauthenticated, async (req, res) => {
 
     try {
         const queryText = `INSERT INTO "loss_type"
-                                ("name") VALUES ($1)`;
+                                ("name") VALUES ($1);`;
 
         await pool.query(queryText, [typeToInsert]);
         res.sendStatus(201);
