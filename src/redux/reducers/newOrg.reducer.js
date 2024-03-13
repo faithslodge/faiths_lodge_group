@@ -38,6 +38,8 @@ const org = (state = orgInitialState, action) => {
   switch (action.type) {
     case "SET_ORG_OBJECT":
       return { ...state, ...action.payload };
+    case "SET_NEW_ORG_TO_INITAL":
+      return orgInitialState;
     default:
       return state;
   }
@@ -47,6 +49,8 @@ const address = (state = addressInitialState, action) => {
   switch (action.type) {
     case "SET_ADDRESS_OBJECT":
       return { ...state, ...action.payload };
+    case "SET_NEW_ORG_TO_INITAL":
+      return addressInitialState;
     default:
       return state;
   }
@@ -56,6 +60,8 @@ const lossTypes = (state = [], action) => {
   switch (action.type) {
     case "SET_NEW_LOSS":
       return action.payload;
+    case "SET_NEW_ORG_TO_INITAL":
+      return [];
     default:
       return state;
   }
@@ -65,6 +71,8 @@ const serviceTypes = (state = [], action) => {
   switch (action.type) {
     case "SET_NEW_SERVICE":
       return action.payload;
+    case "SET_NEW_ORG_TO_INITAL":
+      return [];
     default:
       return state;
   }
@@ -73,20 +81,24 @@ const serviceTypes = (state = [], action) => {
 const contacts = (state = [], action) => {
   switch (action.type) {
     case "COMPLETE_CONTACTS":
-        return [action.payload]
+      return [action.payload];
+    case "SET_NEW_ORG_TO_INITAL":
+      return [];
     default:
       return state;
   }
 };
 
 const newContact = (state = contactInitialState, action) => {
-    switch (action.type) {
-      case "SET_NEW_CONTACT":
-        return {...state, ...action.payload};
-      default:
-        return state;
-    }
-  };
+  switch (action.type) {
+    case "SET_NEW_CONTACT":
+      return { ...state, ...action.payload };
+    case "SET_NEW_ORG_TO_INITAL":
+      return contactInitialState;
+    default:
+      return state;
+  }
+};
 
 export default combineReducers({
   org,
@@ -94,5 +106,5 @@ export default combineReducers({
   lossTypes,
   serviceTypes,
   contacts,
-  newContact
+  newContact,
 });
