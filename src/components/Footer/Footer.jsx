@@ -14,6 +14,9 @@ function Footer() {
         <p>&copy; Faith's Lodge</p>
       </div>
       <div className="footerNav">
+        <Link className="footerLink" to="/home">
+          Home
+        </Link>
         <Link className="footerLink" to="/about">
           About
         </Link>
