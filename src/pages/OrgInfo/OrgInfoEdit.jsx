@@ -29,6 +29,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import PhoneNumberFormatter from "../../utils/PhoneNumberFormatter/PhoneNubmerFormatter";
+import { forwardRef } from "react";
 
 // Font
 const overlineFont = {
@@ -166,8 +167,26 @@ const OrgInfoEdit = () => {
   // console.log("stateServiceTypes:", stateServiceTypes);
 
   // ! Contacts
-  // const [stateContacts, setStateContacts] = useState(org?.agg_contacts);
-  // console.log("stateContacts:", stateContacts);
+  const [stateContacts, setStateContacts] = useState(org?.agg_contacts);
+  console.log("stateContacts:", stateContacts);
+
+  const handleContactChange = (e) => {
+    // console.log("e.target", e.target);
+    // console.log("e.target.name", target.name);
+    // console.log("e.target.id", e.target.id)
+    // console.log("e.target.value", e.target.value)
+
+    let id = e.target.id;
+    let keyName = e.target.name;
+    let value = e.target.value;
+
+    setStateContacts(stateContacts =>
+      stateContacts.map(contact =>
+          contact.id === Number(id) ? {...contact, [keyName]: value} : contact
+        )
+    )
+    
+  };
 
   // ! Dispatch Edits
   // dispatch edited org info in correct format
@@ -578,7 +597,6 @@ const OrgInfoEdit = () => {
         </Grid>
       </Grid>
 
-
       {/* Point of Contact */}
       <Grid container pt={5} rowGap={3} justifyContent="space-between">
         <Grid item xs={12}>
@@ -589,36 +607,45 @@ const OrgInfoEdit = () => {
 
         {/* Map Contacts */}
         {org?.agg_contacts &&
-          org?.agg_contacts?.map((contact) => (
+          org?.agg_contacts?.map((contact, i) => (
             <Grid
               item
-              key={contact.id}
+              key={i}
               xs={5.5}
-              sx={{boxShadow: 2, border: "0.5px solid black", borderRadius: 1, p: 3}}
+              sx={{
+                boxShadow: 2,
+                border: "0.5px solid black",
+                borderRadius: 1,
+                p: 3,
+              }}
             >
               <Stack direction="row" alignItems="center" gap={3}>
                 <TextField
-                  id="standard-helperText"
+                  id={`${contact.id}`}
+                  name="firstName"
                   variant="standard"
                   fullWidth
                   label="First Name"
                   defaultValue={contact.firstName}
+                  onChange={handleContactChange}
                 />
 
                 <TextField
-                  id="standard-helperText"
+                  id="lastName"
                   variant="standard"
                   fullWidth
                   label="Last Name"
                   defaultValue={contact.lastName}
+                  onChange={handleContactChange}
                 />
 
                 <TextField
-                  id="standard-helperText"
+                  id="title"
                   variant="standard"
                   fullWidth
                   label="Title"
                   defaultValue={contact.title}
+                  onChange={handleContactChange}
                 />
               </Stack>
 
@@ -626,18 +653,20 @@ const OrgInfoEdit = () => {
 
               <Stack direction="row" alignItems="center" gap={3}>
                 <TextField
-                  id="standard-helperText"
+                  id="phone"
                   variant="standard"
                   fullWidth
                   label="Phone"
                   defaultValue={contact.phone}
+                  onChange={handleContactChange}
                 />
                 <TextField
-                  id="standard-helperText"
+                  id="email"
                   variant="standard"
                   fullWidth
                   label="Email"
                   defaultValue={contact.email}
+                  onChange={handleContactChange}
                 />
               </Stack>
             </Grid>
