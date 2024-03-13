@@ -60,7 +60,7 @@ CREATE TABLE "organization_contact" (
     "last_name" VARCHAR(100),
     "phone" VARCHAR(30),
     "email" VARCHAR(200),
-    "title" VARCHAR(15),
+    "title" VARCHAR(150),
     "organization_id" INT NOT NULL,
     FOREIGN KEY ("organization_id") REFERENCES "organization" ("id") ON DELETE CASCADE
 );

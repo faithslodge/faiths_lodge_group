@@ -19,6 +19,7 @@ const {
     deleteServiceTypeAssociations,
     putContacts,
     deleteContactsOmittedFromOrgUpdate,
+    getContactIdsToDeleteFromOrg
 } = require("../modules/routerService");
 
 /**
@@ -112,12 +113,17 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
 
     // define DB connection
     let connection;
+    let newContacts;
+    let editContacts;
 
-    // Grab newly generated contacts to add to this organization
-    const newContacts = contacts.filter((contact) => !contact.id);
+    if (contacts && contacts.length > 0) {
+        // Grab newly generated contacts to add to this organization
+    newContacts = contacts.filter((contact) => !contact.id);
 
     // Grab contacts to edit
-    const editContacts = contacts.filter((contact) => contact.id);
+    editContacts = contacts.filter((contact) => contact.id);
+    }
+    
 
     try {
         const { latitude, longitude } = await convertCityStateToLatLong(
@@ -131,11 +137,13 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
         // Begin transaction
         await connection.query("BEGIN;");
 
+        // EDIT ORG
         let addressId = await putOrganization(connection, {
             ...org,
             organizationId,
         });
 
+        // EDIT ADDRESS
         await putAddress(connection, {
             ...address,
             latitude,
@@ -145,11 +153,13 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
 
         // DELETE CURRENT LOSS TYPE ASSOCIATIONS
         await deleteLossTypeAssociations(connection, organizationId);
+        
         // POST GIVEN LOSS TYPE ASSOCIATIONS
         await postLossTypeByOrganization(lossTypes, organizationId, connection);
 
         // DELETE CURRENT SERVICE TYPE ASSOCIATIONS
         await deleteServiceTypeAssociations(connection, organizationId);
+        
         // POST GIVEN SERVICE TYPE ASSOCIATIONS
         await postServiceTypeByOrganization(
             serviceTypes,
@@ -158,19 +168,8 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
         );
 
         // DELETE MISSING CONTACTS
-        const contactGetText = `SELECT * FROM "organization_contact" WHERE "organization_id" = $1;`;
-        const getContactsInOrgResult = await connection.query(contactGetText, [
-            organizationId,
-        ]);
-        const currentContactsInOrg = getContactsInOrgResult.rows;
+        const contactIdsToDelete = await getContactIdsToDeleteFromOrg(connection, editContacts, organizationId);
 
-        const currentContactsInOrgIds = currentContactsInOrg.map(
-            (contact) => contact.id
-        );
-        const editContactsIds = editContacts.map((contact) => contact.id);
-        contactIdsToDelete = editContactsIds.filter(
-            (id) => !currentContactsInOrgIds.includes(id)
-        );
         await deleteContactsOmittedFromOrgUpdate(
             connection,
             organizationId,
@@ -179,6 +178,7 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
 
         // EDIT THE CONTACTS BY ID
         await putContacts(editContacts, organizationId, connection);
+
         // ADD NEW CONTACTS
         await postContacts(newContacts, organizationId, connection);
 
@@ -210,7 +210,7 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
         connection.query("BEGIN;");
 
         const organizationDelQuery = `DELETE FROM organization
-    WHERE organization.id = $1 RETURNING organization.address_id;`;
+            WHERE organization.id = $1 RETURNING organization.address_id;`;
 
         // delete organization
         const organizationDelResponse = await connection.query(
@@ -224,7 +224,7 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
         const addressDelQuery = `DELETE FROM address
                                 WHERE address.id = $1;`;
 
-        const addressDelResponse = await connection.query(addressDelQuery, [
+        await connection.query(addressDelQuery, [
             addressId,
         ]);
 
@@ -235,7 +235,7 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
         // Cancel transaction
         connection.query("ROLLBACK;");
         console.error(
-            "[inside organization.router PUT edit org] Error in this route",
+            "[inside organization.router DELETE org] Error in this route",
             err
         );
         res.sendStatus(500);

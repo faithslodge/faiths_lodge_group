@@ -10,7 +10,7 @@ function Nav() {
   return (
     <div className="nav">
       <Link to="/home">
-        <h2 className="nav-title">Faith's Lodge</h2>
+        <img src="/FaithsLodgeLogo_high res.png" alt="Logo" height={80}/>
       </Link>
       <div>
         {/* If no user is logged in, show these links */}
@@ -40,13 +40,13 @@ function Nav() {
               Options
             </Link>
 
-            <LogOutButton className="navLink" />
+            {user.is_admin && <Link className="navLink" to="/admin">
+              Admin
+            </Link>}
+
+            <LogOutButton className="navLinkButton" />
           </>
         )}
-
-        <Link className="navLink" to="/about">
-          About
-        </Link>
       </div>
     </div>
   );

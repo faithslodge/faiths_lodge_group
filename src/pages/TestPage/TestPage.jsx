@@ -1,121 +1,57 @@
-import React, { useState } from "react";
-import { Box, Stepper, Step, StepLabel, Button, Typography } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import StepOneOrg from "../../components/Steps/StepOneOrg";
-import StepTwoAddress from "../../components/Steps/StepTwoAddress";
-import StepThreeLosses from "../../components/Steps/StepThreeLosses";
-import StepFourServices from "../../components/Steps/StepFourServices";
-import StepFiveContacts from "../../components/Steps/StepFiveContacts";
-import StepSixReview from "../../components/Steps/StepSixReview";
+import React, { forwardRef, useState } from 'react';
+import PropTypes from 'prop-types';
+import { IMaskInput } from 'react-imask';
+import Stack from '@mui/material/Stack';
+import Input from '@mui/material/Input';
+import FormControl from '@mui/material/FormControl';
+import PhoneNumberFormatter from '../../utils/PhoneNumberFormatter/PhoneNubmerFormatter';
+import { useDispatch, useSelector } from 'react-redux';
 
-const steps = [
-  "Enter Organization Details",
-  "Enter Address",
-  "Select Services Provided",
-  "Select Type of Losses",
-  "Add Contacts",
-  "Review"
-];
+// const TextMaskCustom = forwardRef(function TextMaskCustom(props, ref) {
+//   const { onChange, ...other } = props;
+//   return (
+//     <IMaskInput
+//       {...other}
+//       mask="(#00) 000-0000"
+//       definitions={{
+//         '#': /[1-9]/,
+//       }}
+//       inputRef={ref}
+//       onAccept={(value) => onChange({ target: { name: props.name, value } })}
+//       overwrite
+//     />
+//   );
+// });
 
-export default function TestPage() {
-  const [activeStep, setActiveStep] = useState(0);
-  const newContact = useSelector((store) => store.newOrg.newContact);
-  const newOrg = useSelector((store) => store.newOrg);
+// TextMaskCustom.propTypes = {
+//   name: PropTypes.string.isRequired,
+//   onChange: PropTypes.func.isRequired,
+// };
 
-  const dispatch = useDispatch();
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
+export default function FormattedInputs() {
+    const org = useSelector(store => store.newOrg.org)
+    const dispatch = useDispatch()
+  const [values, setValues] = useState({
+    textmask: '(100) 000-0000',
+  });
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  function handleContacts() {
-    dispatch({ type: "COMPLETE_CONTACTS", payload: newContact });
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  }
-
-  function handleSubmit() {
-    dispatch({
-      type: "CREATE_ORGANIZATION",
-      payload: { organizationDetails: newOrg },
-    });
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  }
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
-  const buttonView = ()=>{
-    if(activeStep === steps.length - 1 ) {
-        return <Button onClick={handleSubmit}>SUBMIT</Button>
-      } 
-    if(activeStep === steps.length - 2 ){
-       return <Button onClick={handleContacts}>NEXT</Button>
-    }
-    else{
-        return <Button onClick={handleNext}>NEXT</Button>
-    }
-  }
-
-  const stepView = () => {
-    switch (activeStep) {
-      case 0:
-        return <StepOneOrg />;
-      case 1:
-        return <StepTwoAddress />;
-      case 2:
-        return <StepThreeLosses />;
-      case 3:
-        return <StepFourServices />;
-      case 4:
-        return <StepFiveContacts />;
-      case 5:
-        return <StepSixReview />;
-      default:
-        return <h1>default</h1>;
-    }
+  const handleChange = (event) => {
+    dispatch({type: "SET_ORG_OBJECT", payload: {phone: event.target.value}})
   };
 
   return (
-    <Box sx={{ width: "70%", m: "auto", minHeight: 600, display: "flex", flexDirection: "column"}}>
-      <Stepper activeStep={activeStep}>
-        {steps.map((label) => {
-          const stepProps = {};
-          const labelProps = {};
-          return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
-
-      {activeStep === steps.length ? (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>All steps completed - you&apos;re finished</Typography>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleReset}>Reset</Button>
-          </Box>
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          {stepView()}
-
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Button color="inherit" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
-              Back
-            </Button>
-            <Box sx={{ flex: "1 1 auto" }} />
-
-            {buttonView()}
-          </Box>
-        </React.Fragment>
-      )}
-    </Box>
+    <Stack direction="row" spacing={2}>
+      <FormControl variant="standard">
+        {/* <InputLabel htmlFor="formatted-text-mask-input">react-imask</InputLabel> */}
+        <Input
+          value={org?.phone}
+          onChange={handleChange}
+          name="textmask"
+          id="formatted-text-mask-input"
+          inputComponent={PhoneNumberFormatter}
+        />
+      </FormControl>
+    </Stack>
   );
 }

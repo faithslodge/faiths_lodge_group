@@ -25,9 +25,6 @@ function MapView() {
     dispatch({type: "SET_FILTER_ORGS", payload: storeOrgs})
   }, [storeOrgs]);
 
-  const filterOrgs = (filter) => {
-    setOrgList(filter);
-  };
 
   return (
     <>
@@ -62,7 +59,7 @@ function MapView() {
             backgroundSize: "cover",
           }}
         >
-          <MapBox orgList={filteredOrgs} />
+          <MapBox />
         </Box>
 
         {/* Left Panel with Filters and Org Cards */}

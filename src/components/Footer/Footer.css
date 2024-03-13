@@ -3,3 +3,22 @@ footer {
   padding: 20px;
   text-align: center;
 }
+
+.footerNav {
+  display: flex;
+  justify-content: center;
+}
+
+.footerLink {
+  color: #366695;
+  margin: 0px 24px;
+  padding: 6px 6px;
+  text-decoration: none;
+}
+
+.footerLink:hover {
+  color: #76b5f4;
+  margin: 0px 24px;
+  padding: 6px 6px;
+  text-decoration: none;
+}

@@ -88,6 +88,7 @@ async function postAddress(connection, address) {
                                         "latitude",
                                         "longitude"
                                         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;`;
+
     const addressQueryRes = await connection.query(addressQuery, [
         address.addressLineOne,
         address.addressLineTwo,
@@ -163,9 +164,10 @@ async function postServiceTypeByOrganization(
         );
 
         // format values for multi-line SQL insert
-        serviceQueryParams = mappedServiceTypesToOrg.flatMap(
+        const serviceQueryParams = mappedServiceTypesToOrg.flatMap(
             (orgWithLossType) => Object.values(orgWithLossType)
         );
+
         const serviceTypeQuery = `INSERT INTO "service_type_by_organization"
                                         (
                                             "organization_id",
@@ -192,7 +194,7 @@ async function postLossTypeByOrganization(
             generateNumberOfQueryInputs(mappedLossTypesToOrg);
 
         // format for arg array for multi-line SQL insert
-        lossQueryParams = mappedLossTypesToOrg.flatMap((orgWithType) =>
+        const lossQueryParams = mappedLossTypesToOrg.flatMap((orgWithType) =>
             Object.values(orgWithType)
         );
 
@@ -216,7 +218,7 @@ async function postContacts(contacts, organizationId, connection) {
         const contactInputCount = generateNumberOfQueryInputs(contactsWithOrg);
 
         // format for multi-line SQL insert
-        contactQueryParams = contacts.flatMap((contact) => [
+        const contactQueryParams = contacts.flatMap((contact) => [
             contact.firstName,
             contact.lastName,
             contact.phone,
@@ -261,7 +263,6 @@ function generateNumberOfQueryInputs(arrayOfObjs) {
 
 // UPDATE an organization in DB
 async function putOrganization(connection, organization) {
-    console.log("organization:", organization);
     const organizationQuery = `UPDATE "organization" SET
                                         "name" = $1,
                                         "service_explanation" = $2,
@@ -340,10 +341,13 @@ async function putContacts(contacts, organizationId, connection) {
         const contactInputCount = generateNumberOfQueryInputs(contacts);
 
         const numPropertiesInContactObj = Object.keys(contacts[0]).length;
-        // format for multi-line SQL insert
-        let orgIdPositionInQuery = `$${
+
+        // calculate the position for inserting org id into SQL query params
+        const orgIdPositionInQuery = `$${
             contacts.length * numPropertiesInContactObj + 1
         }`;
+
+        // format for multi-line SQL insert
         const contactQueryParams = contacts.flatMap((contact) => {
             return [
                 contact.id,
@@ -392,21 +396,45 @@ async function deleteContactsOmittedFromOrgUpdate(
     contactIds
 ) {
     if (contactIds && contactIds.length > 0) {
-        const inputIds = `(${contactIds.join(", ")})`;
+        const inputIdCount = contactIds.map((id, i) => {
+            return `$${i + 1}`;
+        });
 
-        console.log(
-            "[inside deleteContactsOmittedFromOrgUpdate] inputIds:",
-            inputIds
-        );
+        // calculate the position for inserting org id into SQL query params
+        const orgIdPositionInQuery = `$${inputIdCount.length + 1}`;
+
+        const inputIdPlaceholder = `(${inputIdCount.join(", ")})`;
 
         const serviceQuery = `WITH delete_contact AS (
-                                SELECT id
-                                FROM organization_contact
-                                WHERE id IN $1 AND organization_id = $2
-                            )
-	DELETE FROM organization_contact
-    WHERE id IN (SELECT id FROM delete_contact);`;
-        await connection.query(serviceQuery, [inputIds, organizationId]);
+                                                        SELECT id
+                                                        FROM organization_contact
+                                                        WHERE id IN ${inputIdPlaceholder} AND organization_id = ${orgIdPositionInQuery}
+                                                     )
+                                DELETE FROM organization_contact
+                                WHERE id IN (SELECT id FROM delete_contact);`;
+        await connection.query(serviceQuery, [...contactIds, organizationId]);
+    }
+}
+
+async function getContactIdsToDeleteFromOrg(
+    connection,
+    contactsToKeep,
+    organizationId
+) {
+    if (contactsToKeep && contactsToKeep.length > 0) {
+        const contactGetText = `SELECT * FROM "organization_contact" WHERE "organization_id" = $1;`;
+        const getContactsInOrgResult = await connection.query(contactGetText, [
+            organizationId,
+        ]);
+        const currentContactsInOrg = getContactsInOrgResult.rows;
+    
+        const currentContactIds = currentContactsInOrg.map((contact) => contact.id);
+    
+        const contactIdsToKeep = contactsToKeep.map((contact) => contact.id);
+        const contactIdsToDelete = currentContactIds.filter(
+            (id) => !contactIdsToKeep.includes(id)
+        );
+        return contactIdsToDelete;
     }
 }
 
@@ -424,4 +452,5 @@ module.exports = {
     deleteServiceTypeAssociations,
     putContacts,
     deleteContactsOmittedFromOrgUpdate,
+    getContactIdsToDeleteFromOrg,
 };
