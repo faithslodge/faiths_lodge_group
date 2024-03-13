@@ -40,6 +40,10 @@ function Nav() {
               Options
             </Link>
 
+            {user.is_admin && <Link className="navLink" to="/admin">
+              Admin
+            </Link>}
+
             <LogOutButton className="navLinkButton" />
           </>
         )}
