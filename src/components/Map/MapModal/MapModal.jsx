@@ -41,8 +41,16 @@ const boolCheck = (info) => {
   }
 };
 
+
 const MapModal = ({ open, handleClose, org }) => {
-  const history = useHistory()
+
+  const socialMediaArray = [
+    { url: org.facebook_url, icon: FacebookIcon, props: { color: "rgba(229, 71, 101, 1)" }  },
+    { url: org.instagram_url, icon: InstagramIcon, props: { color: "rgba(229, 71, 101, 1)" } },
+    { url: org.linked_in_url, icon: LinkedInIcon, props: { color: "rgba(229, 71, 101, 1)" } }
+  ]
+
+  const history = useHistory();
 
   return (
     <div>
@@ -56,31 +64,62 @@ const MapModal = ({ open, handleClose, org }) => {
         <Box border="1px solid black" borderRadius={5} sx={style}>
           {/* Modal Info Container */}
           <Grid container>
-            {/* Left Side */}
-            <Grid item xs={6} pr={1}>
+            {/* Top: Name, Verified, Social Media, View/Edit */}
+            <Grid item xs={12}>
               {/* Org Name, Verified Badge, View/Edit Btn */}
-              <Stack direction="row" alignItems="center" gap={2}>
-                <Typography variant="h5" component="h2">
-                  {org.name}
-                </Typography>
+              <Stack direction="row" alignItems="center" justifyContent="space-between">
+                <Stack direction="row" alignItems="center" gap={2}>
+                  <Typography variant="h5" component="h2">
+                    {org.name}
+                  </Typography>
 
-                {org.verified_by && (
-                  <Stack spacing={1} direction="row" alignItems="center" ml={1}>
-                    <Typography
-                      variant="caption"
-                      fontStyle="italic"
-                      sx={{ fontSize: 14, color: "rgba(217, 144, 33, 1)" }}
-                    >
-                      Verified
-                    </Typography>
-                    <VerifiedIcon
-                      fontSize="medium"
-                      sx={{ color: "rgba(217, 144, 33, 1)" }}
-                    />
+                  {org.verified_by && (
+                    <Stack spacing={1} direction="row" alignItems="center" ml={1}>
+                      <Typography
+                        variant="caption"
+                        fontStyle="italic"
+                        sx={{ fontSize: 14, color: "rgba(217, 144, 33, 1)" }}
+                      >
+                        Verified
+                      </Typography>
+                      <VerifiedIcon
+                        fontSize="medium"
+                        sx={{ color: "rgba(217, 144, 33, 1)" }}
+                      />
+                    </Stack>
+                  )}
+                </Stack>
+
+                {/* Social Meida, Edit Button */}
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                  <Stack direction="row" alignItems="center" gap={1}>
+                    {socialMediaArray.map((site) => 
+                      site.url && (
+                      <Link
+                        href={site.url}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                      >
+                        <site.icon fontSize="medium" props={site.props}/>
+                      </Link>
+                      )
+                    )}
                   </Stack>
-                )}
+               
+                  <Stack direction="row" alignItems="center">
+                    <Button
+                      onClick={() => history.push(`/org/${org.id}`)}
+                      variant="text"
+                      sx={{ fontSize: "small" }}
+                    >
+                      View/Edit
+                    </Button>
+                  </Stack>
+                </Stack>
               </Stack>
+            </Grid>
 
+            <Grid item xs={6} pr={1}>
               <br />
 
               {/* Org Info */}
@@ -144,28 +183,21 @@ const MapModal = ({ open, handleClose, org }) => {
 
               <br />
 
+              <Typography variant="overline" sx={overlineFont}>
+                <b>Service Explanation</b>
+              </Typography>
+              <br />
+              <Typography variant="body2">{org.service_explanation}</Typography>
+            </Grid>
+
+            {/* Right Side */}
+            <Grid item xs={6}>
               {/* Notes */}
               <Typography variant="overline" sx={overlineFont}>
                 <b>Notes</b>
               </Typography>
               <br />
-              <Typography variant="body2">
-                {org.notes}
-                <br />
-              </Typography>
-            </Grid>
-
-            {/* Right Side */}
-            <Grid item xs={6} pl={1}>
-              {/* Edit Button */}
-              <Typography align="right" pr={5}>
-                <Button 
-                  onClick={() => history.push(`/org/${org.id}`)}
-                  variant="text" 
-                  sx={{ fontSize: "small" }}>
-                    View/Edit
-                </Button>
-              </Typography>
+              <Typography variant="body2">{org.notes}</Typography>
 
               <br />
 
