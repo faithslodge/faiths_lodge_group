@@ -5,7 +5,7 @@ const router = express.Router();
 const {
     rejectUnauthenticated,
 } = require("../modules/authentication-middleware");
-const { postContacts } = require("../modules/routerService");
+const { postContacts, putContacts } = require("../modules/routerService");
 
 /**
  * GET all contacts
@@ -62,21 +62,14 @@ router.post("/:org_id", rejectUnauthenticated, async (req, res) => {
 });
 
 /**
- * PUT update contact by id, id located in contact obj
+ * PUT update contact by organization id
  */
-router.put("/", rejectUnauthenticated, async (req, res) => {
-    const { id, firstName, lastName, phone, email, title } = req.body;
+router.put("/:org_id", rejectUnauthenticated, async (req, res) => {
+    const contact = req.body;
+    const {org_id} = req.params;
 
     try {
-        const queryText = `UPDATE "organization_contact" 
-                                SET "first_name" = $1,
-                                    "last_name" = $2,
-                                    "phone" = $3,
-                                    "email" = $4,
-                                    "title" = $5
-                                WHERE id=$6;`;
-
-        await pool.query(queryText, [firstName, lastName, phone, email, title, id]);
+        await putContacts([contact], org_id, pool);
         res.sendStatus(204);
     } catch (err) {
         console.error(
@@ -88,9 +81,9 @@ router.put("/", rejectUnauthenticated, async (req, res) => {
 });
 
 /**
- * DELETE contact by id, id located in contact obj
+ * DELETE contact by id
  */
-router.delete("/:", rejectUnauthenticated, async (req, res) => {
+router.delete("/:id", rejectUnauthenticated, async (req, res) => {
     const { id } = req.params;
 
     try {
