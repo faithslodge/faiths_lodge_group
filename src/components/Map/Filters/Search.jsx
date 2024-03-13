@@ -31,7 +31,7 @@ export default function Search({ }) {
         >
           <Input placeholder="Search by Organization Name" startDecorator={<SearchRoundedIcon />} aria-label="Search" />
         </FormControl>
-        <Button variant="solid" color="primary" onClick={searchFunction}>
+        <Button variant="solid" onClick={searchFunction} sx={{bgcolor: "#658149", ":hover":{bgcolor: "#688948"}}}>
           Search
         </Button>
       </Stack>

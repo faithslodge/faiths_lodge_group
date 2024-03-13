@@ -10,7 +10,7 @@ function Nav() {
   return (
     <div className="nav">
       <Link to="/home">
-        <img src="public/FaithsLodgeLogo_high res.png" alt="Logo" height={80}/>
+        <img src="/FaithsLodgeLogo_high res.png" alt="Logo" height={80}/>
       </Link>
       <div>
         {/* If no user is logged in, show these links */}
