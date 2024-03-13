@@ -117,7 +117,7 @@ const OrgInfoEdit = () => {
 
   // ! Loss Types
   // previous types for rendering dropdown checkboxes checked if the type was previously selected
-  const previousLossTypes = org?.agg_loss_type?.map((type) => type?.name);
+  const previousLossTypes = org?.agg_loss_type ? org?.agg_loss_type?.map((type) => type?.name) : [];
   // console.log("previousLossTypes:", previousLossTypes);
 
   // get all possible types from the reducer to render available types to select
@@ -141,7 +141,7 @@ const OrgInfoEdit = () => {
 
   // ! Services Types
   // previous types for rendering dropdown checkboxes checked if the type was previously selected
-  const previousServiceTypes = org?.agg_service_type?.map((type) => type?.name);
+  const previousServiceTypes = org?.agg_service_type ? org?.agg_service_type?.map((type) => type?.name) : [];
   // console.log("previousServiceTypes:", previousServiceTypes);
 
   // get all possible types from the reducer to render available types to select
