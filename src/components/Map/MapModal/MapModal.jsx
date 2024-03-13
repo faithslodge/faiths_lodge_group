@@ -115,12 +115,13 @@ const MapModal = ({ open, handleClose, org }) => {
                 >
                   <Stack direction="row" alignItems="center" gap={1}>
                     {socialMediaArray.map(
-                      (site) =>
+                      (site, i) =>
                         site.url && (
                           <Link
                             href={site.url}
                             target="_blank"
                             rel="noreferrer noopener"
+                            key={i}
                           >
                             <site.icon fontSize="medium" sx={site.props} />
                           </Link>
