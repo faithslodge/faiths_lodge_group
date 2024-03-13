@@ -16,6 +16,7 @@ import {
   ListItemText,
   Checkbox,
   OutlinedInput,
+  Card,
 } from "@mui/material";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -271,8 +272,8 @@ const OrgInfoEdit = () => {
         </Grid>
       </Grid>
 
-      <Grid container>
-        <Grid item xs={6} pr={3}>
+      <Grid container pt={4}>
+        <Grid item xs={6} pr={5}>
           {/* TITLE: Org Info */}
           <Typography variant="overline" sx={overlineFont}>
             <b>Organization Info</b>
@@ -452,7 +453,7 @@ const OrgInfoEdit = () => {
 
         {/* Right Side */}
 
-        <Grid item xs={6} pl={3}>
+        <Grid item xs={6} pl={5}>
           {/* Notes */}
           <Typography variant="overline" sx={overlineFont}>
             <b>Notes</b>
@@ -577,21 +578,23 @@ const OrgInfoEdit = () => {
         </Grid>
       </Grid>
 
+
       {/* Point of Contact */}
-      <Grid container>
+      <Grid container pt={5} rowGap={3} justifyContent="space-between">
         <Grid item xs={12}>
           <Typography variant="overline" sx={overlineFont}>
             <b>POINTS OF CONTACT</b>
           </Typography>
         </Grid>
+
         {/* Map Contacts */}
         {org?.agg_contacts &&
           org?.agg_contacts?.map((contact) => (
             <Grid
               item
               key={contact.id}
-              xs={5.7}
-              sx={{ border: "1px solid black", borderRadius: 3, p: 3, mr: 3, mb: 3}}
+              xs={5.5}
+              sx={{boxShadow: 2, border: "0.5px solid black", borderRadius: 1, p: 3}}
             >
               <Stack direction="row" alignItems="center" gap={3}>
                 <TextField
@@ -639,42 +642,6 @@ const OrgInfoEdit = () => {
               </Stack>
             </Grid>
           ))}
-
-        {/* Map Contacts */}
-        {/* {org?.agg_contacts &&
-            org?.agg_contacts?.map((contact) => (
-              <div key={contact.id}>
-                <Typography
-                  variant="body2"
-                  textTransform="capitalize"
-                  fontWeight="bold"
-                  fontSize={13}
-                >
-                  {contact.firstName} {contact.lastName}
-                </Typography>
-                <Typography variant="caption" fontWeight="300" pl={1.5}>
-                  Title: {contact.title}
-                </Typography>
-                <Stack direction="row" alignItems="center" gap={1} pl={1.5}>
-                  <Phone fontSize="xsmall" />
-                  <Typography variant="body2" fontSize={12}>
-                    {contact.phone}
-                  </Typography>
-                </Stack>
-                <Stack direction="row" alignItems="center" gap={1} pl={1.5}>
-                  <Email fontSize="xsmall" />
-                  <Link
-                    variant="body2"
-                    href={`mailto:${contact.email}`}
-                    fontSize={12}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    {contact.email}
-                  </Link>
-                </Stack>
-              </div>
-            ))} */}
       </Grid>
     </Container>
   );
