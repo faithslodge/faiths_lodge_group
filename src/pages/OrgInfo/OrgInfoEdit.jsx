@@ -117,7 +117,7 @@ const OrgInfoEdit = () => {
 
   // ! Loss Types
   // previous types for rendering dropdown checkboxes checked if the type was previously selected
-  const previousLossTypes = org?.agg_loss_type.map((type) => type?.name);
+  const previousLossTypes = org?.agg_loss_type?.map((type) => type?.name);
   // console.log("previousLossTypes:", previousLossTypes);
 
   // get all possible types from the reducer to render available types to select
@@ -141,7 +141,7 @@ const OrgInfoEdit = () => {
 
   // ! Services Types
   // previous types for rendering dropdown checkboxes checked if the type was previously selected
-  const previousServiceTypes = org?.agg_service_type.map((type) => type?.name);
+  const previousServiceTypes = org?.agg_service_type?.map((type) => type?.name);
   // console.log("previousServiceTypes:", previousServiceTypes);
 
   // get all possible types from the reducer to render available types to select
@@ -176,12 +176,12 @@ const OrgInfoEdit = () => {
     // console.log("e.target.id", e.target.id)
     // console.log("e.target.value", e.target.value)
 
-    let id = e.target.id;
-    let keyName = e.target.name;
-    let value = e.target.value;
+    let id = e?.target.id;
+    let keyName = e?.target.name;
+    let value = e?.target.value;
 
     setStateContacts(stateContacts =>
-      stateContacts.map(contact =>
+      stateContacts?.map(contact =>
           contact.id === Number(id) ? {...contact, [keyName]: value} : contact
         )
     )
@@ -223,7 +223,7 @@ const OrgInfoEdit = () => {
     };
     const lossTypes = fetchTypeIds(storeLossTypes, stateLossTypes);
     const serviceTypes = fetchTypeIds(storeServiceTypes, stateServiceTypes);
-    const contacts = editOrg.agg_contacts;
+    const contacts = stateContacts;
     let payload = {
       updateOrg: {
         org,
@@ -517,7 +517,7 @@ const OrgInfoEdit = () => {
                   renderValue={(selected) => selected.join(", ")}
                   MenuProps={MenuProps}
                 >
-                  {lossTypeNames.map((type, i) => (
+                  {lossTypeNames?.map((type, i) => (
                     <MenuItem value={type} key={i}>
                       <Checkbox checked={stateLossTypes?.includes(type)} />
                       <ListItemText primary={type} />
@@ -547,7 +547,7 @@ const OrgInfoEdit = () => {
                   renderValue={(selected) => selected.join(", ")}
                   MenuProps={MenuProps}
                 >
-                  {serviceTypeNames.map((type, i) => (
+                  {serviceTypeNames?.map((type, i) => (
                     <MenuItem value={type} key={i}>
                       <Checkbox checked={stateServiceTypes?.includes(type)} />
                       <ListItemText primary={type} />
@@ -621,32 +621,32 @@ const OrgInfoEdit = () => {
             >
               <Stack direction="row" alignItems="center" gap={3}>
                 <TextField
-                  id={`${contact.id}`}
+                  id={`${contact?.id}`}
                   name="firstName"
                   variant="standard"
                   fullWidth
                   label="First Name"
-                  defaultValue={contact.firstName}
+                  defaultValue={contact?.firstName}
                   onChange={handleContactChange}
                 />
 
                 <TextField
-                  id={`${contact.id}`}
+                  id={`${contact?.id}`}
                   name="lastName"
                   variant="standard"
                   fullWidth
                   label="Last Name"
-                  defaultValue={contact.lastName}
+                  defaultValue={contact?.lastName}
                   onChange={handleContactChange}
                 />
 
                 <TextField
-                  id={`${contact.id}`}
+                  id={`${contact?.id}`}
                   name="title"
                   variant="standard"
                   fullWidth
                   label="Title"
-                  defaultValue={contact.title}
+                  defaultValue={contact?.title}
                   onChange={handleContactChange}
                 />
               </Stack>
@@ -655,21 +655,21 @@ const OrgInfoEdit = () => {
 
               <Stack direction="row" alignItems="center" gap={3}>
                 <TextField
-                  id={`${contact.id}`}
+                  id={`${contact?.id}`}
                   name="phone"
                   variant="standard"
                   fullWidth
                   label="Phone"
-                  defaultValue={contact.phone}
+                  defaultValue={contact?.phone}
                   onChange={handleContactChange}
                 />
                 <TextField
-                  id={`${contact.id}`}
+                  id={`${contact?.id}`}
                   name="email"
                   variant="standard"
                   fullWidth
                   label="Email"
-                  defaultValue={contact.email}
+                  defaultValue={contact?.email}
                   onChange={handleContactChange}
                 />
               </Stack>
