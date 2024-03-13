@@ -89,7 +89,7 @@ router.delete("/service/:id", rejectUnauthenticated, async (req, res) => {
  */
 router.get("/loss", rejectUnauthenticated, async (req, res) => {
     try {
-        const queryText = `SELECT * FROM "loss_type";
+        const queryText = `SELECT * FROM "loss_type"
         ORDER BY name ASC;`;
         const dbRes = await pool.query(queryText);
         res.status(200).send(dbRes.rows);
