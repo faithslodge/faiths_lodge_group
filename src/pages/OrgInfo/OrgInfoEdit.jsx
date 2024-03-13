@@ -631,7 +631,8 @@ const OrgInfoEdit = () => {
                 />
 
                 <TextField
-                  id="lastName"
+                  id={`${contact.id}`}
+                  name="lastName"
                   variant="standard"
                   fullWidth
                   label="Last Name"
@@ -640,7 +641,8 @@ const OrgInfoEdit = () => {
                 />
 
                 <TextField
-                  id="title"
+                  id={`${contact.id}`}
+                  name="title"
                   variant="standard"
                   fullWidth
                   label="Title"
@@ -653,7 +655,8 @@ const OrgInfoEdit = () => {
 
               <Stack direction="row" alignItems="center" gap={3}>
                 <TextField
-                  id="phone"
+                  id={`${contact.id}`}
+                  name="phone"
                   variant="standard"
                   fullWidth
                   label="Phone"
@@ -661,7 +664,8 @@ const OrgInfoEdit = () => {
                   onChange={handleContactChange}
                 />
                 <TextField
-                  id="email"
+                  id={`${contact.id}`}
+                  name="email"
                   variant="standard"
                   fullWidth
                   label="Email"
