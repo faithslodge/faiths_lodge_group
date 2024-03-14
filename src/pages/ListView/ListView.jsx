@@ -8,13 +8,13 @@ import VerifiedIcon from "@mui/icons-material/Verified";
 
 const columns = [
   {
-    field: "verified_by",
+    field: "date_verified",
     headerName: "Verify",
     flex: 1,
     headerClassName: "column-header",
     sortable: false,
     renderCell: (params) => {
-      return +params.row.verified_by === 1 ? (
+      return +params.row.date_verified != null ? (
         <Stack spacing={0.2} direction="row" alignItems="center" ml={1}>
           <Typography
             variant="caption"

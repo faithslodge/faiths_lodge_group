@@ -85,7 +85,7 @@ const MapModal = ({ open, handleClose, org }) => {
                     {org.name}
                   </Typography>
 
-                  {org.verified_by && (
+                  {org.date_verified && (
                     <Stack
                       spacing={1}
                       direction="row"

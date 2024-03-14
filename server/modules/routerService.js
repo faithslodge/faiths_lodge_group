@@ -275,7 +275,7 @@ async function putOrganization(connection, organization) {
     const organizationQuery = `UPDATE "organization" SET
                                         "name" = $1,
                                         "service_explanation" = $2,
-                                        "logo" = $3,
+                                        "logo_id" = $3,
                                         "mission" = $4,
                                         "notes" = $5,
                                         "url" = $6,
@@ -292,7 +292,7 @@ async function putOrganization(connection, organization) {
     const organizationQueryRes = await connection.query(organizationQuery, [
         organization.name,
         organization.serviceExplanation,
-        organization.logo,
+        organization.logoId,
         organization.mission,
         organization.notes,
         organization.url,
