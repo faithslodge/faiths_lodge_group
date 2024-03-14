@@ -117,7 +117,9 @@ const OrgInfoEdit = () => {
 
   // ! Loss Types
   // previous types for rendering dropdown checkboxes checked if the type was previously selected
-  const previousLossTypes = org?.agg_loss_type ? org?.agg_loss_type?.map((type) => type?.name) : [];
+  const previousLossTypes = org?.agg_loss_type
+    ? org?.agg_loss_type?.map((type) => type?.name)
+    : [];
   // console.log("previousLossTypes:", previousLossTypes);
 
   // get all possible types from the reducer to render available types to select
@@ -141,7 +143,9 @@ const OrgInfoEdit = () => {
 
   // ! Services Types
   // previous types for rendering dropdown checkboxes checked if the type was previously selected
-  const previousServiceTypes = org?.agg_service_type ? org?.agg_service_type?.map((type) => type?.name) : [];
+  const previousServiceTypes = org?.agg_service_type
+    ? org?.agg_service_type?.map((type) => type?.name)
+    : [];
   // console.log("previousServiceTypes:", previousServiceTypes);
 
   // get all possible types from the reducer to render available types to select
@@ -180,17 +184,19 @@ const OrgInfoEdit = () => {
     let keyName = e?.target.name;
     let value = e?.target.value;
 
-    setStateContacts(stateContacts =>
-      stateContacts?.map(contact =>
-          contact.id === Number(id) ? {...contact, [keyName]: value} : contact
-        )
-    )
-    
+    setStateContacts((stateContacts) =>
+      stateContacts?.map((contact) =>
+        contact.id === Number(id) ? { ...contact, [keyName]: value } : contact
+      )
+    );
   };
 
-  // ! Dispatch Edits
-  // dispatch edited org info in correct format
-  // payload = {{org}, {address}, [lossType (ids)], [serviceType (ids)], [{contacts}]}
+  // ! HANDLE DELETE
+  const handleDelete = () => {
+    // dispatch({type: })
+    history.push('/map')
+  }
+
   const handleSave = () => {
     const org = {
       // dateVerified: editOrg.date_verified,
@@ -277,17 +283,36 @@ const OrgInfoEdit = () => {
                 />
               </Stack>
             )}
-
-            <Button
-              variant="outlined"
-              onClick={handleSave}
-              sx={{ fontSize: "medium", ml: 5 }}
-            >
-              Save
-            </Button>
           </Stack>
 
           <br />
+        </Grid>
+
+        <Grid item xs={6}>
+          <Stack
+            direction="row"
+            justifyContent="end"
+            alignItems="center"
+            pt={5}
+            gap={2}
+          >
+            <Button
+              variant="contained"
+              onClick={handleSave}
+              sx={{ fontSize: "small", ml: 5 }}
+            >
+              Save
+            </Button>
+
+            <Button
+              variant="outlined"
+              color="error"
+              sx={{ fontSize: "small" }}
+              onClick={handleDelete}
+            >
+              DELETE
+            </Button>
+          </Stack>
         </Grid>
       </Grid>
 
