@@ -42,6 +42,21 @@ function* editOrganizations(action) {
    }
 }
 
+// function* deleteOrganization(action) {
+//    try {
+
+//       // passes the username and password from the payload to the server
+//       // yield axios.put('/api/patient', action.payload);
+
+//       // automatically log a user in after registration
+//       // yield put({ type: 'GET_ORGANIZATION' });
+
+
+//    } catch (error) {
+//       handleError(error)
+//    }
+// }
+
 function* organizationsSaga() {
    yield takeLatest("FETCH_ORGANIZATIONS", fetchOrganizations);
    yield takeLatest("CREATE_ORGANIZATION", createOrganizations);
