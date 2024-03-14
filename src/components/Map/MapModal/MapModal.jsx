@@ -21,9 +21,11 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   minWidth: 800,
+  maxHeight: "85%",
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
+  overflow: "scroll" 
 };
 
 const overlineFont = {
