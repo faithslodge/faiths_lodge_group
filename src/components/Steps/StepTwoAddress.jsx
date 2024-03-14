@@ -10,7 +10,7 @@ const orgKeyNames = [
   { text: "Address Line 2", isRequired: false, keyName: "addressLineTwo", size: 5 },
   { text: "City", isRequired: true, keyName: "city", size: 2 },
   { text: "State", isRequired: true, keyName: "state", size: 5 },
-  { text: "Zip", isRequired: false, keyName: "zipCode", size: 2 },
+  { text: "Zip", isRequired: false, keyName: "zipCode", size: 5 },
 ];
 
 export default function StepTwoAddress() {
@@ -62,7 +62,7 @@ export default function StepTwoAddress() {
                   label={elem.text}
                   value={newOrg?.path}
                   sx={{ width: "100%" }}
-                  onChange={(event) => handleChange(event.target.value, elem.keyName)}
+                  onChange={(event) => handleChange(event.target.value, elemkeyName)}
                 />
               </Grid>
             );

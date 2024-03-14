@@ -1,14 +1,13 @@
 import React from "react";
 import { Box, TextField, Grid, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import PhoneNumberFormatter from "../../utils/PhoneNumberFormatter/PhoneNubmerFormatter";
 
 // Array used to conditionally render and style different form inputs
 const orgKeyNames = [
   { text: "First Name", checkBox: false, keyName: "firstName", size: 8 },
   { text: "Last Name", checkBox: false, keyName: "lastName", size: 8 },
   { text: "Title", checkBox: false, keyName: "title", size: 8 },
-  { text: "Phone", checkBox: false, keyName: "phone", size: 8 , inputProps: {inputComponent: PhoneNumberFormatter}},
+  { text: "Phone", checkBox: false, keyName: "phone", size: 8 },
   { text: "Email", checkBox: false, keyName: "email", size: 8 },
 ];
 
@@ -38,7 +37,6 @@ export default function StepFiveContacts() {
                   value={newOrg?.path}
                   key={i}
                   sx={{ width: "100%" }}
-                  InputProps={elem.inputProps}
                   onChange={(event) => handleChange(event.target.value, elem.keyName)}
                 />
               </Grid>

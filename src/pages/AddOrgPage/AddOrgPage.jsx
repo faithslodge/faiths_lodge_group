@@ -11,8 +11,8 @@ import StepSixReview from "../../components/Steps/StepSixReview";
 const steps = [
   "Enter Organization Details",
   "Enter Address",
-  "Select Type of Losses",
   "Select Services Provided",
+  "Select Type of Losses",
   "Add Contacts",
   "Review",
 ];
@@ -42,7 +42,6 @@ export default function AddOrgPage() {
       type: "CREATE_ORGANIZATION",
       payload: { organizationDetails: newOrg },
     });
-    dispatch({type: "SET_NEW_ORG_TO_INITAL"})
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   }
 
