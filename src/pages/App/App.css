@@ -290,3 +290,8 @@ input {
   width: 800px;
   margin: 0 auto;
 }
+
+.column-header {
+  background-color: #544f49;
+  color: white;
+}
