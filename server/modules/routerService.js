@@ -3,6 +3,7 @@ const axios = require("axios");
 
 const ORG_GET_QUERY = `
 SELECT
+    o.id,
     o.logo_id,
     o.name,
     o.verified_by,
