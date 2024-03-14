@@ -188,9 +188,13 @@ const OrgInfoEdit = () => {
     
   };
 
-  // ! Dispatch Edits
-  // dispatch edited org info in correct format
-  // payload = {{org}, {address}, [lossType (ids)], [serviceType (ids)], [{contacts}]}
+  // ! HANDLE DELETE
+  // const handleDelete = () => {
+  //   // dispatch({type: })
+
+  // }
+
+
   const handleSave = () => {
     const org = {
       // dateVerified: editOrg.date_verified,
@@ -288,6 +292,20 @@ const OrgInfoEdit = () => {
           </Stack>
 
           <br />
+        </Grid>
+
+        <Grid item xs={6}>
+
+          <Stack direction="row" justifyContent="end" alignItems="center" pt={5} gap={2}>
+            <Button
+              variant="outlined"
+              color="error"
+              sx={{fontSize: "medium"}}
+              // onClick={}
+            >
+              DELETE
+            </Button>
+          </Stack>
         </Grid>
       </Grid>
 
