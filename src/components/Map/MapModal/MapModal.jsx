@@ -25,7 +25,7 @@ const style = {
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
-  overflow: "scroll" 
+  overflowY: "auto"
 };
 
 const overlineFont = {
@@ -75,7 +75,7 @@ const MapModal = ({ open, handleClose, org }) => {
       >
         <Box border="1px solid black" borderRadius={5} sx={style}>
           {/* Modal Info Container */}
-          <Grid container alignItems="flex-start">
+          <Grid container>
             {/* Top: Name, Verified, Social Media, View/Edit Button */}
             <Grid container>
               <Grid item xs={6}>
