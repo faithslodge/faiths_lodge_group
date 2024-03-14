@@ -67,7 +67,7 @@ export default function StepOneOrg() {
             const path = item.keyName;
             if (item.checkBox) {
               return (
-                <Grid item xs={4} key={i}>
+                <Grid item xs={3} key={i}>
                   <FormControlLabel
                     control={
                       <Checkbox checked={newOrg?.path} onChange={(event) => handleChange(event.target.checked, item.keyName)} />

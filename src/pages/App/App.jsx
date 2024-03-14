@@ -41,7 +41,6 @@ function App() {
   useEffect(() => {
     dispatch({ type: "FETCH_USER" });
     dispatch({ type: "FETCH_ORGANIZATIONS" });
-    dispatch({ type: "FETCH_ALL_USERS" });
     dispatch({ type: "FETCH_LOSSES" });
     dispatch({ type: "FETCH_SERVICES" });
   }, [dispatch]);
