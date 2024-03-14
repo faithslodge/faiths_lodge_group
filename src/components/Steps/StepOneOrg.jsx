@@ -1,85 +1,160 @@
-import React from "react";
-import { Box, FormControlLabel, Checkbox, TextField, Stack, Grid, Typography } from "@mui/material";
+import { useState, useRef } from "react";
+import {
+    Box,
+    FormControlLabel,
+    Checkbox,
+    TextField,
+    Grid,
+    Typography,
+    Button,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import CloudUpload from "@mui/icons-material/CloudUpload";
+import { AspectRatio } from "@mui/joy";
 import { useDispatch, useSelector } from "react-redux";
-import PhoneNumberFormatter from "../../utils/PhoneNumberFormatter/PhoneNubmerFormatter";
 
-// Array used to conditionally render and style different form inputs
-const orgKeyNames = [
-  { text: "Organization Name", checkBox: false, keyName: "name", size: 5, variant: "standard", isRequired: true },
-  { text: "Website", checkBox: false, keyName: "url", size: 5, variant: "standard" },
-  { text: "Logo", checkBox: false, keyName: "logo", size: 2, variant: "standard" },
-  { text: "Phone", checkBox: false, keyName: "phone", size: 5, variant: "standard" , inputProps: {inputComponent: PhoneNumberFormatter}},
-  { text: "Email", checkBox: false, keyName: "email", size: 5, variant: "standard" },
-  { text: "Service Explanation", checkBox: false, keyName: "serviceExplanation", size: 6, rows: 3, variant: "outlined" },
-  { text: "Mission", checkBox: false, keyName: "mission", size: 6, rows: 3, variant: "outlined" },
-  { text: "Notes", checkBox: false, keyName: "notes", size: 12, rows: 3, variant: "outlined" },
-  { text: "LinkedIn", checkBox: false, keyName: "linkedInUrl", size: 4, variant: "standard" },
-  { text: "Facebook", checkBox: false, keyName: "facebookUrl", size: 4, variant: "standard" },
-  { text: "Instagram", checkBox: false, keyName: "instagramUrl", size: 4, variant: "standard" },
-  { text: "For Profit", checkBox: true, keyName: "forProfit" },
-  { text: "Faith Based", checkBox: true, keyName: "faithBased" },
-  { text: "Retreat Center", checkBox: true, keyName: "hasRetreatCenter" },
-];
+import ORG_KEY_NAMES from "../../constants/ORG_KEY_NAMES";
 
 export default function StepOneOrg() {
-  const dispatch = useDispatch();
-  const newOrg = useSelector((store) => store.newOrg.org);
+    const dispatch = useDispatch();
+    const newOrg = useSelector((store) => store.newOrg.org);
+    const [logoPreview, setLogoPreview] = useState(undefined);
+    
+    // memory reference for logo data
+    const fileInput = useRef(null);
 
-  const handleChange = (arg, keyName) => {
-    dispatch({ type: "SET_ORG_OBJECT", payload: { [keyName]: arg } });
-  };
+    // custom MUI hidden component
+    const VisuallyHiddenInput = styled("input")({
+        clip: "rect(0 0 0 0)",
+        clipPath: "inset(50%)",
+        height: 1,
+        overflow: "hidden",
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        whiteSpace: "nowrap",
+        width: 1,
+    });
 
-  return (
-    <Box sx={{ width: "70%", m: "auto" }}>
-      <React.Fragment>
-        <br />
-        <center>
-          <Typography variant="h4">Organization Details</Typography>
-        </center>
-        <Grid container spacing={3}>
-          {orgKeyNames.map((item, i) => {
-            const path = item.keyName;
-            if (item.checkBox === false) {
-              return (
-                <Grid item xs={item.size} key={i}>
-                  <TextField
-                    variant={item.variant}
-                    required={item.isRequired}
-                    multiline
-                    label={item.text}
-                    rows={item.rows}
-                    value={newOrg?.path}
-                    sx={{ width: "100%" }}
-                    InputProps={item.inputProps}
-                    onChange={(event) => handleChange(event.target.value, item.keyName)}
-                  />
+    const handleChange = (arg, keyName) => {
+        dispatch({ type: "SET_ORG_OBJECT", payload: { [keyName]: arg } });
+    };
+
+    const handleLogoOnChange = () => {
+        if (fileInput.current.files.length !== 0) {
+            setLogoPreview(URL.createObjectURL(fileInput.current.files[0]));
+            
+            dispatch({
+                type: "SET_LOGO_DATA",
+                payload: fileInput.current.files[0]
+            });
+            
+        }
+    };
+
+    return (
+        <Box sx={{ width: "70%", m: "auto" }}>
+            <>
+                <br />
+                <center>
+                    <Typography variant="h4">Organization Details</Typography>
+                </center>
+                <Grid container spacing={3}>
+                    {ORG_KEY_NAMES.map((item, i) => {
+                        const path = item.keyName;
+                        if (!item.checkBox) {
+                            return (
+                                <Grid item xs={item.size} key={i}>
+                                    {item.keyName !== "logo" && (
+                                        <TextField
+                                            variant={item.variant}
+                                            required={item.isRequired}
+                                            multiline
+                                            label={item.text}
+                                            rows={item.rows}
+                                            value={newOrg?.path}
+                                            sx={{ width: "100%" }}
+                                            InputProps={item.inputProps}
+                                            onChange={(event) =>
+                                                handleChange(
+                                                    event.target.value,
+                                                    item.keyName
+                                                )
+                                            }
+                                        />
+                                    )}
+                                    {item.keyName === "logo" && (
+                                        <>
+                                            {/* AspectRatio for setting Img Size/Ratio */}
+                                            {/* need to fix for small screens */}
+                                            <AspectRatio
+                                                ratio="1"
+                                                flex
+                                                sx={{
+                                                    minWidth: { sm: 100 },
+                                                }}
+                                            >
+                                                <img
+                                                    alt="Logo Preview"
+                                                    src={logoPreview}
+                                                />
+                                            </AspectRatio>
+                                            <Button
+                                                component="label"
+                                                role={undefined}
+                                                variant="contained"
+                                                tabIndex={-1}
+                                                startIcon={<CloudUpload />}
+                                            >
+                                                Upload Logo
+                                                <VisuallyHiddenInput
+                                                    type="file"
+                                                    id="file-upload"
+                                                    name="logo_to_upload"
+                                                    ref={fileInput}
+                                                    accept="image/*"
+                                                    onChange={
+                                                        handleLogoOnChange
+                                                    }
+                                                />
+                                            </Button>
+                                        </>
+                                    )}
+                                </Grid>
+                            );
+                        }
+                    })}
                 </Grid>
-              );
-            }
-          })}
-        </Grid>
 
-        <br />
-        <br />
+                <br />
+                <br />
 
-        <Grid container spacing={3}>
-          {orgKeyNames.map((item, i) => {
-            const path = item.keyName;
-            if (item.checkBox) {
-              return (
-                <Grid item xs={4} key={i}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={newOrg?.path} onChange={(event) => handleChange(event.target.checked, item.keyName)} />
-                    }
-                    label={item.text}
-                  />
+                <Grid container spacing={3}>
+                    {ORG_KEY_NAMES.map((item, i) => {
+                        const path = item.keyName;
+                        if (item.checkBox) {
+                            return (
+                                <Grid item xs={4} key={i}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={newOrg?.path}
+                                                onChange={(event) =>
+                                                    handleChange(
+                                                        event.target.checked,
+                                                        item.keyName
+                                                    )
+                                                }
+                                            />
+                                        }
+                                        label={item.text}
+                                    />
+                                </Grid>
+                            );
+                        }
+                    })}
                 </Grid>
-              );
-            }
-          })}
-        </Grid>
-      </React.Fragment>
-    </Box>
-  );
+            </>
+        </Box>
+    );
 }

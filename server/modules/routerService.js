@@ -3,7 +3,7 @@ const axios = require("axios");
 
 const ORG_GET_QUERY = `
 SELECT
-    o.id,
+    o.logo_id,
     o.name,
     o.verified_by,
     o.service_explanation,
@@ -109,7 +109,7 @@ async function postOrganization(connection, organization) {
                                     (
                                         "name",
                                         "service_explanation",
-                                        "logo",
+                                        "logo_id",
                                         "mission",
                                         "notes",
                                         "url",
@@ -130,7 +130,7 @@ async function postOrganization(connection, organization) {
     const organizationQueryRes = await connection.query(organizationQuery, [
         organization.name,
         organization.serviceExplanation,
-        organization.logo,
+        organization.logoId,
         organization.mission,
         organization.notes,
         organization.url,
