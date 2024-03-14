@@ -4,7 +4,7 @@ import { IMaskInput } from 'react-imask';
 import Stack from '@mui/material/Stack';
 import Input from '@mui/material/Input';
 import FormControl from '@mui/material/FormControl';
-import PhoneNumberFormatter from '../../utils/PhoneNumberFormatter/PhoneNubmerFormatter';
+import PhoneNumberFormatter from '../../utils/PhoneNumberFormatter/PhoneNumberFormatter';
 import { useDispatch, useSelector } from 'react-redux';
 
 // const TextMaskCustom = forwardRef(function TextMaskCustom(props, ref) {

@@ -5,7 +5,7 @@ const router = express.Router();
 const {
     rejectUnauthenticated,
 } = require("../modules/authentication-middleware");
-const { postContacts } = require("../modules/routerService");
+const { postContacts, putContacts } = require("../modules/routerService");
 
 /**
  * GET all contacts
@@ -62,22 +62,14 @@ router.post("/:org_id", rejectUnauthenticated, async (req, res) => {
 });
 
 /**
- * PUT update contact by id
+ * PUT update contact by organization id
  */
-router.put("/:id", rejectUnauthenticated, async (req, res) => {
+router.put("/:org_id", rejectUnauthenticated, async (req, res) => {
     const contact = req.body;
-    const { id } = req.params;
+    const {org_id} = req.params;
 
     try {
-        const queryText = `UPDATE "organization_contact" 
-                                SET "first_name" = $1,
-                                    "last_name" = $2,
-                                    "phone" = $3,
-                                    "email" = $4,
-                                    "title" = $5
-                                WHERE id=$6;`;
-
-        await pool.query(queryText, [...Object.values(contact), id]);
+        await putContacts([contact], org_id, pool);
         res.sendStatus(204);
     } catch (err) {
         console.error(

@@ -20,7 +20,13 @@ function* fetchOrganizations() {
 
 function* createOrganizations(action) {
    try {
-      yield axios.post('/api/organization', action.payload);
+      const { organizationDetails } = action.payload;
+      const logoPostRes = yield axios.post('/api/logo', action.payload.formWithLogo);
+      console.log("the returned json:", logoPostRes.data.id);
+      const logoId = logoPostRes.data.id;
+      const newOrganizationDetails = {organizationDetails: {...organizationDetails }};
+      delete newOrganizationDetails.formWithLogo;
+      yield axios.post('/api/organization', {...newOrganizationDetails, logoId: logoId});
       yield put({ type: 'FETCH_ORGANIZATIONS' });
    } catch (error) {
       handleError(error)

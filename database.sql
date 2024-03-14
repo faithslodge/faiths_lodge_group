@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS "service_type_by_organization";
 DROP TABLE IF EXISTS "service_type";
 DROP TABLE IF EXISTS "loss_type";
 DROP TABLE IF EXISTS "organization";
+DROP TABLE IF EXISTS "organization_logo";
 DROP TABLE IF EXISTS "address";
 DROP TABLE IF EXISTS "user";
 
@@ -31,12 +32,17 @@ CREATE TABLE "address" (
     "longitude" VARCHAR(15)
 );
 
+CREATE TABLE "organization_logo" (
+    "id" SERIAL PRIMARY KEY,
+    "file_name" VARCHAR(300),
+    "data" BYTEA 
+);
+
 CREATE TABLE "organization" (
     "id" SERIAL PRIMARY KEY,
     "name" VARCHAR(200) NOT NULL UNIQUE,
     "service_explanation" TEXT,
-    "logo" BYTEA,
-    "mission" VARCHAR(500),
+    "mission" TEXT,
     "notes" TEXT,
     "url" VARCHAR(300),
     "phone" VARCHAR(20),
@@ -48,8 +54,10 @@ CREATE TABLE "organization" (
     "facebook_url" VARCHAR(300), 
     "instagram_url" VARCHAR(300),
     "date_verified" DATE,
+    "logo_id" INT NOT NULL,
     "address_id" INT NOT NULL,
     "verified_by" INT ,
+    FOREIGN KEY ("logo_id") REFERENCES "organization_logo" ("id"),
     FOREIGN KEY ("address_id") REFERENCES "address" ("id"),
     FOREIGN KEY ("verified_by") REFERENCES "user" ("id")
 );
@@ -144,6 +152,18 @@ CREATE TABLE "service_type_by_organization" (
 
 ----------------------------------------------- INSERT TYPE SEPARATOR -----------------------------------------------                 
 
+    -- address TABLE INSERT
+    INSERT INTO "organization_logo"
+        (
+            "file_name",
+            "data"
+        ) VALUES (
+                    'empty_file.png',
+                    NULL
+                 );
+
+----------------------------------------------- INSERT TYPE SEPARATOR -----------------------------------------------                 
+
     -- organization TABLE INSERT
     INSERT INTO "organization"
         (
@@ -161,6 +181,7 @@ CREATE TABLE "service_type_by_organization" (
             "facebook_url",
             "instagram_url",
             "date_verified",
+            "logo_id",
             "address_id",
             "verified_by"
         ) VALUES (
@@ -178,6 +199,7 @@ CREATE TABLE "service_type_by_organization" (
                     'https://www.facebook.com/fake_organization',
                     'https://www.instagram.com/fake_organization',
                     CURRENT_DATE,
+                    1,
                     1,
                     1
                  );
