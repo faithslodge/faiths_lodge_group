@@ -21,9 +21,11 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   minWidth: 800,
+  maxHeight: "85%",
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
+  overflowY: "auto"
 };
 
 const overlineFont = {
@@ -56,13 +58,16 @@ const MapModal = ({ open, handleClose, org }) => {
         <Box border="1px solid black" borderRadius={5} sx={style}>
           {/* Modal Info Container */}
           <Grid container>
-            {/* Left Side */}
-            <Grid item xs={6} pr={1}>
-              {/* Org Name, Verified Badge, View/Edit Btn */}
-              <Stack direction="row" alignItems="center" gap={2}>
-                <Typography variant="h5" component="h2">
-                  {org.name}
-                </Typography>
+
+            {/* Top: Name, Verified, Social Media, View/Edit Button */}
+            <Grid container>
+              <Grid item xs={6}>
+                {/* Org Name, Verified Badge, View/Edit Btn */}
+                <Stack direction="row" alignItems="center" gap={2}>
+                  <Typography variant="h5" component="h2">
+                    {org.name}
+                  </Typography>
+
 
                 {org.verified_by && (
                   <Stack spacing={1} direction="row" alignItems="center" ml={1}>
