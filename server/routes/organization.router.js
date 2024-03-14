@@ -28,7 +28,7 @@ const {
 /**
  * GET all organizations
  */
-router.get("/", rejectUnauthenticated, upload.single('logo_to_upload'), async (req, res) => {
+router.get("/", rejectUnauthenticated, async (req, res) => {
     try {
         const dbRes = await pool.query(ORG_GET_QUERY);
         res.status(200).send(dbRes.rows);
@@ -55,7 +55,10 @@ router.post("/", rejectUnauthenticated,/**  upload.single('logo_to_upload'), */ 
     // console.log("buffer:", buffer);
     const { org, address, lossTypes, serviceTypes, contacts } =
         req.body.organizationDetails;
+    const { logoId } = req.body;
     const { city, state } = address;
+
+    console.log("logoId:", logoId);
 
     // define DB connection, and ids from created entities
     let connection;
@@ -84,7 +87,7 @@ router.post("/", rejectUnauthenticated,/**  upload.single('logo_to_upload'), */ 
         // INSERT organization
         organizationId = await postOrganization(connection, {
             ...org,
-            // logo: buffer,
+            logoId: logoId,
             addressId,
         });
 

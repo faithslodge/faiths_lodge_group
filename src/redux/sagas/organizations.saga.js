@@ -21,10 +21,12 @@ function* fetchOrganizations() {
 function* createOrganizations(action) {
    try {
       const { organizationDetails } = action.payload;
-      const logoId = yield axios.post('/api/logo', action.payload.formWithLogo);
-      const newOrganizationDetails = {...organizationDetails };
+      const logoPostRes = yield axios.post('/api/logo', action.payload.formWithLogo);
+      console.log("the returned json:", logoPostRes.data.id);
+      const logoId = logoPostRes.data.id;
+      const newOrganizationDetails = {organizationDetails: {...organizationDetails }};
       delete newOrganizationDetails.formWithLogo;
-      yield axios.post('/api/organization', {...newOrganizationDetails, logoId});
+      yield axios.post('/api/organization', {...newOrganizationDetails, logoId: logoId});
       yield put({ type: 'FETCH_ORGANIZATIONS' });
    } catch (error) {
       handleError(error)

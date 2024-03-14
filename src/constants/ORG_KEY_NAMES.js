@@ -21,7 +21,7 @@ const ORG_KEY_NAMES = [
     {
         text: "Logo",
         checkBox: false,
-        keyName: "logo",
+        keyName: "logoId",
         size: 2,
         variant: "standard",
     },

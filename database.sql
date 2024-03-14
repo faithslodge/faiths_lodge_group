@@ -42,7 +42,7 @@ CREATE TABLE "organization" (
     "id" SERIAL PRIMARY KEY,
     "name" VARCHAR(200) NOT NULL UNIQUE,
     "service_explanation" TEXT,
-    "mission" VARCHAR(500),
+    "mission" TEXT,
     "notes" TEXT,
     "url" VARCHAR(300),
     "phone" VARCHAR(20),

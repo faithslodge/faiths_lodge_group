@@ -65,7 +65,7 @@ export default function StepOneOrg() {
                         if (!item.checkBox) {
                             return (
                                 <Grid item xs={item.size} key={i}>
-                                    {item.keyName !== "logo" && (
+                                    {item.keyName !== "logoId" && (
                                         <TextField
                                             variant={item.variant}
                                             required={item.isRequired}
@@ -83,7 +83,7 @@ export default function StepOneOrg() {
                                             }
                                         />
                                     )}
-                                    {item.keyName === "logo" && (
+                                    {item.keyName === "logoId" && (
                                         <>
                                             {/* AspectRatio for setting Img Size/Ratio */}
                                             {/* need to fix for small screens */}

@@ -3,7 +3,7 @@ import { combineReducers } from "redux";
 const orgInitialState = {
   name: "",
   serviceExplanation: "",
-  logo: null,
+  logoId: null,
   mission: "",
   notes: "",
   url: "",

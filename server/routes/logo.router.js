@@ -36,7 +36,7 @@ router.get("/:id", async (req, res) => {
 /**
  * POST LOGO
  */
-router.post("/", upload.single("image_to_upload"), async (req, res) => {
+router.post("/", upload.single("logo_to_upload"), async (req, res) => {
     const { file } = req; // 'file' is added to req obj by multer middleware
 
     if (!file) {
@@ -44,12 +44,13 @@ router.post("/", upload.single("image_to_upload"), async (req, res) => {
     }
 
     try {
-        const queryString = `INSERT INTO organization_logo(name, data) VALUES($1, $2) RETURNING logo.id;`;
+        const queryString = `INSERT INTO organization_logo(file_name, data) VALUES($1, $2) RETURNING id;`;
         const queryParams = [file.originalname, file.buffer];
         const dbRes = await pool.query(queryString, queryParams);
+        console.log("id of logo just created:", dbRes.rows[0]);
 
         // send the logo id
-        res.status(201).send(dbRes.rows[0].id);
+        res.json({id: dbRes.rows[0].id});
     } catch (err) {
         console.error("Error saving the logo to the database", err);
         res.status(500).send("Error saving the logo to the database");

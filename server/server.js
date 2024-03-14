@@ -33,7 +33,7 @@ app.use("/api/organization", organizationRouter);
 app.use("/api/option", optionRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/address", addressRouter);
-app.use("/api/logo", logoRouterRouter);
+app.use("/api/logo", logoRouter);
 
 // Listen Server & Port
 app.listen(PORT, () => {
