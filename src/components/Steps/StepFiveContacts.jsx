@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, TextField, Grid, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import PhoneNumberFormatter from "../../utils/PhoneNumberFormatter/PhoneNubmerFormatter";
+import PhoneNumberFormatter from "../../utils/PhoneNumberFormatter/PhoneNumberFormatter";
 
 // Array used to conditionally render and style different form inputs
 const orgKeyNames = [

@@ -13,6 +13,7 @@ const organizationRouter = require("./routes/organization.router");
 const contactRouter = require("./routes/contact.router");
 const addressRouter = require("./routes/address.router");
 const optionRouter = require("./routes/option.router"); // services types && loss types
+const logoRouter = require("./routes/logo.router");
 
 // Express Middleware
 app.use(express.json());
@@ -32,6 +33,7 @@ app.use("/api/organization", organizationRouter);
 app.use("/api/option", optionRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/address", addressRouter);
+app.use("/api/logo", logoRouter);
 
 // Listen Server & Port
 app.listen(PORT, () => {

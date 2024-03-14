@@ -3,11 +3,10 @@ const axios = require("axios");
 
 const ORG_GET_QUERY = `
 SELECT
-    o.id,
+    o.logo_id,
     o.name,
     o.verified_by,
     o.service_explanation,
-    o.logo,
     o.mission,
     o.notes,
     o.url,
@@ -31,7 +30,8 @@ SELECT
     a.longitude,
     lts.agg_loss_type,
     sts.agg_service_type,
-    ocs.agg_contacts
+    ocs.agg_contacts,
+    ocl.logo_data
 FROM organization AS o
 LEFT JOIN address AS a ON o.address_id = a.id
 LEFT JOIN (
@@ -56,7 +56,13 @@ LEFT JOIN (
           ARRAY_AGG(json_build_object('id', oc.id, 'firstName', oc.first_name, 'lastName', oc.last_name, 'phone', oc.phone, 'email', oc.email, 'title', oc.title)) AS agg_contacts
       FROM organization_contact AS oc
       GROUP BY oc.organization_id
-    ) AS ocs ON o.id = ocs.organization_id;
+    ) AS ocs ON o.id = ocs.organization_id
+LEFT JOIN (
+      SELECT
+      ol.id,
+      ol.data AS logo_data
+      FROM organization_logo AS ol
+) AS ocl ON o.logo_id = ocl.id;
 `;
 
 // translate a city/state to a lat/long to store in DB for this org
@@ -105,11 +111,13 @@ async function postAddress(connection, address) {
 
 // INSERT an organization into DB
 async function postOrganization(connection, organization) {
+    console.log("[postOrganization] organization:", organization);
+
     const organizationQuery = `INSERT INTO "organization"
                                     (
                                         "name",
                                         "service_explanation",
-                                        "logo",
+                                        "logo_id",
                                         "mission",
                                         "notes",
                                         "url",
@@ -130,7 +138,7 @@ async function postOrganization(connection, organization) {
     const organizationQueryRes = await connection.query(organizationQuery, [
         organization.name,
         organization.serviceExplanation,
-        organization.logo,
+        organization.logoId,
         organization.mission,
         organization.notes,
         organization.url,

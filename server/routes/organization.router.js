@@ -1,6 +1,9 @@
 const express = require("express");
 const pool = require("../modules/pool");
 const router = express.Router();
+// const multer = require("multer");
+
+// const upload = multer({ storage: multer.memoryStorage()});
 
 const {
     rejectUnauthenticated,
@@ -41,10 +44,21 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
 /**
  * POST make new organization
  */
-router.post("/", rejectUnauthenticated, async (req, res) => {
+router.post("/", rejectUnauthenticated,/**  upload.single('logo_to_upload'), */ async (req, res) => {
+    console.log("req.body:", req.body);
+    // for (let [key, value] of req.body.formWithLogo.entries()) {
+    //     console.log(key, value);
+    // }
+
+    // conditionally set the buffer to file if it exists
+    // const buffer = req.file && req.file.buffer;
+    // console.log("buffer:", buffer);
     const { org, address, lossTypes, serviceTypes, contacts } =
         req.body.organizationDetails;
+    const { logoId } = req.body;
     const { city, state } = address;
+
+    console.log("logoId:", logoId);
 
     // define DB connection, and ids from created entities
     let connection;
@@ -73,6 +87,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
         // INSERT organization
         organizationId = await postOrganization(connection, {
             ...org,
+            logoId: logoId,
             addressId,
         });
 
@@ -106,7 +121,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 /**
  * PUT edit organization
  */
-router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
+router.put("/:organizationId", rejectUnauthenticated,/**  upload.single('logo_to_upload'), */ async (req, res) => {
     const { organizationId } = req.params;
     const { address, lossTypes, serviceTypes, contacts, org } =
         req.body.updateOrg;
