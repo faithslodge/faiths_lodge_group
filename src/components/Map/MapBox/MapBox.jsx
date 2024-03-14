@@ -3,6 +3,8 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useSelector } from "react-redux";
 import RecenterAuto from "./RecenterAuto";
+import { Link } from "@mui/joy";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const MapBox = () => {
   // Set the initial position and zoom level of the map
@@ -12,6 +14,8 @@ const MapBox = () => {
 
   // import filtered store
   const orgList = useSelector((store) => store.filters);
+
+  const history = useHistory()
 
   // Monitor filtered org list to calculated Lat and Long based on filtered results
   useEffect(() => {
@@ -37,6 +41,11 @@ const MapBox = () => {
     setFilteredLong(sum / orgList?.length);
   }
 
+  function handleDetails(id){
+    history.push(`/org/${id}`)
+
+  }
+
   return (
     <MapContainer center={[filteredLat, filteredLong]} zoom={zoom} style={{ height: "100%", width: "100%" }}>
       <TileLayer
@@ -47,7 +56,10 @@ const MapBox = () => {
       {orgList.map((org) => (
         <Marker key={org.id} position={[org?.latitude, org?.longitude]}>
           <Popup>
-            {org.name} <br /> Link to Org Details
+            <p><b>{org.name}</b></p>
+            <Link fontSize={14} onClick={()=>handleDetails(org.id)} >
+              View Details
+            </Link>
           </Popup>
         </Marker>
       ))}
