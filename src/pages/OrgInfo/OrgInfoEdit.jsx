@@ -94,9 +94,9 @@ const OrgInfoEdit = () => {
   // ! HANDLECHANGE()
   // handle string value changes
   const handleChange = (e) => {
-    // console.log("e.target", e.target)
-    // console.log("e.target.id", e.target.id)
-    // console.log("e.target.value", e.target.value)
+    console.log("e.target", e.target)
+    console.log("e.target.id", e.target.id)
+    console.log("e.target.value", e.target.value)
     let keyName = e.target.id;
     let value = e.target.value;
     setEditOrg({ ...editOrg, [keyName]: value });
@@ -207,7 +207,7 @@ const OrgInfoEdit = () => {
       id: editOrg.id,
       instagramUrl: editOrg.instagram_url,
       linkedInUrl: editOrg.linked_in_url,
-      logo: editOrg.logo,
+      logoId: editOrg.logo_id,
       mission: editOrg.mission,
       name: editOrg.name,
       notes: editOrg.notes,
@@ -267,7 +267,7 @@ const OrgInfoEdit = () => {
               onChange={handleChange}
             />
 
-            {org?.verified_by && (
+            {org?.date_verified && (
               <Stack spacing={1} direction="row" alignItems="center" ml={1}>
                 <Typography
                   variant="caption"
@@ -328,7 +328,7 @@ const OrgInfoEdit = () => {
           {/* Address 1 & 2 */}
           <Stack direction="row" alignItems="center" gap={3}>
             <TextField
-              id="standard-helperText"
+              id="address_line_1"
               key="address_line_1"
               variant="standard"
               label="Address Line 1"

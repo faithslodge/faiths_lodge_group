@@ -75,7 +75,7 @@ const OrgInfo = () => {
                 {org.name}
               </Typography>
 
-              {org.verified_by && (
+              {org.date_verified && (
                 <Stack spacing={1} direction="row" alignItems="center" ml={1}>
                   <Typography
                     variant="caption"

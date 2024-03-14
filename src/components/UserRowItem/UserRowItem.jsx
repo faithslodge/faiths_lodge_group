@@ -28,7 +28,7 @@ const UserRowItem = ({ row }) => {
   };
 
   const handleDelete = (event) => {
-    console.log(event.target.id);
+    dispatch({type: "DELETE_USER", payload: {userId: event.target.id}});
   };
 
   return (

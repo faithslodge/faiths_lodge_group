@@ -45,7 +45,7 @@ function* editUserIdAdmin(action) {
 
 function* deleteUser(action) {
   try {
-    yield axios.put(`/api/user/editAdmin/${action.payload.userId}`, action.payload);
+    yield axios.delete(`/api/user/${action.payload.userId}`);
     yield put({ type: "FETCH_ALL_USERS" });
   } catch (error) {
     console.log("User isAdmin update request failed", error);
