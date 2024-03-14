@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { TableCell, TableRow, Select, Button, MenuItem, FormControl, InputLabel } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 
 const UserRowItem = ({ row }) => {
   const [editMode, setEditMode] = useState(false);
   const [isAdmin, setIsAdmin] = useState(row.is_admin);
+
+  const dispatch = useDispatch()
 
   const handleEdit = (event) => {
     console.log(event.target.id);
@@ -17,7 +19,11 @@ const UserRowItem = ({ row }) => {
   };
 
   const handleSave = (event) => {
-    console.log(event.target.id);
+    console.log(event.target.id, isAdmin);
+    dispatch({type: "EDIT_USER_IS_ADMIN", payload: {
+      userId: event.target.id,
+      isAdmin: isAdmin
+    }})
     editMode ? setEditMode(false) : setEditMode(true);
   };
 
