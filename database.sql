@@ -54,7 +54,7 @@ CREATE TABLE "organization" (
     "facebook_url" VARCHAR(300), 
     "instagram_url" VARCHAR(300),
     "date_verified" DATE,
-    "logo_id" INT NOT NULL,
+    "logo_id" INT,
     "address_id" INT NOT NULL,
     "verified_by" INT ,
     FOREIGN KEY ("logo_id") REFERENCES "organization_logo" ("id"),

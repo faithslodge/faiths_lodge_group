@@ -47,12 +47,13 @@ export default function AddOrgPage() {
 
     function handleSubmit() {
         console.log("logoData:", logoData);
-        let formWithLogo = new FormData();
-        formWithLogo.append("logo_to_upload", logoData);
-      //   for (let [key, value] of formWithLogo.entries()) {
-      //     console.log(key, value);
-      // }
-        // console.log("formWithLogo:", formWithLogo);
+        let formWithLogo;
+        if (logoData && Object.keys(logoData).length > 0 ) {
+            formWithLogo = new FormData();
+            formWithLogo.append("logo_to_upload", logoData);
+        } else {
+            formWithLogo = null;
+        }
         const organizationDetails = {...newOrg};
         dispatch({
             type: "CREATE_ORGANIZATION",
