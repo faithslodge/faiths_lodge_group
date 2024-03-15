@@ -192,7 +192,7 @@ const OrgInfoEdit = () => {
 
   // ! HANDLE DELETE
   const handleDelete = () => {
-    // dispatch({type: })
+    dispatch({type: "DELETE_ORG", payload: org?.id})
     history.push('/map')
   }
 
