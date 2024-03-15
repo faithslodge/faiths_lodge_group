@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
     Box,
     FormControlLabel,
@@ -14,11 +14,16 @@ import { AspectRatio } from "@mui/joy";
 import { useDispatch, useSelector } from "react-redux";
 
 import ORG_KEY_NAMES from "../../constants/ORG_KEY_NAMES";
+import MOCK_DATA from "../../constants/MOCK_DATA";
 
 export default function StepOneOrg() {
     const dispatch = useDispatch();
     const newOrg = useSelector((store) => store.newOrg.org);
     const [logoPreview, setLogoPreview] = useState(undefined);
+
+    useEffect(() => {
+        console.log(newOrg)
+      }, [newOrg]);
     
     // memory reference for logo data
     const fileInput = useRef(null);
@@ -52,12 +57,20 @@ export default function StepOneOrg() {
         }
     };
 
+    const handleMock = ()=>{
+        dispatch({ type: "SET_ORG_OBJECT", payload: MOCK_DATA.org });
+        dispatch({ type: "SET_ADDRESS_OBJECT", payload: MOCK_DATA.address });
+        dispatch({ type: "SET_NEW_LOSS", payload: MOCK_DATA.lossTypes });
+        dispatch({ type: "SET_NEW_SERVICE", payload: MOCK_DATA.serviceTypes });
+        dispatch({ type: "SET_NEW_CONTACT", payload: MOCK_DATA.contacts });
+    }
+
     return (
         <Box sx={{ width: "70%", m: "auto" }}>
             <>
                 <br />
                 <center>
-                    <Typography variant="h4">Organization Details</Typography>
+                    <Typography variant="h4" onClick={handleMock} >Organization Details</Typography>
                 </center>
                 <Grid container spacing={3}>
                     {ORG_KEY_NAMES.map((item, i) => {
@@ -72,7 +85,7 @@ export default function StepOneOrg() {
                                             multiline
                                             label={item.text}
                                             rows={item.rows}
-                                            value={newOrg?.path}
+                                            value={newOrg?.[path]}
                                             sx={{ width: "100%" }}
                                             InputProps={item.inputProps}
                                             onChange={(event) =>
@@ -138,7 +151,7 @@ export default function StepOneOrg() {
                                     <FormControlLabel
                                         control={
                                             <Checkbox
-                                                checked={newOrg?.path}
+                                                checked={newOrg?.[path]}
                                                 onChange={(event) =>
                                                     handleChange(
                                                         event.target.checked,

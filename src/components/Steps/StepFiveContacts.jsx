@@ -35,7 +35,7 @@ export default function StepFiveContacts() {
                 <TextField
                   variant="standard"
                   label={elem.text}
-                  value={newOrg?.path}
+                  value={newOrg?.[path]}
                   key={i}
                   sx={{ width: "100%" }}
                   InputProps={elem.inputProps}

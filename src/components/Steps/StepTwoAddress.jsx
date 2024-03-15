@@ -60,7 +60,7 @@ export default function StepTwoAddress() {
                   variant="standard"
                   required={elem.isRequired}
                   label={elem.text}
-                  value={newOrg?.path}
+                  value={newOrg?.[path]}
                   sx={{ width: "100%" }}
                   onChange={(event) => handleChange(event.target.value, elem.keyName)}
                 />
