@@ -22,12 +22,22 @@ function* createOrganizations(action) {
    try {
       const { organizationDetails, formWithLogo } = action.payload;
       const logoPostRes = yield axios.post('/api/logo', formWithLogo);
-      console.log("the returned logo id:", logoPostRes.data.id);
+      // console.log("the returned logo id:", logoPostRes.data.id);
       const logoId = logoPostRes.data.id;
-      const newOrganizationDetails = {organizationDetails: {...organizationDetails }};
-      delete newOrganizationDetails.formWithLogo;
-      yield axios.post('/api/organization', {...newOrganizationDetails, logoId: logoId});
+
+      // remove the redundant picture data for this organization
+      delete organizationDetails.formWithLogo;
+
+      // const newOrganizationDetails = {organizationDetails: {...organizationDetails }};
+      // delete newOrganizationDetails.formWithLogo;
+
+      yield axios.post('/api/organization', {organizationDetails, logoId: logoId});
+      
+      // yield axios.post('/api/organization', {...newOrganizationDetails, logoId: logoId});
       yield put({ type: 'FETCH_ORGANIZATIONS' });
+
+      // remove the logo data from the logo reducer
+      yield put({ type: 'RESET_LOGO_DATA'})
    } catch (error) {
       handleError(error)
    }
