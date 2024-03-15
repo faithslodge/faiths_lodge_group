@@ -71,7 +71,7 @@ function MapView() {
             {filteredOrgs.map((org) => (
               <OrganizationCard
                 key={org.id}
-                logo="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400"
+                logo={org.logo_data ? org.logo_data : "/public/faithslogo.png"}
                 org={org}
               />
             ))}
