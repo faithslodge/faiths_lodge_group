@@ -16,8 +16,8 @@ import MapBox from "../../components/Map/MapBox/MapBox";
 // 3. verify all filters work
 
 function MapView() {
-  const storeOrgs = useSelector((store) => store.organizations);
-  const filteredOrgs =  useSelector(store => store.filters);
+  const storeOrgs = useSelector((store) => store?.organizations);
+  const filteredOrgs =  useSelector(store => store?.filters);
 
   const dispatch = useDispatch();
 
