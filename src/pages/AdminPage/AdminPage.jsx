@@ -31,7 +31,7 @@ const AdminPage = () => {
   const dispatch = useDispatch();
 
   const registerUser = () => {
-    console.log(username, password)
+    console.log(username, password);
     dispatch({
       type: "REGISTER",
       payload: {
@@ -43,28 +43,33 @@ const AdminPage = () => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <Box sx={{ m: 5}} >
-        <Typography sx={{ m: 2}}>Add New User</Typography>
+      <Box sx={{ m: 5 }}>
+        <Typography sx={{ m: 2 }}>Add New User</Typography>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <TextField
             variant="outlined"
             label="Username"
             size="small"
+            autoComplete="off"
             value={username}
-            sx={{ m: 2}}
+            sx={{ m: 2 }}
             required
             onChange={(event) => setUsername(event.target.value)}
           />
+
           <TextField
             variant="outlined"
             label="Password"
+            type="password"
+            autoComplete="off"
             size="small"
             value={password}
-            sx={{ m: 2}}
+            sx={{ m: 2 }}
             required
             onChange={(event) => setPassword(event.target.value)}
           />
-          <Button sx={{ m: 2}} variant="contained" onSubmit={registerUser}>
+
+          <Button sx={{ m: 2 }} variant="contained" onClick={registerUser}>
             Register
           </Button>
         </Box>
