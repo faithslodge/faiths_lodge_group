@@ -44,21 +44,11 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
 /**
  * POST make new organization
  */
-router.post("/", rejectUnauthenticated,/**  upload.single('logo_to_upload'), */ async (req, res) => {
-    console.log("req.body:", req.body);
-    // for (let [key, value] of req.body.formWithLogo.entries()) {
-    //     console.log(key, value);
-    // }
-
-    // conditionally set the buffer to file if it exists
-    // const buffer = req.file && req.file.buffer;
-    // console.log("buffer:", buffer);
-    const { org, address, lossTypes, serviceTypes, contacts } =
+router.post("/", rejectUnauthenticated, async (req, res) => {
+    const { org, address, lossTypes, serviceTypes, contacts, logoId } =
         req.body.organizationDetails;
-    const { logoId } = req.body;
+    // const { logoId } = req.body;
     const { city, state } = address;
-
-    console.log("logoId:", logoId);
 
     // define DB connection, and ids from created entities
     let connection;
