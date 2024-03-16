@@ -37,7 +37,7 @@ router.get("/:id", async (req, res) => {
  * POST LOGO
  */
 router.post("/", upload.single("logo_to_upload"), async (req, res) => {
-
+console.log("req:", req);
     try {
         const logoData = req && req.file && req.file.buffer;
         const logoDataName = req && req.file && req.file.originalname;
