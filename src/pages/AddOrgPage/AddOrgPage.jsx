@@ -47,20 +47,12 @@ export default function AddOrgPage() {
 
     function handleSubmit() {
         console.log("[inside handleSubmit of AddOrgPage] logoData:", logoData);
-        let formWithLogo;
-        if (logoData && Object.entries(logoData).length > 0 ) {
-            formWithLogo = new FormData();
-            formWithLogo.append("logo_to_upload", logoData);
-            console.log("[inside handleSubmit of AddOrgPage] formWithLogo:", formWithLogo);
-        } else {
-            formWithLogo = null;
-            console.log("[inside handleSubmit of AddOrgPage] formWithLogo:", formWithLogo);
-        }
+       
         const organizationDetails = {...newOrg};
         console.log("[inside handleSubmit of AddOrgPage] organizationDetails:", organizationDetails);
         dispatch({
             type: "CREATE_ORGANIZATION",
-            payload: {  formWithLogo, organizationDetails },
+            payload: {  logoData, organizationDetails },
         });
         dispatch({ type: "SET_NEW_ORG_TO_INITAL" });
         setActiveStep((prevActiveStep) => prevActiveStep + 1);

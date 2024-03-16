@@ -20,23 +20,25 @@ function* fetchOrganizations() {
 
 function* createOrganizations(action) {
    try {
-      const { organizationDetails, formWithLogo } = action.payload;
+      const { organizationDetails, logoData } = action.payload;
+      // console.log("[inside createOrganizations of organization.saga] logoData:", logoData);
+      // console.log("[inside createOrganizations of organization.saga] type of logoData:", typeof logoData);
+
+            const formWithLogo = new FormData();
+            formWithLogo.append("logo_to_upload", logoData);
+            // console.log("[inside createOrganizations of organization.saga] formWithLogo:", formWithLogo);
+
       const logoPostRes = yield axios.post('/api/logo', formWithLogo);
       console.log("[inside createOrganizations of organization.saga] res from logo upload:", logoPostRes);
-      console.log("[inside createOrganizations of organization.saga] the returned logo id:", logoPostRes.data.id);
-      console.log("[inside createOrganizations of organization.saga] organizationDetails:", organizationDetails);
+      // console.log("[inside createOrganizations of organization.saga] the returned logo id:", logoPostRes.data.id);
+      // console.log("[inside createOrganizations of organization.saga] organizationDetails:", organizationDetails);
       const logoId = logoPostRes.data.id;
 
-      // remove the redundant picture data for this organization
-      delete organizationDetails.formWithLogo;
-      console.log("[inside createOrganizations of organization.saga] organizationDetails after formWithLogo deletion:", organizationDetails);
+      // console.log("[inside createOrganizations of organization.saga] organizationDetails after formWithLogo deletion:", organizationDetails);
 
-      // const newOrganizationDetails = {organizationDetails: {...organizationDetails }};
-      // delete newOrganizationDetails.formWithLogo;
       let logoIdObj = {logoId: logoId};
       yield axios.post('/api/organization', {organizationDetails: {...organizationDetails, ...logoIdObj}});
       
-      // yield axios.post('/api/organization', {...newOrganizationDetails, logoId: logoId});
       yield put({ type: 'FETCH_ORGANIZATIONS' });
 
       // remove the logo data from the logo reducer
