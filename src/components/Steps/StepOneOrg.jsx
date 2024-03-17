@@ -70,7 +70,7 @@ export default function StepOneOrg() {
             <>
                 <br />
                 <center>
-                    <Typography variant="h4" onClick={handleMock} >Organization Details</Typography>
+                    <Typography variant="h4" onClick={handleMock} mb={5}>Organization Details</Typography>
                 </center>
                 <Grid container spacing={3}>
                     {ORG_KEY_NAMES.map((item, i) => {
