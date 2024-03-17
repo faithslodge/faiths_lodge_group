@@ -13,7 +13,7 @@ export default function StepFourServices() {
         <React.Fragment>
           <br />
           <FormControl component="fieldset" sx={{ justifyContent: "center", minWidth: 350 }}>
-            <Typography variant="h4">Select Services Provided</Typography>
+            <Typography variant="h4" mb={5}>Select Services Provided</Typography>
             <FormGroup>
               {options?.map((option) => (
                 <FormControlLabel

@@ -24,6 +24,9 @@ export default function StepSixReview() {
 
   return (
     <Card sx={{ p: 5, width: "70%", m: "auto", boxShadow: 3}}>
+      <center>
+          <Typography variant="h4" mb={5}>Confirm Details</Typography>
+        </center>
       <Grid container justifyContent="space-between" columnGap={3}>
         <Grid item xs={5.5}>
           <Typography variant="h5" component="h3">
