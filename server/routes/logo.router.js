@@ -84,7 +84,7 @@ router.post("/", upload.single("logo_to_upload"), async (req, res) => {
             const dbRes = await pool.query(queryString, queryParams);
             console.log("rows of response:", dbRes.rows[0]);
 
-            // send the logo id
+            // send the logo id and the file path
             res.json({ id: dbRes.rows[0].id });
         } else {
             res.json({ id: null });
