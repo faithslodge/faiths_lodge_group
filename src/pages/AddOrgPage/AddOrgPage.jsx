@@ -6,6 +6,7 @@ import {
     StepLabel,
     Button,
     Typography,
+    Stack,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import StepOneOrg from "../../components/Steps/StepOneOrg";
@@ -128,19 +129,18 @@ export default function AddOrgPage() {
                 <React.Fragment>
                     {stepView()}
 
-                    <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                    <Stack direction="row" pt={2} justifyContent="space-around">
                         <Button
                             color="inherit"
+                            size="large"
                             disabled={activeStep === 0}
                             onClick={handleBack}
-                            sx={{ mr: 1 }}
                         >
                             Back
                         </Button>
-                        <Box sx={{ flex: "1 1 auto" }} />
 
                         {buttonView()}
-                    </Box>
+                    </Stack>
                 </React.Fragment>
             )}
         </Box>
