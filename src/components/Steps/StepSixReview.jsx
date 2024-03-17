@@ -1,47 +1,78 @@
 import React from "react";
-import { Box, Typography, FormControlLabel, Checkbox } from "@mui/material";
+import { Box, Typography, FormControlLabel, Checkbox, Card, Grid } from "@mui/material";
 import { useSelector } from "react-redux";
+
+const overlineFont = {
+  fontSize: 14,
+  color: "rgba(92, 118, 55, 1)",
+  fontWeight: "bold"
+};
+
+const boolCheck = (info) => {
+  if (info === null) {
+    return "";
+  } else if (info === true) {
+    return "Yes";
+  } else if (info === false) {
+    return "No";
+  }
+};
+
 
 export default function StepSixReview() {
   const newOrg = useSelector((store) => store.newOrg);
 
   return (
-    <Box sx={{ width: "70%", m: "auto" }}>
-      <React.Fragment>
-        <br />
-        <Box>
-          <Typography variant="h5">Organization Details</Typography>
-          <Typography>Organization Name: {newOrg.org.name}</Typography>
-          <Typography>Service Explination: {newOrg.org.serviceExplanation}</Typography>
-          <Typography>Mission: {newOrg.org.mission}</Typography>
-          <Typography>Website: {newOrg.org.url}</Typography>
-          <Typography>Phone: {newOrg.org.phone}</Typography>
-          <Typography>Emial: {newOrg.org.email}</Typography>
-          <FormControlLabel control={<Checkbox checked={newOrg.org.forProfit} />} label="For Profit" />
-          <FormControlLabel control={<Checkbox checked={newOrg.org.faithBased} />} label="Faith Based" />
-          <FormControlLabel control={<Checkbox checked={newOrg.org.hasRetreatCenter} />} label="Faith Based" />
-          <Typography>{newOrg.org.linkedInUrl}</Typography>
-          <Typography>{newOrg.org.facebookUrl}</Typography>
-          <Typography>{newOrg.org.instagramUrl}</Typography>
-          <Typography>Notes: {newOrg.org.notes}</Typography>
-        </Box>
-        <Box>
-          <Typography variant="h5">Address</Typography>
-          <Typography>Address Line 1: {newOrg.address.addressLineOne}</Typography>
-          <Typography>Address Line 2: {newOrg.address.addressLineTwo}</Typography>
-          <Typography>City: {newOrg.address.city}</Typography>
-          <Typography>State: {newOrg.address.state}</Typography>
-          <Typography>Zip Code: {newOrg.address.zipCode}</Typography>
-        </Box>
-        <Box>
-          <Typography variant="h5">Contacts</Typography>
-          <Typography>First Name: {newOrg.contacts[0].firstName}</Typography>
-          <Typography>Last Name: {newOrg.contacts[0].lastName}</Typography>
-          <Typography>Title: {newOrg.contacts[0].title}</Typography>
-          <Typography>Phone: {newOrg.contacts[0].phone}</Typography>
-          <Typography>Email: {newOrg.contacts[0].email}</Typography>
-        </Box>
-      </React.Fragment>
-    </Box>
+    <Card sx={{ p: 5, width: "70%", m: "auto", boxShadow: 3}}>
+      <center>
+          <Typography variant="h4" mb={5}>Confirm Details</Typography>
+        </center>
+      <Grid container justifyContent="space-between" columnGap={3}>
+        <Grid item xs={5.5}>
+          <Typography variant="h5" component="h3">
+            {newOrg.org.name}
+          </Typography>
+          <br />
+          <Typography variant="overline" component="h3" style={overlineFont}>Organization Details</Typography>
+          <Typography variant="body2">
+            <b>Mission:</b> {newOrg.org.mission}
+            <br />
+            <br />
+          
+            <b>Address: </b>
+              {newOrg.address.addressLineOne && `${newOrg.address.addressLineOne}, `}
+              {newOrg.address.addressLineTwo && `${newOrg.address.addressLineTwo}, `}
+              {newOrg.address.city && `${newOrg.address.city}, `}
+              {newOrg.address.state && `${newOrg.address.state} `}
+              {newOrg.address.zipCode && `${newOrg.address.zipCode}`}
+              <br />
+            <b>Phone:</b> {newOrg.org.phone} <br />
+            <b>Email:</b> {newOrg.org.email} <br />
+            <b>Website:</b> {newOrg.org.url} <br />
+            <b>Has Retreat?:</b> {boolCheck(newOrg.org.hasRetreatCenter)} <br />
+            <b>Faith Based?:</b> {boolCheck(newOrg.org.faithBased)} <br />
+            <b>For Profit?:</b> {boolCheck(newOrg.org.forProfit)} <br />
+            <b>Facebook: </b>{newOrg.org.facebookUrl} <br />
+            <b>Instagram: </b>{newOrg.org.instagramUrl} <br />
+            <b>LinkedIn: </b>{newOrg.org.linkedInUrl}
+          </Typography><br />
+ 
+        <Typography variant="overline" component="h3" style={overlineFont}>Service Explanation</Typography>
+          <Typography variant="body2">{newOrg.org.serviceExplanation}</Typography>
+
+        </Grid>
+        <Grid item xs={5.5}>
+          <Typography variant="overline" component="h3" style={overlineFont}>Notes</Typography>
+          <Typography variant="body2">{newOrg.org.notes}</Typography>
+          <br />
+          <Typography variant="overline" component="h3" style={overlineFont}>Point of Contact</Typography>
+          <Typography variant="body2"><b>First Name:</b> {newOrg.contacts[0].firstName}</Typography>
+          <Typography variant="body2"><b>Last Name:</b> {newOrg.contacts[0].lastName}</Typography>
+          <Typography variant="body2"><b>Title:</b> {newOrg.contacts[0].title}</Typography>
+          <Typography variant="body2"><b>Phone:</b> {newOrg.contacts[0].phone}</Typography>
+          <Typography variant="body2"><b>Email:</b> {newOrg.contacts[0].email}</Typography>
+        </Grid>
+      </Grid>
+    </Card>
   );
 }
