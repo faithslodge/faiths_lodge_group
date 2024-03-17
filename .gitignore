@@ -5,6 +5,9 @@
 # Build directories for Front-End Assets
 build/
 
+# Ignore logos uploaded to app
+public/logos
+
 # Logs
 logs
 *.log
