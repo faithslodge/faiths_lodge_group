@@ -19,6 +19,7 @@ const logoRouter = require("./routes/logo.router");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("build"));
+app.use(express.static("public"));
 
 // Passport Session Configuration
 app.use(sessionMiddleware);
