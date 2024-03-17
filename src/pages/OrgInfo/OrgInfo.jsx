@@ -65,13 +65,13 @@ const OrgInfo = () => {
 
   return (
     <Container>
-      <Grid container alignItems="flex-start" pt={5}>
+      <Grid container pt={5}>
         {/* Top: Name, Verified, Social Media, View/Edit Button */}
         <Grid container>
           <Grid item xs={6}>
             {/* Org Name, Verified Badge, View/Edit Btn */}
             <Stack direction="row" alignItems="center" gap={2}>
-              <Typography variant="h5" component="h2">
+              <Typography variant="h5" component="h3">
                 {org.name}
               </Typography>
 
@@ -132,7 +132,7 @@ const OrgInfo = () => {
           {/* Left Side */}
           <Grid item xs={6} pr={2}>
             <Typography variant="overline" sx={overlineFont}>
-              <b>Organization Info</b>
+              <b>Organization Details</b>
             </Typography>
             <br />
             <Typography variant="body2">
