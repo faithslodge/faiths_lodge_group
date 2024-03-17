@@ -50,11 +50,12 @@ function OrganizationCard({ logo, org }) {
           <AspectRatio
             ratio="1"
             flex
+            objectFit="cover"
             sx={{
               minWidth: { sm: 100 },
             }}
           >
-            <img alt="" src={logo} />
+            <img alt="logo" src={logo} />
           </AspectRatio>
         </CardOverflow>
 
