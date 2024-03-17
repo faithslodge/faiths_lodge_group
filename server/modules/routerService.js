@@ -32,7 +32,7 @@ SELECT
     lts.agg_loss_type,
     sts.agg_service_type,
     ocs.agg_contacts,
-    ocl.file_name
+    ocl.file_path
 FROM organization AS o
 LEFT JOIN address AS a ON o.address_id = a.id
 LEFT JOIN (
@@ -61,7 +61,7 @@ LEFT JOIN (
 LEFT JOIN (
       SELECT
       ol.id,
-      ol.file_name AS file_name
+      ol.file_path AS file_path
       FROM organization_logo AS ol
 ) AS ocl ON o.logo_id = ocl.id
 ORDER BY o.name ASC;`;
