@@ -6,7 +6,7 @@
 build/
 
 # Ignore logos uploaded to app
-public/logos/*
+public/logos/*.webp
 
 # Logs
 logs
