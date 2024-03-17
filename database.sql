@@ -35,7 +35,8 @@ CREATE TABLE "address" (
 CREATE TABLE "organization_logo" (
     "id" SERIAL PRIMARY KEY,
     "file_name" VARCHAR(300),
-    "data" BYTEA 
+    "data" BYTEA,
+    "file_path" VARCHAR(150)
 );
 
 CREATE TABLE "organization" (
