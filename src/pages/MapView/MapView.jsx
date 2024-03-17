@@ -71,7 +71,7 @@ function MapView() {
             {filteredOrgs.map((org) => (
               <OrganizationCard
                 key={org.id}
-                logo={org.logo_data ? org.logo_data : "/public/faithslogo.png"}
+                logo={org.logo_data ? org.logo_data : "public/FaithsLogoPlaceholder.png"}
                 org={org}
               />
             ))}

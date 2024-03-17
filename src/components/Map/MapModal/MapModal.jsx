@@ -147,7 +147,7 @@ const MapModal = ({ open, handleClose, org }) => {
               {/* Left Side */}
               <Grid item xs={6} pr={2}>
                 <Typography variant="overline" sx={overlineFont}>
-                  <b>Organization Info</b>
+                  <b>Organization Details</b>
                 </Typography>
                 <br />
                 <Typography variant="body2">

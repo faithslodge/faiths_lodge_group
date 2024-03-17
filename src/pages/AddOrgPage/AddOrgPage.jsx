@@ -64,12 +64,12 @@ export default function AddOrgPage() {
 
     const buttonView = () => {
         if (activeStep === steps.length - 1) {
-            return <Button onClick={handleSubmit}>SUBMIT</Button>;
+            return <Button onClick={handleSubmit} size="large">SUBMIT</Button>;
         }
         if (activeStep === steps.length - 2) {
-            return <Button onClick={handleContacts}>NEXT</Button>;
+            return <Button onClick={handleContacts} size="large">NEXT</Button>;
         } else {
-            return <Button onClick={handleNext}>NEXT</Button>;
+            return <Button onClick={handleNext} size="large">NEXT</Button>;
         }
     };
 
@@ -102,7 +102,7 @@ export default function AddOrgPage() {
                 flexDirection: "column",
             }}
         >
-            <Stepper activeStep={activeStep}>
+            <Stepper activeStep={activeStep} sx={{py: 5}}>
                 {steps.map((label) => {
                     const stepProps = {};
                     const labelProps = {};
