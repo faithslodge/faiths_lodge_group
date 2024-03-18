@@ -84,7 +84,7 @@ router.post("/", upload.single("logo_to_upload"), async (req, res) => {
             });
 
             const queryString = `INSERT INTO organization_logo(file_name, data, file_path) VALUES($1, $2, $3) RETURNING id, file_path;`;
-            const queryParams = [newFileName, logoData, outputPath];
+            const queryParams = [newFileName, logoData, `/logos/${newFileName}`];
             const dbRes = await pool.query(queryString, queryParams);
             console.log("rows of response:", dbRes.rows[0]);
 
