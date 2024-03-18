@@ -94,9 +94,9 @@ const OrgInfoEdit = () => {
   // ! HANDLECHANGE()
   // handle string value changes
   const handleChange = (e) => {
-    console.log("e.target", e.target)
-    console.log("e.target.id", e.target.id)
-    console.log("e.target.value", e.target.value)
+    console.log("e.target", e.target);
+    console.log("e.target.id", e.target.id);
+    console.log("e.target.value", e.target.value);
     let keyName = e.target.id;
     let value = e.target.value;
     setEditOrg({ ...editOrg, [keyName]: value });
@@ -192,9 +192,17 @@ const OrgInfoEdit = () => {
 
   // ! HANDLE DELETE
   const handleDelete = () => {
-    dispatch({type: "DELETE_ORG", payload: org?.id})
-    history.push('/map')
-  }
+    dispatch({ type: "DELETE_ORG", payload: org?.id });
+    history.push("/map");
+  };
+
+  // ! HANDLE VERIFY
+  const handleVerify = () => {
+    dispatch({ type: "VERIFY_ORG", payload: org?.id });
+  };
+  const handleUnverify = () => {
+    dispatch({ type: "UNVERIFY_ORG", payload: org?.id });
+  };
 
   const handleSave = () => {
     const org = {
@@ -298,10 +306,43 @@ const OrgInfoEdit = () => {
             <Button
               variant="contained"
               onClick={handleSave}
-              sx={{ fontSize: "small", ml: 5 }}
+              sx={{ fontSize: "small" }}
             >
               Save
             </Button>
+            {org?.date_verified ? (
+              <Button
+                variant="outlined"
+                onClick={handleUnverify}
+                sx={{
+                  color: "#d99023",
+                  borderColor: "#d99023",
+                  ":hover": {
+                    backgroundColor: "#d9902310",
+                    borderColor: "#d99023",
+                  },
+                  fontSize: "small",
+                }}
+              >
+                UNVERIFY
+              </Button>
+            ) : (
+              <Button
+                variant="outlined"
+                onClick={handleVerify}
+                sx={{
+                  color: "#d99023",
+                  borderColor: "#d99023",
+                  ":hover": {
+                    backgroundColor: "#d9902310",
+                    borderColor: "#d99023",
+                  },
+                  fontSize: "small",
+                }}
+              >
+                VERIFY
+              </Button>
+            )}
 
             <Button
               variant="outlined"

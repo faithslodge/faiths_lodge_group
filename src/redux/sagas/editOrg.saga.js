@@ -9,27 +9,43 @@ function* editOrgUpdate(action) {
     );
     yield put({ type: "FETCH_ORGANIZATIONS" });
   } catch (error) {
-    alert("Error updating organization:", error)
+    alert("Error updating organization:", error);
   }
 }
 
-function* deleteOrg(action){
+function* deleteOrg(action) {
   try {
-    console.log("DELETE ID:", action.payload)
-    yield axios.delete(
-      `/api/organization/${action.payload}`
-    );
+    console.log("DELETE ID:", action.payload);
+    yield axios.delete(`/api/organization/${action.payload}`);
     yield put({ type: "FETCH_ORGANIZATIONS" });
   } catch (error) {
-    alert("Error deleting organization:", error)
+    alert("Error deleting organization:", error);
   }
 }
 
+function* verifyOrg(action) {
+  try {
+    yield axios.put(`/api/organization/verify/${action.payload}`);
+    yield put({ type: "FETCH_ORGANIZATIONS" });
+  } catch (error) {
+    alert("Error verifying organization:", error);
+  }
+}
 
+function* unverifyOrg(action) {
+  try {
+    yield axios.put(`/api/organization/unverify/${action.payload}`);
+    yield put({ type: "FETCH_ORGANIZATIONS" });
+  } catch (error) {
+    alert("Error removing verification from organization:", error);
+  }
+}
 
 function* editOrgSaga() {
   yield takeLatest("EDIT_ORG_UPDATE", editOrgUpdate);
   yield takeLatest("DELETE_ORG", deleteOrg);
+  yield takeLatest("VERIFY_ORG", verifyOrg);
+  yield takeLatest("UNVERIFY_ORG", unverifyOrg);
 }
 
 export default editOrgSaga;
