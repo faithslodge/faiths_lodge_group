@@ -215,6 +215,48 @@ router.put(
 );
 
 /**
+ * UPDATE organization as verified
+ */
+router.put("/verify/:id", rejectUnauthenticated, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const queryText = `UPDATE "organization"
+                              SET "date_verified" = CURRENT_DATE
+                           WHERE id = $1;`;
+
+        await pool.query(queryText, [id]);
+        res.sendStatus(204);
+    } catch (err) {
+        console.error(
+            "[inside organization.router PUT edit org] Error in this route",
+            err
+        );
+        res.sendStatus(500);
+    }
+});
+
+/**
+ * UPDATE organization as unverified
+ */
+router.put("/unverify/:id", rejectUnauthenticated, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const queryText = `UPDATE "organization"
+                              SET "date_verified" = null
+                           WHERE id = $1;`;
+
+        await pool.query(queryText, [id]);
+        res.sendStatus(204);
+    } catch (err) {
+        console.error(
+            "[inside organization.router PUT edit org] Error in this route",
+            err
+        );
+        res.sendStatus(500);
+    }
+});
+
+/**
  * DELETE organization
  */
 router.delete("/:id", rejectUnauthenticated, async (req, res) => {
