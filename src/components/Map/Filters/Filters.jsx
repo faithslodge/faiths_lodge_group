@@ -10,6 +10,8 @@ import OrderSelector from "./OrderSelector";
 import { useDispatch, useSelector } from "react-redux";
 import US_STATES from "../../../constants/US_STATES";
 import LossSelector from "./LossSelector";
+import FaithBasedCheck from "./FaithBasedCheck";
+import ServiceSelector from "./ServiceSelector";
 
 export default function Filters() {
   const [open, setOpen] = React.useState(false);
@@ -52,6 +54,8 @@ export default function Filters() {
           <ModalClose />
           <StateSelector handleChange={(event) => handleState(event.target.id)} />
           <LossSelector />
+          <ServiceSelector />
+          <FaithBasedCheck />
         </Stack>
       </Drawer>
     </Stack>
