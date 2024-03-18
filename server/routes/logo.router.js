@@ -57,27 +57,27 @@ router.post("/", upload.single("logo_to_upload"), async (req, res) => {
         console.log("logoDataName:", logoDataName);
         console.log("logoFilePath:", logoFilePath);
 
-        // remove the extension on the image if present
-        const baseFileName = logoDataName.replace(/\.[^/.]+$/, "");
-
-        // add the '.webp' extension
-        const newFileName = `${baseFileName}.webp`;
-
-        // define the final storage place for converted file
-        const outputPath = `public/logos/${newFileName}`;
-        console.log("newFileName:", newFileName);
         if (logoDataName) {
+            // remove the extension on the image if present
+            const baseFileName = logoDataName.replace(/\.[^/.]+$/, "");
+
+            // add the '.webp' extension
+            const newFileName = `${baseFileName}.webp`;
+
+            // define the final storage place for converted file
+            const outputPath = `public/logos/${newFileName}`;
+            console.log("newFileName:", newFileName);
 
             // convert the file to the '.webp' format
             await sharp(logoFilePath).toFormat("webp").toFile(outputPath);
-            
+
             // read the data for the file from fs to send to db
             const logoData = fs.readFileSync(outputPath);
 
             // remove the original file from the '/tmp' directory
             fs.unlink(logoFilePath, (err) => {
                 if (err) throw err;
-            })
+            });
 
             const queryString = `INSERT INTO organization_logo(file_name, data, file_path) VALUES($1, $2, $3) RETURNING id, file_path;`;
             const queryParams = [newFileName, logoData, outputPath];
