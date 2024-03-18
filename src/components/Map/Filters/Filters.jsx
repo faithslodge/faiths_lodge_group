@@ -1,44 +1,57 @@
-import * as React from 'react';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Drawer from '@mui/joy/Drawer';
-import DialogTitle from '@mui/joy/DialogTitle';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Input from '@mui/joy/Input';
-import ModalClose from '@mui/joy/ModalClose';
-import Stack from '@mui/joy/Stack';
-import FilterAltOutlined from '@mui/icons-material/FilterAltOutlined';
-import StateSelector from './StateSelector';
-import OrderSelector from './OrderSelector';
-
-
+import * as React from "react";
+import Button from "@mui/joy/Button";
+import Drawer from "@mui/joy/Drawer";
+import DialogTitle from "@mui/joy/DialogTitle";
+import ModalClose from "@mui/joy/ModalClose";
+import Stack from "@mui/joy/Stack";
+import FilterAltOutlined from "@mui/icons-material/FilterAltOutlined";
+import StateSelector from "./StateSelector";
+import OrderSelector from "./OrderSelector";
+import { useDispatch, useSelector } from "react-redux";
+import US_STATES from "../../../constants/US_STATES";
+import LossSelector from "./LossSelector";
 
 export default function Filters() {
   const [open, setOpen] = React.useState(false);
+  const storeOrgs = useSelector((store) => store.organizations);
+
+  const dispatch = useDispatch();
+
+  const handleState = (arg) => {
+    const stateArray = US_STATES.filter((state) => state.id == arg);
+    const stateName = stateArray[0].name.toLowerCase();
+
+    const newList = storeOrgs.filter((org) => {
+      return arg.toLowerCase() === "" ? org : org.state.toLowerCase().includes(stateName);
+    });
+
+    dispatch({ type: "SET_FILTER_ORGS", payload: newList });
+  };
+
+  const handleClear = ()=>{
+    dispatch({ type: "SET_FILTER_ORGS", payload: storeOrgs });
+  }
+
   return (
     <Stack
       useFlexGap
       direction="row"
       spacing={{ xs: 0, sm: 2 }}
-      justifyContent={{ xs: 'space-between' }}
+      justifyContent={{ xs: "space-between" }}
       flexWrap="wrap"
       sx={{ minWidth: 0 }}
     >
-      <Button
-        variant="outlined"
-        color="neutral"
-        startDecorator={<FilterAltOutlined />}
-        onClick={() => setOpen(true)}
-      >
+      <Button variant="outlined" color="neutral" startDecorator={<FilterAltOutlined />} onClick={() => setOpen(true)}>
         Filters
       </Button>
       <OrderSelector />
       <Drawer open={open} onClose={() => setOpen(false)}>
         <Stack useFlexGap spacing={3} sx={{ p: 2 }}>
           <DialogTitle>Filters</DialogTitle>
+          <Button onClick={handleClear} >Clear Filters</Button>
           <ModalClose />
-          <StateSelector />
+          <StateSelector handleChange={(event) => handleState(event.target.id)} />
+          <LossSelector />
         </Stack>
       </Drawer>
     </Stack>
