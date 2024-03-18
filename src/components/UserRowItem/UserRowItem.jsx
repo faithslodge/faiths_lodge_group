@@ -39,12 +39,12 @@ const UserRowItem = ({ row }) => {
       ) : (
         <TableCell align="left">
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Age</InputLabel>
+            <InputLabel id="demo-simple-select-label">Admin</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={isAdmin}
-              label="Age"
+              label="Admin"
               onChange={handleChange}
             >
               <MenuItem value={true}>Yes</MenuItem>
