@@ -36,10 +36,18 @@ export default function LossSelector() {
   const handleLossTypeChange = (event) => {
     const lossArray = event.target.value;
     setStateLossTypes(lossArray);
-    console.log(event.target.value);
-    // lossArray.map((lossId) => {
-    //   if(lossId)
-    // });
+
+    let newList = [];
+    for (let loss of lossArray) {
+      newList = storeOrgs?.filter((org) => {
+        for( let orgLoss of org?.agg_loss_type){
+            if(loss == orgLoss.id){
+                return org
+            } 
+        }
+      });
+    }
+    console.log("NEW LIST", newList)
   };
 
   return (
