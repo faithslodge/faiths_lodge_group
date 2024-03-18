@@ -60,6 +60,10 @@ router.post("/", upload.single("logo_to_upload"), async (req, res) => {
         if (logoDataName) {
             // remove the extension on the image if present
             const baseFileName = logoDataName.replace(/\.[^/.]+$/, "");
+            // regular expression to match located b/n opening and closing '/'
+            // replace with empty string if matched
+            // match any period followed by any characters that aren't
+            // a ('/' or a '.') one or more times
 
             // add the '.webp' extension
             const newFileName = `${baseFileName}.webp`;
@@ -87,6 +91,7 @@ router.post("/", upload.single("logo_to_upload"), async (req, res) => {
             // send the logo id and the file path
             res.json({ id: dbRes.rows[0].id });
         } else {
+            // otherwise send null
             res.json({ id: null });
         }
     } catch (err) {
