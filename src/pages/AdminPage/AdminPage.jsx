@@ -42,6 +42,10 @@ const AdminPage = () => {
   };
 
   return (
+    <>
+    <center>
+      <Typography variant="h4" component="h2" pt={5} gutterBottom>Admin</Typography>
+    </center>
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
       <Box sx={{ m: 5 }}>
         <Typography sx={{ m: 2 }}>Add New User</Typography>
@@ -93,6 +97,7 @@ const AdminPage = () => {
         </Table>
       </TableContainer>
     </Box>
+    </>
   );
 };
 
