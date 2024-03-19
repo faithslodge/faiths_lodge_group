@@ -15,7 +15,7 @@ export default function Search({ }) {
 
   const searchFunction = (arg) => {
     const newList = storeOrgs.filter((org) => {
-      return arg.toLowerCase() === "" ? org : org.name.toLowerCase().includes(arg);
+      return arg.toLowerCase() === "" ? org : org.name.toLowerCase().includes(arg) || org.state.toLowerCase().includes(arg);
     });
     dispatch({type: "SET_FILTER_ORGS", payload: newList});
   };

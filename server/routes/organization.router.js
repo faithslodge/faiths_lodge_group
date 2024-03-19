@@ -1,5 +1,6 @@
 const express = require("express");
 const pool = require("../modules/pool");
+const fs = require("fs");
 const router = express.Router();
 // const multer = require("multer");
 
@@ -22,7 +23,7 @@ const {
     deleteServiceTypeAssociations,
     putContacts,
     deleteContactsOmittedFromOrgUpdate,
-    getContactIdsToDeleteFromOrg
+    getContactIdsToDeleteFromOrg,
 } = require("../modules/routerService");
 
 /**
@@ -44,21 +45,11 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
 /**
  * POST make new organization
  */
-router.post("/", rejectUnauthenticated,/**  upload.single('logo_to_upload'), */ async (req, res) => {
-    console.log("req.body:", req.body);
-    // for (let [key, value] of req.body.formWithLogo.entries()) {
-    //     console.log(key, value);
-    // }
-
-    // conditionally set the buffer to file if it exists
-    // const buffer = req.file && req.file.buffer;
-    // console.log("buffer:", buffer);
-    const { org, address, lossTypes, serviceTypes, contacts } =
+router.post("/", rejectUnauthenticated, async (req, res) => {
+    const { org, address, lossTypes, serviceTypes, contacts, logoId } =
         req.body.organizationDetails;
-    const { logoId } = req.body;
+    // const { logoId } = req.body;
     const { city, state } = address;
-
-    console.log("logoId:", logoId);
 
     // define DB connection, and ids from created entities
     let connection;
@@ -121,94 +112,147 @@ router.post("/", rejectUnauthenticated,/**  upload.single('logo_to_upload'), */ 
 /**
  * PUT edit organization
  */
-router.put("/:organizationId", rejectUnauthenticated,/**  upload.single('logo_to_upload'), */ async (req, res) => {
-    const { organizationId } = req.params;
-    const { address, lossTypes, serviceTypes, contacts, org } =
-        req.body.updateOrg;
+router.put(
+    "/:organizationId",
+    rejectUnauthenticated,
+    /**  upload.single('logo_to_upload'), */ async (req, res) => {
+        const { organizationId } = req.params;
+        const { address, lossTypes, serviceTypes, contacts, org } =
+            req.body.updateOrg;
 
-    // define DB connection
-    let connection;
-    let newContacts;
-    let editContacts;
+        // define DB connection
+        let connection;
+        let newContacts;
+        let editContacts;
 
-    if (contacts && contacts.length > 0) {
-        // Grab newly generated contacts to add to this organization
-    newContacts = contacts.filter((contact) => !contact.id);
+        if (contacts && contacts.length > 0) {
+            // Grab newly generated contacts to add to this organization
+            newContacts = contacts.filter((contact) => !contact.id);
 
-    // Grab contacts to edit
-    editContacts = contacts.filter((contact) => contact.id);
+            // Grab contacts to edit
+            editContacts = contacts.filter((contact) => contact.id);
+        }
+
+        try {
+            const { latitude, longitude } = await convertCityStateToLatLong(
+                address.city,
+                address.state
+            );
+
+            // establish connection to DB
+            connection = await pool.connect();
+
+            // Begin transaction
+            await connection.query("BEGIN;");
+
+            // EDIT ORG
+            let addressId = await putOrganization(connection, {
+                ...org,
+                organizationId,
+            });
+
+            // EDIT ADDRESS
+            await putAddress(connection, {
+                ...address,
+                latitude,
+                longitude,
+                addressId,
+            });
+
+            // DELETE CURRENT LOSS TYPE ASSOCIATIONS
+            await deleteLossTypeAssociations(connection, organizationId);
+
+            // POST GIVEN LOSS TYPE ASSOCIATIONS
+            await postLossTypeByOrganization(
+                lossTypes,
+                organizationId,
+                connection
+            );
+
+            // DELETE CURRENT SERVICE TYPE ASSOCIATIONS
+            await deleteServiceTypeAssociations(connection, organizationId);
+
+            // POST GIVEN SERVICE TYPE ASSOCIATIONS
+            await postServiceTypeByOrganization(
+                serviceTypes,
+                organizationId,
+                connection
+            );
+
+            // DELETE MISSING CONTACTS
+            const contactIdsToDelete = await getContactIdsToDeleteFromOrg(
+                connection,
+                editContacts,
+                organizationId
+            );
+
+            await deleteContactsOmittedFromOrgUpdate(
+                connection,
+                organizationId,
+                contactIdsToDelete
+            );
+
+            // EDIT THE CONTACTS BY ID
+            await putContacts(editContacts, organizationId, connection);
+
+            // ADD NEW CONTACTS
+            await postContacts(newContacts, organizationId, connection);
+
+            await connection.query("COMMIT;");
+            res.sendStatus(204);
+        } catch (err) {
+            // Cancel transaction
+            await connection.query("ROLLBACK;");
+            console.error(
+                "[inside organization.router PUT edit org] Error in this route",
+                err
+            );
+            res.sendStatus(500);
+        } finally {
+            await connection.release();
+        }
     }
-    
+);
 
+/**
+ * UPDATE organization as verified
+ */
+router.put("/verify/:id", rejectUnauthenticated, async (req, res) => {
+    const { id } = req.params;
     try {
-        const { latitude, longitude } = await convertCityStateToLatLong(
-            address.city,
-            address.state
-        );
+        const queryText = `UPDATE "organization"
+                              SET "date_verified" = CURRENT_DATE
+                           WHERE id = $1;`;
 
-        // establish connection to DB
-        connection = await pool.connect();
-
-        // Begin transaction
-        await connection.query("BEGIN;");
-
-        // EDIT ORG
-        let addressId = await putOrganization(connection, {
-            ...org,
-            organizationId,
-        });
-
-        // EDIT ADDRESS
-        await putAddress(connection, {
-            ...address,
-            latitude,
-            longitude,
-            addressId,
-        });
-
-        // DELETE CURRENT LOSS TYPE ASSOCIATIONS
-        await deleteLossTypeAssociations(connection, organizationId);
-        
-        // POST GIVEN LOSS TYPE ASSOCIATIONS
-        await postLossTypeByOrganization(lossTypes, organizationId, connection);
-
-        // DELETE CURRENT SERVICE TYPE ASSOCIATIONS
-        await deleteServiceTypeAssociations(connection, organizationId);
-        
-        // POST GIVEN SERVICE TYPE ASSOCIATIONS
-        await postServiceTypeByOrganization(
-            serviceTypes,
-            organizationId,
-            connection
-        );
-
-        // DELETE MISSING CONTACTS
-        const contactIdsToDelete = await getContactIdsToDeleteFromOrg(connection, editContacts, organizationId);
-
-        await deleteContactsOmittedFromOrgUpdate(
-            connection,
-            organizationId,
-            contactIdsToDelete
-        );
-
-        // EDIT THE CONTACTS BY ID
-        await putContacts(editContacts, organizationId, connection);
-
-        // ADD NEW CONTACTS
-        await postContacts(newContacts, organizationId, connection);
-
-        await connection.query("COMMIT;");
+        await pool.query(queryText, [id]);
         res.sendStatus(204);
     } catch (err) {
-        // Cancel transaction
-        await connection.query("ROLLBACK;");
         console.error(
             "[inside organization.router PUT edit org] Error in this route",
             err
         );
         res.sendStatus(500);
-    } finally {
-        await connection.release();
+    }
+});
+
+/**
+ * UPDATE organization as unverified
+ */
+router.put("/unverify/:id", rejectUnauthenticated, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const queryText = `UPDATE "organization"
+                              SET "date_verified" = null
+                           WHERE id = $1;`;
+
+        await pool.query(queryText, [id]);
+        res.sendStatus(204);
+    } catch (err) {
+        console.error(
+            "[inside organization.router PUT edit org] Error in this route",
+            err
+        );
+        res.sendStatus(500);
     }
 });
 
@@ -224,8 +268,9 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
         // Begin transaction
         connection.query("BEGIN;");
 
-        const organizationDelQuery = `DELETE FROM organization
-            WHERE organization.id = $1 RETURNING organization.address_id;`;
+        const organizationDelQuery = `DELETE FROM organization AS o
+                WHERE o.id = $1 
+                RETURNING o.address_id, o.logo_id;`;
 
         // delete organization
         const organizationDelResponse = await connection.query(
@@ -234,14 +279,27 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
         );
 
         const addressId = organizationDelResponse.rows[0].address_id;
+        const logoId = organizationDelResponse.rows[0].logo_id;
 
         // then delete address
         const addressDelQuery = `DELETE FROM address
                                 WHERE address.id = $1;`;
 
-        await connection.query(addressDelQuery, [
-            addressId,
-        ]);
+        await connection.query(addressDelQuery, [addressId]);
+
+        // then delete logo
+        if (logoId) {
+            const logoDelQuery = `DELETE FROM organization_logo AS ol
+                                    WHERE ol.id = $1 RETURNING file_path;`;
+
+            const logoDelResponse = await connection.query(logoDelQuery, [
+                logoId,
+            ]);
+            const logoFilePath = logoDelResponse.rows[0].file_path;
+            fs.unlink(logoFilePath, (err) => {
+                if (err) throw err;
+            });
+        }
 
         // Commit transaction
         connection.query("COMMIT;");

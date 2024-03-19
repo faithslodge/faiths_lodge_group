@@ -27,7 +27,7 @@ router.get("/service", rejectUnauthenticated, async (req, res) => {
  * POST make new service_type
  */
 router.post("/service", rejectUnauthenticated, async (req, res) => {
-    const { typeToInsert } = req.body;
+    const { service } = req.body;
     try {
         const queryText = `INSERT INTO "service_type"
                                 ("name") VALUES ($1);`;
@@ -47,13 +47,14 @@ router.post("/service", rejectUnauthenticated, async (req, res) => {
  * PUT update type of service
  */
 router.put("/service/:id", rejectUnauthenticated, async (req, res) => {
-    const { typeToInsert } = req.body;
+    console.log("req.body:", req.body)
+    const { service } = req.body;
     const { id } = req.params;
 
     try {
         const queryText = `UPDATE service_type SET "name"=$1 WHERE id=$2;`;
 
-        await pool.query(queryText, [typeToInsert, id]);
+        await pool.query(queryText, [service, id]);
         res.sendStatus(204);
     } catch (err) {
         console.error(
@@ -106,7 +107,7 @@ router.get("/loss", rejectUnauthenticated, async (req, res) => {
  * POST make new type of loss
  */
 router.post("/loss", rejectUnauthenticated, async (req, res) => {
-    const { typeToInsert } = req.body;
+    const { loss } = req.body;
 
     try {
         const queryText = `INSERT INTO "loss_type"
@@ -127,13 +128,13 @@ router.post("/loss", rejectUnauthenticated, async (req, res) => {
  * PUT update type of loss
  */
 router.put("/loss/:id", rejectUnauthenticated, async (req, res) => {
-    const { typeToInsert } = req.body;
+    const { loss } = req.body;
     const { id } = req.params;
 
     try {
         const queryText = `UPDATE loss_type SET "name"=$1 WHERE id=$2;`;
 
-        await pool.query(queryText, [typeToInsert, id]);
+        await pool.query(queryText, [loss, id]);
         res.sendStatus(204);
     } catch (err) {
         console.error(

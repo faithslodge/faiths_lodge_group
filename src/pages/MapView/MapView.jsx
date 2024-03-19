@@ -16,8 +16,8 @@ import MapBox from "../../components/Map/MapBox/MapBox";
 // 3. verify all filters work
 
 function MapView() {
-  const storeOrgs = useSelector((store) => store.organizations);
-  const filteredOrgs =  useSelector(store => store.filters);
+  const storeOrgs = useSelector((store) => store?.organizations);
+  const filteredOrgs =  useSelector(store => store?.filters);
 
   const dispatch = useDispatch();
 
@@ -71,7 +71,7 @@ function MapView() {
             {filteredOrgs.map((org) => (
               <OrganizationCard
                 key={org.id}
-                logo="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=400"
+                logo={org.file_path ? org.file_path : "/FaithsLogoPlaceholder.png"}
                 org={org}
               />
             ))}

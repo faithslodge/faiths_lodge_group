@@ -38,7 +38,7 @@ export default function StepTwoAddress() {
     <Box sx={{ width: "50%", m: "auto" }}>
       <br />
       <center>
-          <Typography variant="h4">Organization Address</Typography>
+          <Typography variant="h4" mb={5}>Organization Address</Typography>
         </center>
       <Grid container spacing={3} sx={{justifyContent: "center"}}>
         {orgKeyNames.map((elem, i) => {
@@ -60,7 +60,7 @@ export default function StepTwoAddress() {
                   variant="standard"
                   required={elem.isRequired}
                   label={elem.text}
-                  value={newOrg?.path}
+                  value={newOrg?.[path]}
                   sx={{ width: "100%" }}
                   onChange={(event) => handleChange(event.target.value, elem.keyName)}
                 />
