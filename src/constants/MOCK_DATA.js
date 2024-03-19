@@ -1,7 +1,7 @@
 const MOCK_DATA = {
   org: {
     name: "Hope After Loss",
-    serviceExplanation: "",
+    serviceExplanation: "Set up families with support groups and provide grief counseling",
     logoId: null,
     mission: "We believe that anyone who has lost a pregnancy and or/ infant should not have to grieve alone",
     notes: "Jane is amazing to work with!",
@@ -11,8 +11,8 @@ const MOCK_DATA = {
     forProfit: false,
     faithBased: false,
     hasRetreatCenter: false,
-    linkedInUrl: "",
-    facebookUrl: "",
+    linkedInUrl: "linkedin.com/hopeafter",
+    facebookUrl: "facebook.com/hopeafter",
     instagramUrl: "",
   },
 
