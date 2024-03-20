@@ -30,7 +30,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import PhoneNumberFormatter from "../../utils/PhoneNumberFormatter/PhoneNumberFormatter";
 
-// Font
+// Font Style
 const overlineFont = {
   fontSize: 14,
   color: "rgba(92, 118, 55, 1)",
@@ -48,6 +48,7 @@ const MenuProps = {
   },
 };
 
+// Render boolean values as "Yes/No"
 const boolCheck = (info) => {
   if (info === null) {
     return "";
@@ -58,12 +59,12 @@ const boolCheck = (info) => {
   }
 };
 
-// ! filter the service/loss types in the local state
+// ! FETCH TYPE IDS
+// used for sending just the service/loss type IDs when saving changes
+// filter the service/loss types in the local state
 // compare to the store values, return the store ids for the type in an array
 const fetchTypeIds = (storeTypeArr, stateTypeArr) => {
   const filteredIds = [];
-  // console.log("storeTypeArr:", storeTypeArr);
-  // console.log("stateTypeArr:", stateTypeArr);
   for (let storeType of storeTypeArr) {
     for (let stateType of stateTypeArr) {
       if (stateType === storeType.name) {
@@ -71,114 +72,90 @@ const fetchTypeIds = (storeTypeArr, stateTypeArr) => {
       }
     }
   }
-  // console.log("FilteredIds:", filteredIds);
   return filteredIds;
 };
 
 const OrgInfoEdit = () => {
+  // hooks
   const history = useHistory();
   const dispatch = useDispatch();
-  // ! Fetch the Organization from the reducer by ID
   const { id } = useParams();
-  // console.log("ParamID:", id);
+  // fetching Organizations from store
   const orgStore = useSelector((store) => store.organizations);
-  // console.log("orgStore:", orgStore);
+  // filter orgStore to get specific organization by ID
   const filteredOrgArray = orgStore?.filter((item) => item.id === Number(id));
-  // console.log("filteredOrgArray:", filteredOrgArray);
   let org = filteredOrgArray[0];
-  console.log("org:", org);
 
+  // ! MAIN LOCAL STATE
+  // this is used for storing Edits
+  // it is initially set to the org filtered from the store
+  // onChange edits change the local state only
+  // onSubmit (save), editOrg is dispatched to the DB
   const [editOrg, setEditOrg] = useState(org);
-  console.log("EDIT ORG:", editOrg);
 
   // ! HANDLECHANGE()
-  // handle string value changes
+  // handle STRING value changes
   const handleChange = (e) => {
-    console.log("e.target", e.target);
-    console.log("e.target.id", e.target.id);
-    console.log("e.target.value", e.target.value);
     let keyName = e.target.id;
     let value = e.target.value;
     setEditOrg({ ...editOrg, [keyName]: value });
-    // dispatch({type: "EDIT_ORG", payload: { [keyName]: value}})
   };
 
   // handleBoolean dropdown changes
   const handleBooleanChange = (e) => {
-    // console.log("e.target", e.target)
-    // console.log("e.target.name", e.target.name)
-    // console.log("e.target.value", e.target.value)
     let keyName = e.target.name;
     let value = e.target.value;
     setEditOrg({ ...editOrg, [keyName]: value });
-    // dispatch({type: "EDIT_ORG", payload: { [keyName]: value}})
   };
 
+  // ! CHECKBOX DROP DOWNS MENUS
   // ! Loss Types
-  // previous types for rendering dropdown checkboxes checked if the type was previously selected
+  // Dropdown VALUES -- need to be an array
+  // if types exist in store, set previousTypes to store values, else return empty array
   const previousLossTypes = org?.agg_loss_type
     ? org?.agg_loss_type?.map((type) => type?.name)
     : [];
-  // console.log("previousLossTypes:", previousLossTypes);
 
-  // get all possible types from the reducer to render available types to select
+  // Dropdown Select Options - get all possible types from the reducer
+  // Cannot render objects -- map through types to render just the names in the dropdown
   const storeLossTypes = useSelector((store) => store?.options.lossesReducer);
-  // console.log("storeLossTypes:", storeLossTypes);
-
-  // map just the type names to render in the dropdown
   const lossTypeNames = storeLossTypes?.map((type) => type?.name);
-  // console.log("lossTypeNames:", lossTypeNames);
 
   // local state to set currently checked types
   const [stateLossTypes, setStateLossTypes] = useState(previousLossTypes);
-  // console.log("stateLossTypes:", stateLossTypes);
 
   // onchange, set the local state to the current value of the dropdown (array)
   const handleLossTypeChange = (event) => {
     setStateLossTypes(event.target.value);
-    // console.log("Loss type change event:", event);
   };
-  // console.log("stateLossTypes:", stateLossTypes);
 
   // ! Services Types
-  // previous types for rendering dropdown checkboxes checked if the type was previously selected
+  // Dropdown VALUES -- need to be an array
+  // if types exist in store, set previousTypes to store values, else return empty array
   const previousServiceTypes = org?.agg_service_type
     ? org?.agg_service_type?.map((type) => type?.name)
     : [];
-  // console.log("previousServiceTypes:", previousServiceTypes);
 
-  // get all possible types from the reducer to render available types to select
-  const storeServiceTypes = useSelector(
-    (store) => store?.options.servicesReducer
-  );
-  // console.log("storeServiceTypes:", storeServiceTypes);
-
-  // map just the type names to render in the dropdown
+  // Dropdown Select Options - get all possible types from the reducer
+  // Cannot render objects -- map through types to render just the names in the dropdown
+  const storeServiceTypes = useSelector((store) => store?.options.servicesReducer);
   const serviceTypeNames = storeServiceTypes?.map((type) => type.name);
-  // console.log("serviceTypeNames:", serviceTypeNames);
 
   // local state to set currently checked types
   const [stateServiceTypes, setStateServiceTypes] =
     useState(previousServiceTypes);
-  // console.log("stateServiceTypes:", stateServiceTypes);
 
   // onchange, set the local state to the current value of the dropdown (array)
   const handleServiceTypeChange = (event) => {
     setStateServiceTypes(event.target.value);
-    // console.log("Service type change event:", event);
   };
-  // console.log("stateServiceTypes:", stateServiceTypes);
 
-  // ! Contacts
+  // ! CONTACTS
+  // local state for editing contacts -- initially set to contacts from store
   const [stateContacts, setStateContacts] = useState(org?.agg_contacts);
-  console.log("stateContacts:", stateContacts);
 
+  // onChange, map changes to stateContacts
   const handleContactChange = (e) => {
-    // console.log("e.target", e.target);
-    // console.log("e.target.name", target.name);
-    // console.log("e.target.id", e.target.id)
-    // console.log("e.target.value", e.target.value)
-
     let id = e?.target.id;
     let keyName = e?.target.name;
     let value = e?.target.value;
@@ -204,9 +181,9 @@ const OrgInfoEdit = () => {
     dispatch({ type: "UNVERIFY_ORG", payload: org?.id });
   };
 
+  // ! HANDLE SAVE 
   const handleSave = () => {
     const org = {
-      // dateVerified: editOrg.date_verified,
       email: editOrg.email,
       facebookUrl: editOrg.facebook_url,
       faithBased: editOrg.faith_based,
@@ -222,7 +199,6 @@ const OrgInfoEdit = () => {
       phone: editOrg.phone,
       serviceExplanation: editOrg.service_explanation,
       url: editOrg.url,
-      // verifiedBy: editOrg.verified_by,
     };
     const address = {
       addressLineOne: editOrg.address_line_1,
@@ -246,7 +222,6 @@ const OrgInfoEdit = () => {
         contacts,
       },
     };
-    console.log("PAYLOAD:", payload);
     dispatch({ type: "EDIT_ORG_UPDATE", payload: payload });
     history.push("/map");
   };
@@ -254,8 +229,10 @@ const OrgInfoEdit = () => {
   // ! RENDER
   return (
     <Container>
+      {/* MAIN CONTAINER: 3 nested grid containers: top (name/buttons), middle (details), bottom (contacts) */}
+      
+      {/* TOP: org name, save/verify/delete buttons */}
       <Grid container>
-        {/* Left */}
         <Grid item xs={6}>
           {/* TITLE: ORG NAME */}
           <Typography variant="overline" sx={overlineFont}>
@@ -355,7 +332,8 @@ const OrgInfoEdit = () => {
           </Stack>
         </Grid>
       </Grid>
-
+      
+      {/* MIDDLE: details with left/right grid items*/}
       <Grid container pt={4}>
         <Grid item xs={6} pr={5}>
           {/* TITLE: Org Info */}
@@ -535,8 +513,8 @@ const OrgInfoEdit = () => {
           />
         </Grid>
 
-        {/* Right Side */}
 
+        {/* Right Side */}
         <Grid item xs={6} pl={5}>
           {/* Notes */}
           <Typography variant="overline" sx={overlineFont}>
@@ -662,7 +640,7 @@ const OrgInfoEdit = () => {
         </Grid>
       </Grid>
 
-      {/* Point of Contact */}
+      {/* BOTTOM: Points of Contact */}
       <Grid container pt={5} rowGap={3} justifyContent="space-between">
         <Grid item xs={12}>
           <Typography variant="overline" sx={overlineFont}>
