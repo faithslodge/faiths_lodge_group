@@ -32,7 +32,7 @@ router.post("/service", rejectUnauthenticated, async (req, res) => {
         const queryText = `INSERT INTO "service_type"
                                 ("name") VALUES ($1);`;
 
-        await pool.query(queryText, [typeToInsert]);
+        await pool.query(queryText, [service]);
         res.sendStatus(201);
     } catch (err) {
         console.error(
@@ -113,7 +113,7 @@ router.post("/loss", rejectUnauthenticated, async (req, res) => {
         const queryText = `INSERT INTO "loss_type"
                                 ("name") VALUES ($1);`;
 
-        await pool.query(queryText, [typeToInsert]);
+        await pool.query(queryText, [loss]);
         res.sendStatus(201);
     } catch (err) {
         console.error(

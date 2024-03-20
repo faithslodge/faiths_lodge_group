@@ -35,7 +35,7 @@ router.get(
     }
 );
 
-// REMOVE THIS ROUTE BEFORE APP IMPLEMENTATION
+// POST to register new user
 router.post("/register", (req, res, next) => {
     const username = req.body.username;
     const password = encryptLib.encryptPassword(req.body.password);
@@ -49,32 +49,6 @@ router.post("/register", (req, res, next) => {
             res.sendStatus(500);
         });
 });
-
-// <------------------------ POST WILL REPLACE REGISTRATION ABOVE ---------------------------->
-// POST new user (admins only)
-router.post(
-    "/newUser",
-    rejectUnauthenticated,
-    rejectUnauthorized,
-    async (req, res) => {
-        const { username, isAdmin } = req.body;
-        const password = encryptLib.encryptPassword(
-            `${username}${process.env.PASSWORD_POSTFIX}`
-        );
-        try {
-            const queryText = `INSERT INTO "user" (username, password, is_admin)
-    VALUES ($1, $2, $3)`;
-            await pool.query(queryText, [username, password, isAdmin]);
-            res.sendStatus(201);
-        } catch (err) {
-            console.error(
-                "[inside user.router POST admin register new user] Error in this route",
-                err
-            );
-            res.sendStatus(500);
-        }
-    }
-);
 
 // POST login user, (user cookie in 'res' object for browser to store)
 router.post("/login", userStrategy.authenticate("local"), (req, res) => {
@@ -118,6 +92,7 @@ router.put(
     }
 );
 
+/**  FUTURE IMPLEMENTATION */
 // PUT to edit the current user password
 router.put(
     "/editPassword",

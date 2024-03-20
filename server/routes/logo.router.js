@@ -5,6 +5,7 @@ const fs = require("fs");
 const multer = require("multer");
 const sharp = require("sharp");
 
+// incoming logo file system config
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "public/tmp");
@@ -14,8 +15,8 @@ const storage = multer.diskStorage({
     },
 }); //from multer documentation
 
+// instantiate disk storage
 const upload = multer({ storage });
-// const upload = multer({ storage: multer.memoryStorage() });
 
 // GET ALL LOGOS
 router.get("/", async (req, res) => {
@@ -54,9 +55,6 @@ router.post("/", upload.single("logo_to_upload"), async (req, res) => {
         const logoDataName = req && req.file && req.file.filename;
         const logoFilePath = req && req.file && req.file.path;
 
-        console.log("logoDataName:", logoDataName);
-        console.log("logoFilePath:", logoFilePath);
-
         if (logoDataName) {
             // remove the extension on the image if present
             const baseFileName = logoDataName.replace(/\.[^/.]+$/, "");
@@ -70,7 +68,6 @@ router.post("/", upload.single("logo_to_upload"), async (req, res) => {
 
             // define the final storage place for converted file
             const outputPath = `public/logos/${newFileName}`;
-            console.log("newFileName:", newFileName);
 
             // convert the file to the '.webp' format
             await sharp(logoFilePath).toFormat("webp").toFile(outputPath);
@@ -86,7 +83,6 @@ router.post("/", upload.single("logo_to_upload"), async (req, res) => {
             const queryString = `INSERT INTO organization_logo(file_name, data, file_path) VALUES($1, $2, $3) RETURNING id, file_path;`;
             const queryParams = [newFileName, logoData, `/logos/${newFileName}`];
             const dbRes = await pool.query(queryString, queryParams);
-            console.log("rows of response:", dbRes.rows[0]);
 
             // send the logo id and the file path
             res.json({ id: dbRes.rows[0].id });
