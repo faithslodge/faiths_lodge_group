@@ -50,7 +50,6 @@ router.get("/:id", async (req, res) => {
  * POST LOGO
  */
 router.post("/", upload.single("logo_to_upload"), async (req, res) => {
-    console.log("req.file:", req.file);
     try {
         const logoDataName = req && req.file && req.file.filename;
         const logoFilePath = req && req.file && req.file.path;
