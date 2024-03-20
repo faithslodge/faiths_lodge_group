@@ -22,7 +22,9 @@ router.get(
     rejectUnauthorized,
     async (req, res) => {
         try {
-            const queryText = `SELECT * FROM "user";`;
+            // return all users but the user with id of 1,
+            // the root user has id = 1.
+            const queryText = `SELECT * FROM "user" WHERE id <> 1;`;
 
             const dbRes = await pool.query(queryText);
             res.status(200).send(dbRes.rows);

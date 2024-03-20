@@ -296,7 +296,7 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
                 logoId,
             ]);
             const logoFilePath = logoDelResponse.rows[0].file_path;
-            fs.unlink(logoFilePath, (err) => {
+            fs.unlink(`public/${logoFilePath}`, (err) => {
                 if (err) throw err;
             });
         }
