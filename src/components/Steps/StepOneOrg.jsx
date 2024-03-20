@@ -64,6 +64,56 @@ export default function StepOneOrg() {
                 <center>
                     <Typography variant="h4" mb={5}>Organization Details</Typography>
                 </center>
+                
+                {ORG_KEY_NAMES.map((item, i) => {
+                        const path = item.keyName;
+                        if (!item.checkBox) {
+                            return (
+                                <Box sx={{width: 150, marginBottom: 5}}>
+                                    
+                                    {item.keyName === "logoId" && (
+                                        <>
+                                            {/* AspectRatio for setting Img Size/Ratio */}
+                                            {/* need to fix for small screens */}
+                                            <AspectRatio
+                                                ratio="1"
+                                                flex
+                                                sx={{
+                                                    minWidth: { sm: 100 },
+                                                }}
+                                            >
+                                                <img
+                                                    alt="Logo Preview"
+                                                    src={logoPreview}
+                                                />
+                                            </AspectRatio>
+                                            <Button
+                                                component="label"
+                                                role={undefined}
+                                                variant="contained"
+                                                size="small"
+                                                tabIndex={-1}
+                                                startIcon={<CloudUpload />}
+                                            >
+                                                Upload Logo
+                                                <VisuallyHiddenInput
+                                                    type="file"
+                                                    id="file-upload"
+                                                    name="logo_to_upload"
+                                                    ref={fileInput}
+                                                    accept="image/*"
+                                                    onChange={
+                                                        handleLogoOnChange
+                                                    }
+                                                />
+                                            </Button>
+                                        </>
+                                    )}
+                                </Box>
+                            );
+                        }
+                    })}
+                
                 <Grid container spacing={3}>
                     {ORG_KEY_NAMES.map((item, i) => {
                         const path = item.keyName;
@@ -88,43 +138,7 @@ export default function StepOneOrg() {
                                             }
                                         />
                                     )}
-                                    {item.keyName === "logoId" && (
-                                        <>
-                                            {/* AspectRatio for setting Img Size/Ratio */}
-                                            {/* need to fix for small screens */}
-                                            <AspectRatio
-                                                ratio="1"
-                                                flex
-                                                sx={{
-                                                    minWidth: { sm: 100 },
-                                                }}
-                                            >
-                                                <img
-                                                    alt="Logo Preview"
-                                                    src={logoPreview}
-                                                />
-                                            </AspectRatio>
-                                            <Button
-                                                component="label"
-                                                role={undefined}
-                                                variant="contained"
-                                                tabIndex={-1}
-                                                startIcon={<CloudUpload />}
-                                            >
-                                                Upload Logo
-                                                <VisuallyHiddenInput
-                                                    type="file"
-                                                    id="file-upload"
-                                                    name="logo_to_upload"
-                                                    ref={fileInput}
-                                                    accept="image/*"
-                                                    onChange={
-                                                        handleLogoOnChange
-                                                    }
-                                                />
-                                            </Button>
-                                        </>
-                                    )}
+                                    
                                 </Grid>
                             );
                         }
