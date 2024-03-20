@@ -1,124 +1,88 @@
-# Prime Solo Project - Starting Repo
+# Faiths Lodge Resource Directory
 
-This version uses React, Redux, Express, Passport, and PostgreSQL (a full list of dependencies can be found in `package.json`).
+## Description
 
-We **STRONGLY** recommend following these instructions carefully. It's a lot, and will take some time to set up, but your life will be much easier this way in the long run.
-
-## Use the Template for This Repository (Don't Clone)
-
-- Don't Fork or Clone. Instead, click the `Use this Template` button, and make a copy to your personal account. Make the project `PUBLIC`!
+This application serves as a comprehensive directory for grief support resources, designed to assist employees and volunteers in finding appropriate grief support resources for grieving parents. It features a geographical map with pins indicating the locations of various support resources and a list of organizations that can be filtered by loss, service, and faith affiliation. The app supports multiple user roles including regular users, administrators, and a root user with immutable credentials to ensure secure access management. Administrators have the capability to manage users, including the creation and deletion of all user types (excluding the root user), and the editing of user admin privileges. All users have the ability to enter an organizations details, edit those details, and delete an organization. They also have the ability to create, modify, and delete all service and loss types. There is the ability to verify organizations for accurate data entry in the form of a verification badge that can be applied and removed through the edit organization functionality. This project is intended to be hosted on Heroku or some other cloud service provider. This project is the property of ©Faiths Lodge, dedicated to providing accessible support for those in need.
 
 ## Prerequisites
 
-Before you get started, make sure you have the following software installed on your computer:
+Before you begin, ensure you have the following installed:
 
-- [Node.js](https://nodejs.org/en)
-- [PostgreSQL](https://www.postgresql.org)
-- [Nodemon](https://nodemon.io)
+-   Node.js (v18.x)
+-   npm (comes with Node.js)
 
-## Create Database and Table
+## Installation
 
-Create a new database called `prime_app` and create a `user` table:
+1. **Clone the repository:**
 
-```SQL
-CREATE TABLE "user" (
-    "id" SERIAL PRIMARY KEY,
-    "username" VARCHAR (80) UNIQUE NOT NULL,
-    "password" VARCHAR (1000) NOT NULL
-);
-```
+    ```bash
+    git clone [repository-url]
+    cd faiths_lodge_group
+    ```
 
-If you would like to name your database something else, you will need to change `prime_app` to the name of your new database name in `server/modules/pool.js`.
-
-## Development Setup Instructions
-
-- Run `npm install`.
-    - Be sure to take stock of `package.json` to see which dependencies you'll need to add.
-- Create a `.env` file at the root of the project and paste this line into the file:
+2. **Install dependencies**
+    ```bash
+    npm i
+    ```
+3. **Create a `.env` file** at the root of the project and paste this line into the file:
 
 ```plaintext
-SERVER_SESSION_SECRET=superDuperSecret
+SERVER_SESSION_SECRET=<INSERT CUSTOM STRING OF CHARACTERS OR THE EX IN DOCS>
+USER_AGENT=<INSERT THE NAME FROM THE DOCS>
+```
+EXAMPLE `.env` file
+```plaintext
+SERVER_SESSION_SECRET=GjtNcBQpFday4FdxQy-*4kW33JRQm3wJXXqD9-nCbjwJsn@VmxCtLL
+USER_AGENT="Example Resource Directory"
 ```
 
-While you're in your new `.env` file, take the time to replace `superDuperSecret` with some long random string like `25POUbVtx6RKVNWszd9ERB9Bb6` to keep your application secure. Here's a site that can help you: [Password Generator Plus](https://passwordsgenerator.net). If you don't do this step, create a secret with less than eight characters, or leave it as `superDuperSecret`, you will get a warning.
+## Running the App locally
+1. **Create and Connect Database**
+- Create a database with the name as defined in the database.sql file.
+- Copy the contents of database.sql and run the database table creation queries only.
+- ***Do not insert example data into DB by running example INSERT statements***
+2. **Run Server**
+    ```
+    npm run server
+    ```
+3.  **In another terminal window**
+    ```
+    npm run client
+    ```
+## Usage
 
-- Start postgres if not running already by using opening up the [Postgres.app](https://postgresapp.com), or if using [Homebrew](https://brew.sh) you can use the command `brew services start postgresql`.
-- Run `npm run server` to start the server.
-- Run `npm run client` to start the client.
-- Navigate to `localhost:5173`.
+### Server Setup
+The server is set up in `server.js` and configured to listen on port 5001. It includes middleware for parsing JSON and URL-encoded data and routes for handling API requests related to image uploading.
 
-## Debugging
+### React Frontend
 
-To debug, you will need to run the client-side separately from the server. Start the client by running the command `npm run client`. Start the debugging server by selecting the Debug button.
+Vite manages the URL for the client. Access client in browser at URL defined after client run command.
+## Features
+Map visualization of grief support resources.
+Role-based access control for regular users, admins, and a root user.
+Admin capabilities to manage users and resources.
+Resource management including editing and updating support information.
 
-![VSCode Toolbar](documentation/images/vscode-toolbar.png)
+## Dependencies
+- React for frontend development.
+- Express for the backend server.
+- Multer for handling image uploads.
+- PostgreSQL (pg) for database management.
+- Vite for bundling and development server.
+- Leaflet for map visualization.
+- Material UI for front-end components
+- ***For a full list of dependencies, refer to the package.json file.***
 
-Then make sure `Launch Program` is selected from the dropdown, then click the green play arrow.
+## Third-party APIs
+- This project uses the **Nominatim** API, which is a free api for the public to use as long as utilization requirements are adhered to as defined in: https://operations.osmfoundation.org/policies/nominatim/
 
-![VSCode Debug Bar](documentation/images/vscode-debug-bar.png)
 
-## Testing Routes with Postman
+## Configuration
+This app requires configuration of environment variables for database connections and other sensitive information. Ensure these are set up correctly in your .env file before running the app.
 
-To use Postman with this repo, you will need to set up requests in Postman to register a user and login a user at a minimum.
+## Contributing
+This project was started by Prime Digital Academy 'Peridot' cohort members in March 2024.
+Future contributions expected from volunteers and/or hired software developers.
 
-Keep in mind that once you using the login route, Postman will manage your session cookie for you just like a browser, ensuring it is sent with each subsequent request. If you delete the `localhost` cookie in Postman, it will effectively log you out.
-
-1. Run `npm run server` to start the server.
-2. Import the sample routes JSON file [v2](./PostmanPrimeSoloRoutesv2.json) by clicking `Import` in Postman. Select the file.
-3. Click `Collections` and `Send` the following three calls in order:
-   1. `POST /api/user/register` registers a new user, see body to change username/password.
-   2. `POST /api/user/login` will login a user, see body to change username/password.
-   3. `GET /api/user` will get user information, by default it's not very much.
-
-After running the login route above, you can try any other route you've created that requires a logged in user!
-
-## Production Build
-
-Before pushing to Heroku, run `npm run build` in terminal. This will create a build folder that contains the code Heroku will be pointed at. You can test this build by typing `npm start`. Keep in mind that `npm start` will let you preview the production build but will **not** auto update.
-
-- Start postgres if not running already by using opening up the [Postgres.app](https://postgresapp.com), or if using [Homebrew](https://brew.sh) you can use the command `brew services start postgresql`.
-- Run `npm start`.
-- Navigate to `localhost:5173`.
-
-## Lay of the Land
-
-There are a few videos linked below that show a walkthrough the client and sever setup to help acclimatize to the boilerplate. Please take some time to watch the videos in order to get a better understanding of what the boilerplate is like.
-
-- [Initial Set](https://vimeo.com/453297271)
-- [Server Walkthrough](https://vimeo.com/453297212)
-- [Client Walkthrough](https://vimeo.com/453297124)
-
-Directory Structure:
-
-- `src/` contains the React application.
-- `public/` contains static assets for the client-side.
-- `build/` after you build the project, contains the transpiled code from `src/` and `public/` that will be viewed on the production site.
-- `server/` contains the Express App.
-
-This code is also heavily commented. We recommend reading through the comments, getting a lay of the land, and becoming comfortable with how the code works before you start making too many changes. If you're wondering where to start, consider reading through component file comments in the following order:
-
-- src/components
-  - App/App
-  - Footer/Footer
-  - Nav/Nav
-  - AboutPage/AboutPage
-  - InfoPage/InfoPage
-  - UserPage/UserPage
-  - LoginPage/LoginPage
-  - RegisterPage/RegisterPage
-  - LogOutButton/LogOutButton
-  - ProtectedRoute/ProtectedRoute
-
-## Deployment
-
-1. Create a new Heroku project.
-1. Link the Heroku project to the project GitHub Repo.
-1. Create an Heroku Postgres database.
-1. Connect to the Heroku Postgres database from Postico.
-1. Create the necessary tables.
-1. Add an environment variable for `SERVER_SESSION_SECRET` with a nice random string for security.
-1. In the deploy section, select manual deploy.
-
-## Update Documentation
-
-Customize this ReadMe and the code comments in this project to read less like a starter repo and more like a project. Here is an example: https://gist.github.com/PurpleBooth/109311bb0361f32d87a2.
+## License
+This project is the property of ©Faiths Lodge.

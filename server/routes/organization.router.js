@@ -2,9 +2,6 @@ const express = require("express");
 const pool = require("../modules/pool");
 const fs = require("fs");
 const router = express.Router();
-// const multer = require("multer");
-
-// const upload = multer({ storage: multer.memoryStorage()});
 
 const {
     rejectUnauthenticated,
@@ -48,7 +45,6 @@ router.get("/", rejectUnauthenticated, async (req, res) => {
 router.post("/", rejectUnauthenticated, async (req, res) => {
     const { org, address, lossTypes, serviceTypes, contacts, logoId } =
         req.body.organizationDetails;
-    // const { logoId } = req.body;
     const { city, state } = address;
 
     // define DB connection, and ids from created entities
@@ -95,9 +91,11 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
         // INSERT organization_contact
         await postContacts(contacts, organizationId, connection);
 
+        // COMMIT transaction
         await connection.query("COMMIT;");
         res.sendStatus(201);
     } catch (err) {
+        // ROLLBACK transaction
         await connection.query("ROLLBACK;");
         console.error(
             "[inside organization.router POST new org] Error in this route",
@@ -105,6 +103,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
         );
         res.sendStatus(500);
     } finally {
+        // RELEASE connection to DB
         await connection.release();
     }
 });
@@ -112,107 +111,101 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 /**
  * PUT edit organization
  */
-router.put(
-    "/:organizationId",
-    rejectUnauthenticated,
-    /**  upload.single('logo_to_upload'), */ async (req, res) => {
-        const { organizationId } = req.params;
-        const { address, lossTypes, serviceTypes, contacts, org } =
-            req.body.updateOrg;
+router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
+    const { organizationId } = req.params;
+    const { address, lossTypes, serviceTypes, contacts, org } =
+        req.body.updateOrg;
 
-        // define DB connection
-        let connection;
-        let newContacts;
-        let editContacts;
+    // define DB connection
+    let connection;
+    let newContacts;
+    let editContacts;
 
-        if (contacts && contacts.length > 0) {
-            // Grab newly generated contacts to add to this organization
-            newContacts = contacts.filter((contact) => !contact.id);
+    if (contacts && contacts.length > 0) {
+        // Grab newly generated contacts to add to this organization
+        newContacts = contacts.filter((contact) => !contact.id);
 
-            // Grab contacts to edit
-            editContacts = contacts.filter((contact) => contact.id);
-        }
-
-        try {
-            const { latitude, longitude } = await convertCityStateToLatLong(
-                address.city,
-                address.state
-            );
-
-            // establish connection to DB
-            connection = await pool.connect();
-
-            // Begin transaction
-            await connection.query("BEGIN;");
-
-            // EDIT ORG
-            let addressId = await putOrganization(connection, {
-                ...org,
-                organizationId,
-            });
-
-            // EDIT ADDRESS
-            await putAddress(connection, {
-                ...address,
-                latitude,
-                longitude,
-                addressId,
-            });
-
-            // DELETE CURRENT LOSS TYPE ASSOCIATIONS
-            await deleteLossTypeAssociations(connection, organizationId);
-
-            // POST GIVEN LOSS TYPE ASSOCIATIONS
-            await postLossTypeByOrganization(
-                lossTypes,
-                organizationId,
-                connection
-            );
-
-            // DELETE CURRENT SERVICE TYPE ASSOCIATIONS
-            await deleteServiceTypeAssociations(connection, organizationId);
-
-            // POST GIVEN SERVICE TYPE ASSOCIATIONS
-            await postServiceTypeByOrganization(
-                serviceTypes,
-                organizationId,
-                connection
-            );
-
-            // DELETE MISSING CONTACTS
-            const contactIdsToDelete = await getContactIdsToDeleteFromOrg(
-                connection,
-                editContacts,
-                organizationId
-            );
-
-            await deleteContactsOmittedFromOrgUpdate(
-                connection,
-                organizationId,
-                contactIdsToDelete
-            );
-
-            // EDIT THE CONTACTS BY ID
-            await putContacts(editContacts, organizationId, connection);
-
-            // ADD NEW CONTACTS
-            await postContacts(newContacts, organizationId, connection);
-
-            await connection.query("COMMIT;");
-            res.sendStatus(204);
-        } catch (err) {
-            // Cancel transaction
-            await connection.query("ROLLBACK;");
-            console.error(
-                "[inside organization.router PUT edit org] Error in this route",
-                err
-            );
-            res.sendStatus(500);
-        } finally {
-            await connection.release();
-        }
+        // Grab contacts to edit
+        editContacts = contacts.filter((contact) => contact.id);
     }
-);
+
+    try {
+        const { latitude, longitude } = await convertCityStateToLatLong(
+            address.city,
+            address.state
+        );
+
+        // establish connection to DB
+        connection = await pool.connect();
+
+        // Begin transaction
+        await connection.query("BEGIN;");
+
+        // EDIT ORG
+        let addressId = await putOrganization(connection, {
+            ...org,
+            organizationId,
+        });
+
+        // EDIT ADDRESS
+        await putAddress(connection, {
+            ...address,
+            latitude,
+            longitude,
+            addressId,
+        });
+
+        // DELETE CURRENT LOSS TYPE ASSOCIATIONS
+        await deleteLossTypeAssociations(connection, organizationId);
+
+        // POST GIVEN LOSS TYPE ASSOCIATIONS
+        await postLossTypeByOrganization(lossTypes, organizationId, connection);
+
+        // DELETE CURRENT SERVICE TYPE ASSOCIATIONS
+        await deleteServiceTypeAssociations(connection, organizationId);
+
+        // POST GIVEN SERVICE TYPE ASSOCIATIONS
+        await postServiceTypeByOrganization(
+            serviceTypes,
+            organizationId,
+            connection
+        );
+
+        // DELETE MISSING CONTACTS
+        const contactIdsToDelete = await getContactIdsToDeleteFromOrg(
+            connection,
+            editContacts,
+            organizationId
+        );
+
+        await deleteContactsOmittedFromOrgUpdate(
+            connection,
+            organizationId,
+            contactIdsToDelete
+        );
+
+        // EDIT THE CONTACTS BY ID
+        await putContacts(editContacts, organizationId, connection);
+
+        // ADD NEW CONTACTS
+        await postContacts(newContacts, organizationId, connection);
+
+        // COMMIT transaction
+        await connection.query("COMMIT;");
+        res.sendStatus(204);
+    } catch (err) {
+        // ROLLBACK transaction
+        await connection.query("ROLLBACK;");
+        console.error(
+            "[inside organization.router PUT edit org] Error in this route",
+            err
+        );
+        res.sendStatus(500);
+    } finally {
+        // RELEASE connection to DB
+        await connection.release();
+    }
+});
 
 /**
  * UPDATE organization as verified
@@ -296,7 +289,9 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
                 logoId,
             ]);
             const logoFilePath = logoDelResponse.rows[0].file_path;
-            fs.unlink(logoFilePath, (err) => {
+            
+            // remove the logo from the public/logos path
+            fs.unlink(`public/${logoFilePath}`, (err) => {
                 if (err) throw err;
             });
         }
@@ -313,6 +308,7 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
         );
         res.sendStatus(500);
     } finally {
+        // RELEASE connection to DB
         connection.release();
     }
 });
