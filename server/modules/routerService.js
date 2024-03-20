@@ -163,6 +163,7 @@ async function postServiceTypeByOrganization(
     organizationId,
     connection
 ) {
+    // if the org post has service types then associate them
     if (serviceTypesIds && serviceTypesIds.length > 0) {
         const mappedServiceTypesToOrg = serviceTypesIds.map((serviceTypeId) => {
             return { organizationId, serviceTypeId };
@@ -194,6 +195,7 @@ async function postLossTypeByOrganization(
     organizationId,
     connection
 ) {
+    // if the org post has loss types then associate them
     if (lossTypeIds && lossTypeIds.length > 0) {
         // associate the org id with this loss type
         const mappedLossTypesToOrg = lossTypeIds.map((lossTypeId) => {
@@ -220,6 +222,7 @@ async function postLossTypeByOrganization(
 
 // INSERT contact into DB for this org
 async function postContacts(contacts, organizationId, connection) {
+    // if the org post has contact(s) then associate them
     if (contacts && contacts.length > 0) {
         const contactsWithOrg = contacts.map((contact) => {
             return { ...contact, organizationId };
@@ -339,16 +342,10 @@ async function putAddress(connection, address) {
 // UPDATE contacts in DB for this organization
 async function putContacts(contacts, organizationId, connection) {
     const orgIdAsInt = parseInt(organizationId);
+    // if there are contacts to update
     if (contacts && contacts.length > 0) {
-        // generate number of query inputs without the ids
-        let contactsCopy = [...contacts];
-        contactsCopy = contactsCopy.map((contact) => {
-            const editContact = { ...contact };
-            delete editContact.id;
-            return editContact;
-        });
-        const contactInputCount = generateNumberOfQueryInputs(contacts);
 
+        const contactInputCount = generateNumberOfQueryInputs(contacts);
         const numPropertiesInContactObj = Object.keys(contacts[0]).length;
 
         // calculate the position for inserting org id into SQL query params
