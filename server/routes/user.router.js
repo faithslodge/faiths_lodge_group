@@ -72,8 +72,8 @@ router.put(
         const { isAdmin } = req.body;
 
         try {
-            // cannot edit the admin property for yourself
-            if (req.user.id == id) {
+            // cannot edit the admin property for yourself OR the root user (id == 1)
+            if (req.user.id == id || id == 1) {
                 res.sendStatus(403);
             } else {
                 const queryText = `UPDATE "user" SET "is_admin" = $1
@@ -127,8 +127,8 @@ router.delete(
         const userToDeleteId = req.params.id;
 
         try {
-            // cannot delete yourself
-            if (loggedInUserId == userToDeleteId) {
+            // cannot delete yourself OR the root user (id == 1)
+            if (loggedInUserId == userToDeleteId || userToDeleteId == 1) {
                 res.sendStatus(403);
             } else {
                 const queryText = `DELETE FROM "user" WHERE id = $1;`;
