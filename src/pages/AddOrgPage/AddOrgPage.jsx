@@ -47,10 +47,8 @@ export default function AddOrgPage() {
     }
 
     function handleSubmit() {
-        console.log("[inside handleSubmit of AddOrgPage] logoData:", logoData);
        
         const organizationDetails = {...newOrg};
-        console.log("[inside handleSubmit of AddOrgPage] organizationDetails:", organizationDetails);
         dispatch({
             type: "CREATE_ORGANIZATION",
             payload: {  logoData, organizationDetails },

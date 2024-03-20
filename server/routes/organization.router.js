@@ -53,6 +53,11 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     let organizationId;
 
     try {
+        if (!org.name || (!city && !state)) {
+            throw new Error(
+                "Name of organization or city and state not provided!"
+            );
+        }
         const { latitude, longitude } = await convertCityStateToLatLong(
             city,
             state
@@ -96,7 +101,9 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
         res.sendStatus(201);
     } catch (err) {
         // ROLLBACK transaction
-        await connection.query("ROLLBACK;");
+        if (connection) {
+            await connection.query("ROLLBACK;");
+        }
         console.error(
             "[inside organization.router POST new org] Error in this route",
             err
@@ -104,7 +111,9 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
         res.sendStatus(500);
     } finally {
         // RELEASE connection to DB
-        await connection.release();
+        if (connection) {
+            await connection.release();
+        }
     }
 });
 
@@ -195,7 +204,9 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
         res.sendStatus(204);
     } catch (err) {
         // ROLLBACK transaction
-        await connection.query("ROLLBACK;");
+        if (connection) {
+            await connection.query("ROLLBACK;");
+        }
         console.error(
             "[inside organization.router PUT edit org] Error in this route",
             err
@@ -203,7 +214,9 @@ router.put("/:organizationId", rejectUnauthenticated, async (req, res) => {
         res.sendStatus(500);
     } finally {
         // RELEASE connection to DB
-        await connection.release();
+        if (connection) {
+            await connection.release();
+        }
     }
 });
 
@@ -289,7 +302,7 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
                 logoId,
             ]);
             const logoFilePath = logoDelResponse.rows[0].file_path;
-            
+
             // remove the logo from the public/logos path
             fs.unlink(`public/${logoFilePath}`, (err) => {
                 if (err) throw err;
