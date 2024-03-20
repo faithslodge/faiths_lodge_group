@@ -1,6 +1,5 @@
 import React from "react";
 import "./Footer.css";
-import { Link } from "react-router-dom";
 
 // This is one of our simplest components
 // It doesn't have local state, so it can be a function component.
@@ -12,20 +11,6 @@ function Footer() {
     <footer>
       <div>
         <p>&copy; Faith's Lodge</p>
-      </div>
-      <div className="footerNav">
-        <Link className="footerLink" to="/home">
-          Home
-        </Link>
-        <Link className="footerLink" to="/about">
-          About
-        </Link>
-        <Link className="footerLink" to="/info">
-          Info
-        </Link>
-        <Link className="footerLink" to="/team">
-          Team
-        </Link>
       </div>
     </footer>
   );

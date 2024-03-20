@@ -14,7 +14,6 @@ import { AspectRatio } from "@mui/joy";
 import { useDispatch, useSelector } from "react-redux";
 
 import ORG_KEY_NAMES from "../../constants/ORG_KEY_NAMES";
-import MOCK_DATA from "../../constants/MOCK_DATA";
 
 export default function StepOneOrg() {
     const dispatch = useDispatch();
@@ -57,20 +56,13 @@ export default function StepOneOrg() {
         }
     };
 
-    const handleMock = ()=>{
-        dispatch({ type: "SET_ORG_OBJECT", payload: MOCK_DATA.org });
-        dispatch({ type: "SET_ADDRESS_OBJECT", payload: MOCK_DATA.address });
-        dispatch({ type: "SET_NEW_LOSS", payload: MOCK_DATA.lossTypes });
-        dispatch({ type: "SET_NEW_SERVICE", payload: MOCK_DATA.serviceTypes });
-        dispatch({ type: "SET_NEW_CONTACT", payload: MOCK_DATA.contacts });
-    }
 
     return (
         <Box sx={{ width: "70%", m: "auto" }}>
             <>
                 <br />
                 <center>
-                    <Typography variant="h4" onClick={handleMock} mb={5}>Organization Details</Typography>
+                    <Typography variant="h4" mb={5}>Organization Details</Typography>
                 </center>
                 <Grid container spacing={3}>
                     {ORG_KEY_NAMES.map((item, i) => {

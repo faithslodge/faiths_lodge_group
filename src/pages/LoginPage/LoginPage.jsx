@@ -10,7 +10,7 @@ function LoginPage() {
     <div>
       <LoginForm />
 
-      <center>
+      {/* <center>
         <Button
           variant='text'
           size='small'
@@ -20,7 +20,7 @@ function LoginPage() {
         >
           Register
         </Button>
-      </center>
+      </center> */}
     </div>
   );
 }

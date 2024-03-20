@@ -9,10 +9,8 @@ import Footer from "../../components/Footer/Footer";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
 import AboutPage from "../AboutPage/AboutPage";
-import UserPage from "../UserPage/UserPage";
-import InfoPage from "../InfoPage/InfoPage";
+
 import LoginPage from "../LoginPage/LoginPage";
-import RegisterPage from "../RegisterPage/RegisterPage";
 import ListView from "../ListView/ListView";
 import MapView from "../MapView/MapView";
 import OptionsPage from "../OptionsPage/OptionsPage";
@@ -21,9 +19,8 @@ import AddOrgPage from "../AddOrgPage/AddOrgPage";
 
 import "./App.css";
 import OrgInfoEdit from "../OrgInfo/OrgInfoEdit";
-import TeamPage from "../Team/Team";
-import AdminPage from "../AdminPage/AdminPage";
 
+import AdminPage from "../AdminPage/AdminPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -35,10 +32,9 @@ function App() {
       dispatch({ type: "FETCH_ORGANIZATIONS" });
       dispatch({ type: "FETCH_LOSSES" });
       dispatch({ type: "FETCH_SERVICES" });
-    } else{
+    } else {
       dispatch({ type: "FETCH_USER" });
     }
-    
   }, [dispatch, user]);
 
   return (
@@ -55,25 +51,16 @@ function App() {
               // redirect them to the /home page
               <AboutPage />
             ) : (
-              // Otherwise, show the Landing page
+              // Otherwise, show the Login page
               <LoginPage />
             )}
           </Route>
-          <Route exact path="/team">
-            <TeamPage />
-          </Route>
-          
+
           {/* For protected routes, the view could show one of several things on the same route.
             Visiting localhost:5173/user will show the UserPage if the user is logged in.
             If the user is not logged in, the ProtectedRoute will show the LoginPage (component).
             Even though it seems like they are different pages, the user is always on localhost:5173/user */}
-          <ProtectedRoute
-            // logged in shows UserPage else shows LoginPage
-            exact
-            path="/user"
-          >
-            <UserPage />
-          </ProtectedRoute>
+
           {/* Route for MapView */}
           <ProtectedRoute exact path="/map">
             <MapView />
@@ -98,13 +85,7 @@ function App() {
           <ProtectedRoute exact path="/orgedit/:id">
             <OrgInfoEdit />
           </ProtectedRoute>
-          <ProtectedRoute
-            // logged in shows InfoPage else shows LoginPage
-            exact
-            path="/info"
-          >
-            <InfoPage />
-          </ProtectedRoute>
+
           <ProtectedRoute
             // logged in shows InfoPage else shows LoginPage
             exact
@@ -122,16 +103,7 @@ function App() {
               <LoginPage />
             )}
           </Route>
-          <Route exact path="/registration">
-            {user.id ? (
-              // If the user is already logged in,
-              // redirect them to the /user page
-              <Redirect to="/user" />
-            ) : (
-              // Otherwise, show the registration page
-              <RegisterPage />
-            )}
-          </Route>
+
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>
             <h1>404</h1>
