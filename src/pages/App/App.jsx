@@ -20,12 +20,10 @@ import OrgInfo from "../OrgInfo/OrgInfo";
 import AddOrgPage from "../AddOrgPage/AddOrgPage";
 
 import "./App.css";
-import TestPage from "../TestPage/TestPage";
 import OrgInfoEdit from "../OrgInfo/OrgInfoEdit";
 import TeamPage from "../Team/Team";
 import AdminPage from "../AdminPage/AdminPage";
 
-// Test comment
 
 function App() {
   const dispatch = useDispatch();
@@ -64,14 +62,7 @@ function App() {
           <Route exact path="/team">
             <TeamPage />
           </Route>
-          // ! Need to delete test page before release
-          <Route
-            // page for testing components
-            exact
-            path="/test"
-          >
-            <TestPage />
-          </Route>
+          
           {/* For protected routes, the view could show one of several things on the same route.
             Visiting localhost:5173/user will show the UserPage if the user is logged in.
             If the user is not logged in, the ProtectedRoute will show the LoginPage (component).
