@@ -345,6 +345,7 @@ async function putContacts(contacts, organizationId, connection) {
     // if there are contacts to update
     if (contacts && contacts.length > 0) {
 
+        // generate the $1, $2, ... for SQL query
         const contactInputCount = generateNumberOfQueryInputs(contacts);
         const numPropertiesInContactObj = Object.keys(contacts[0]).length;
 
@@ -401,6 +402,7 @@ async function deleteContactsOmittedFromOrgUpdate(
     organizationId,
     contactIds
 ) {
+    // if there are contacts to disassociate from this org on UPDATE
     if (contactIds && contactIds.length > 0) {
         const inputIdCount = contactIds.map((id, i) => {
             return `$${i + 1}`;
@@ -427,16 +429,20 @@ async function getContactIdsToDeleteFromOrg(
     contactsToKeep,
     organizationId
 ) {
+    // if there are contacts to keep associated w/ org on UPDATE
     if (contactsToKeep && contactsToKeep.length > 0) {
         const contactGetText = `SELECT * FROM "organization_contact" WHERE "organization_id" = $1;`;
         const getContactsInOrgResult = await connection.query(contactGetText, [
             organizationId,
         ]);
+        // get the current contacts associated w/ org from DB
         const currentContactsInOrg = getContactsInOrgResult.rows;
-    
         const currentContactIds = currentContactsInOrg.map((contact) => contact.id);
-    
+
+        // grab ids from contacts we want to keep
         const contactIdsToKeep = contactsToKeep.map((contact) => contact.id);
+        
+        // determine the contacts from DB that should be removed
         const contactIdsToDelete = currentContactIds.filter(
             (id) => !contactIdsToKeep.includes(id)
         );

@@ -102,6 +102,8 @@ CREATE TABLE "service_type_by_organization" (
 
 -------------------------------------------------- END CREATE TABLE -------------------------------------------------
 
+---<<<<<<<<<<<---------------- DO NOT USE THE EXAMPLE INSERTS FOR THE REAL APPLICATION ---------------->>>>>>>>>>>---
+
 ---------------------------------------------- BEGIN INSERT STATEMENTS ----------------------------------------------
     -- user TABLE INSERT
     INSERT INTO "user"
