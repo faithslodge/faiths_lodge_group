@@ -16,11 +16,13 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
+// Font Styling
 const overlineFont = {
   fontSize: 14,
   color: "rgba(92, 118, 55, 1)",
 };
 
+// for rendering boolean values as "Yes/No"
 const boolCheck = (info) => {
   if (info === null) {
     return "";
@@ -32,19 +34,16 @@ const boolCheck = (info) => {
 };
 
 const OrgInfo = () => {
+  // hooks
   const { id } = useParams();
-  // console.log("ParamID:", id);
-
   const history = useHistory();
-
-  const orgStore = useSelector((orgStore) => orgStore.organizations);
-  // console.log("STORE:", orgStore);
-
+  // fetching Organizations from store
+  const orgStore = useSelector((store) => store.organizations);
+  // filter orgStore to get specific organization by ID
   const filteredOrgArray = orgStore?.filter((item) => item.id === Number(id));
-  // console.log("filteredOrgArray:", filteredOrgArray);
-
   const org = filteredOrgArray[0];
 
+  // Props for .mapping social media links/icons
   const socialMediaArray = [
     {
       url: org?.facebook_url,
@@ -65,8 +64,9 @@ const OrgInfo = () => {
 
   return (
     <Container>
+      {/* Main Grid Container, includes 3 nested Grid Containers for Top, Middle, Bottom sections */}
       <Grid container pt={5}>
-        {/* Top: Name, Verified, Social Media, View/Edit Button */}
+        {/* TOP: Name, Verified, Social Media, Edit Button */}
         <Grid container>
           <Grid item xs={6}>
             {/* Org Name, Verified Badge, View/Edit Btn */}
@@ -93,7 +93,7 @@ const OrgInfo = () => {
             </Stack>
           </Grid>
 
-          {/* Social Meida, Edit Button */}
+          {/* Social Media, Edit Button */}
           <Grid item xs={6} pl={2}>
             <Stack
               direction="row"
@@ -127,7 +127,7 @@ const OrgInfo = () => {
           </Grid>
         </Grid>
 
-        {/* Org Info */}
+        {/* MIDDLE: Org Details, Includes Left/Right side Grid Items */}
         <Grid container pt={3}>
           {/* Left Side */}
           <Grid item xs={6} pr={2}>
@@ -193,7 +193,7 @@ const OrgInfo = () => {
 
             <br />
 
-            {/* Notes */}
+            {/* Service Explanation */}
             <Typography variant="overline" sx={overlineFont}>
               <b>Service Explanation</b>
             </Typography>
@@ -212,9 +212,9 @@ const OrgInfo = () => {
 
             <br />
 
-            {/* Stack to place Type of Loss and Services side-by-side */}
+            {/* Stack to place Loss Types and Services side-by-side */}
             <Stack direction="row" alignItems="top" gap={5}>
-              {/* Type of Loss */}
+              {/* Loss Types */}
               <div>
                 <Typography variant="overline" sx={overlineFont}>
                   <b>Type of Loss</b>
@@ -249,8 +249,9 @@ const OrgInfo = () => {
             </Typography>
 
             <br />
+
+            {/* BOTTOM: Map Contacts */}
             <Grid container>
-              {/* Map Contacts */}
               {org.agg_contacts &&
                 org.agg_contacts?.map((contact) => (
                   <Grid item key={contact.id} xs={3} overflow="hidden" pr={2}>
